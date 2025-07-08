@@ -138,135 +138,7 @@
             "button_text_color": ""
          }
       },
-      "media_grid_FMthgY": {
-         "type": "media-grid",
-         "blocks": {
-            "video_r8V7Xz": {
-               "type": "video",
-               "settings": {
-                  "video": "shopify://files/videos/website.mp4",
-                  "external_video_url": "",
-                  "show_video_controls": false,
-                  "title": "",
-                  "heading_tag": "h4",
-                  "link_url": "",
-                  "link_text": "",
-                  "mobile_text_position": "place-self-center text-center",
-                  "desktop_column_span": 2,
-                  "desktop_row_span": 2,
-                  "desktop_text_position": "sm:place-self-center sm:text-center",
-                  "background": "#000000",
-                  "background_gradient": "",
-                  "text_color": "#ffffff",
-                  "text_gradient": "",
-                  "button_background": "#000000",
-                  "button_text_color": "#ffffff",
-                  "overlay_color": "#000000",
-                  "overlay_opacity": 0
-               }
-            },
-            "image_Neytai": {
-               "type": "image",
-               "settings": {
-                  "image": "shopify://shop_images/IMG_2325_db8408ee-b7af-4894-aece-498c87843cab.png",
-                  "title": "Everyday wear",
-                  "heading_tag": "h5",
-                  "link_url": "shopify://collections/every-day-wear",
-                  "link_text": "",
-                  "mobile_text_position": "place-self-center text-center",
-                  "desktop_column_span": 1,
-                  "desktop_row_span": 1,
-                  "desktop_text_position": "sm:place-self-center sm:text-center",
-                  "background": "#000000",
-                  "background_gradient": "",
-                  "text_color": "#ffffff",
-                  "text_gradient": "",
-                  "button_background": "#000000",
-                  "button_text_color": "#ffffff",
-                  "overlay_color": "#000000",
-                  "overlay_opacity": 30
-               }
-            },
-            "image_GMhhgq": {
-               "type": "image",
-               "settings": {
-                  "image": "shopify://shop_images/IMG_7148.jpg",
-                  "title": "PREMIUM KURTIS",
-                  "heading_tag": "h4",
-                  "link_url": "shopify://collections/new-arrival-setion",
-                  "link_text": "",
-                  "mobile_text_position": "place-self-center text-center",
-                  "desktop_column_span": 1,
-                  "desktop_row_span": 1,
-                  "desktop_text_position": "sm:place-self-center sm:text-center",
-                  "background": "#000000",
-                  "background_gradient": "",
-                  "text_color": "#ffffff",
-                  "text_gradient": "",
-                  "button_background": "#000000",
-                  "button_text_color": "#ffffff",
-                  "overlay_color": "#000000",
-                  "overlay_opacity": 0
-               }
-            },
-            "image_kkwmrw": {
-               "type": "image",
-               "settings": {
-                  "image": "shopify://shop_images/IMG-6663.png",
-                  "title": "Mens Kurta",
-                  "heading_tag": "h4",
-                  "link_url": "shopify://collections/mens-collection",
-                  "link_text": "",
-                  "mobile_text_position": "place-self-end-center text-center",
-                  "desktop_column_span": 2,
-                  "desktop_row_span": 1,
-                  "desktop_text_position": "sm:place-self-center sm:text-center",
-                  "background": "#000000",
-                  "background_gradient": "",
-                  "text_color": "#ffffff",
-                  "text_gradient": "",
-                  "button_background": "#000000",
-                  "button_text_color": "#ffffff",
-                  "overlay_color": "#000000",
-                  "overlay_opacity": 30
-               }
-            }
-         },
-         "block_order": [
-            "video_r8V7Xz",
-            "image_Neytai",
-            "image_GMhhgq",
-            "image_kkwmrw"
-         ],
-         "settings": {
-            "full_width": true,
-            "reduce_width": false,
-            "desktop_row_height": 290,
-            "mobile_row_height": 160,
-            "background": "",
-            "background_gradient": ""
-         }
-      },
-      "1727347439f3f8fea8": {
-         "type": "apps",
-         "blocks": {
-            "reelup_shoppable_videos_reels_reelup_stories_8RmHWW": {
-               "type": "shopify://apps/reelup-shoppable-videos-reels/blocks/reelup-stories/a8ec9e4d-d192-44f7-9c23-595f9ee7dd5b",
-               "disabled": true,
-               "settings": { "section_id": "", "debugging_script": "" }
-            }
-         },
-         "block_order": ["reelup_shoppable_videos_reels_reelup_stories_8RmHWW"],
-         "disabled": true,
-         "settings": {
-            "full_width": true,
-            "remove_vertical_spacing": false,
-            "remove_horizontal_spacing": false,
-            "background": "",
-            "background_gradient": "",
-            "text_color": ""
-         }
-      },
+
       "scrolling_text_6FAqWL": {
          "type": "scrolling-text",
          "settings": {
@@ -282,34 +154,7 @@
             "text_gradient": ""
          }
       },
-      "multiple_images_with_text_VhMhkX": {
-         "type": "multiple-images-with-text",
-         "blocks": {
-            "item_74hTfX": {
-               "type": "item",
-               "settings": {
-                  "image": "shopify://shop_images/IMG-6523_9ed362cb-34bf-4b56-9959-77754c935749.png",
-                  "image_rotation_degrees": -2,
-                  "subheading": "(Founder: Shreya)",
-                  "title": "ADHYA HANDCRAFTED CHIKANKARI",
-                  "content": "<p>When you buy Handmade, you support the dream of a person who puts their heart and soul into making chikankari special.</p>",
-                  "button_url": "shopify://pages/our-story",
-                  "button_text": ""
-               }
-            }
-         },
-         "block_order": ["item_74hTfX"],
-         "settings": {
-            "full_width": true,
-            "images_layout": "stacked",
-            "collage_images_alignment": "middle",
-            "background": "#f7f7f7",
-            "background_gradient": "",
-            "text_color": "",
-            "button_background": "",
-            "button_text_color": ""
-         }
-      },
+
       "testimonials_ixf9yp": {
          "type": "testimonials",
          "blocks": {
@@ -398,32 +243,7 @@
             "testimonial_card_text_color": ""
          }
       },
-      "before-after-image": {
-         "type": "before-after-image",
-         "settings": {
-            "full_width": true,
-            "subheading": "",
-            "title": "Adorn Yourself with Timeless Craftsmanship",
-            "content": "<p>At Adhya Chikankari, we are dedicated to preserving the essence of authentic Chikankari craftsmanship. Each kurti is meticulously hand-embroidered by skilled artisans who have mastered this traditional art form. Every stitch tells a story of heritage, with intricate designs that take time, precision, and dedication to complete. Our focus is on creating ethnic wear that honor this age-old craft while ensuring timeless elegance and comfort. When you choose Adhya Chikankari, you’re not just wearing a kurti—you’re embracing the legacy of original Chikankari, brought to life by the hands of true artisans.</p>",
-            "before_image": "shopify://shop_images/chapai.png",
-            "before_image_mobile": "shopify://shop_images/chapai.png",
-            "after_image": "shopify://shop_images/IMG_7012.jpg",
-            "after_image_mobile": "shopify://shop_images/IMG_7012.jpg",
-            "expand_image": true,
-            "text_position": "start",
-            "before_after_text_position": "top",
-            "before_text": "",
-            "after_text": "",
-            "drag_initial_position": 50,
-            "background": "#f7f7f7",
-            "background_gradient": "",
-            "text_color": "",
-            "before_text_color": "#ffffff",
-            "after_text_color": "#ffffff",
-            "drag_cursor_background": "#ffffff",
-            "drag_cursor_color": "#000000"
-         }
-      },
+
       "newsletter_Kawdrt": {
          "type": "newsletter",
          "disabled": true,
@@ -448,13 +268,11 @@
       "featured-collection",
       "17273466324463fe67",
       "featured_collection_MWKDhW",
-      "multiple_images_with_text_MydGjE",
-      "media_grid_FMthgY",
-      "1727347439f3f8fea8",
       "scrolling_text_6FAqWL",
-      "multiple_images_with_text_VhMhkX",
+      "multiple_images_with_text_MydGjE",
+
       "testimonials_ixf9yp",
-      "before-after-image",
+
       "newsletter_Kawdrt"
    ]
 }
