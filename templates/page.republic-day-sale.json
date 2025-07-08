@@ -1,278 +1,277 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-   "sections": {
-      "scrolling_text_GtdaQe": {
-         "type": "scrolling-text",
-         "disabled": true,
-         "settings": {
-            "full_width": true,
-            "text": "Republic Day sale",
-            "text_size": "medium",
-            "text_style": "fill",
-            "scrolling_mode": "auto",
-            "scrolling_speed": 10,
-            "background": "",
-            "background_gradient": "linear-gradient(133deg, rgba(255, 103, 31, 1) 11%, rgba(255, 255, 255, 1) 49%, rgba(4, 106, 56, 1) 87%)",
-            "text_color": "#06038d",
-            "text_gradient": ""
-         }
-      },
-      "featured-collection": {
-         "type": "featured-collection",
-         "settings": {
-            "collection": "best-offers",
-            "products": [],
-            "full_width": true,
-            "stack_products": false,
-            "show_progress_bar": true,
-            "products_count": 8,
-            "products_per_row_mobile": "2",
-            "products_per_row_desktop": 4,
-            "subheading": "",
-            "title": "Best Offers",
-            "content": "",
-            "link_url": "",
-            "link_text": "",
-            "background": "",
-            "background_gradient": "",
-            "text_color": "",
-            "heading_color": "",
-            "heading_gradient": "",
-            "product_card_background": "",
-            "product_card_text_color": ""
-         }
-      },
-      "17273466324463fe67": {
-         "type": "apps",
-         "blocks": {
-            "reelup_shoppable_videos_reels_reelup_playlist_HriPqc": {
-               "type": "shopify://apps/reelup-shoppable-videos-reels/blocks/reelup-playlist/a8ec9e4d-d192-44f7-9c23-595f9ee7dd5b",
-               "settings": { "playlist_id": "", "debugging_script": "" }
-            }
-         },
-         "block_order": [
-            "reelup_shoppable_videos_reels_reelup_playlist_HriPqc"
-         ],
-         "settings": {
-            "full_width": true,
-            "remove_vertical_spacing": false,
-            "remove_horizontal_spacing": false,
-            "background": "",
-            "background_gradient": "",
-            "text_color": ""
-         }
-      },
-      "featured_collection_MWKDhW": {
-         "type": "featured-collection",
-         "settings": {
-            "collection": "new-arrival-final",
-            "products": [],
-            "full_width": true,
-            "stack_products": false,
-            "show_progress_bar": true,
-            "products_count": 8,
-            "products_per_row_mobile": "2",
-            "products_per_row_desktop": 4,
-            "subheading": "",
-            "title": "New Arrival",
-            "content": "",
-            "link_url": "",
-            "link_text": "View all",
-            "background": "",
-            "background_gradient": "",
-            "text_color": "",
-            "heading_color": "",
-            "heading_gradient": "",
-            "product_card_background": "",
-            "product_card_text_color": ""
-         }
-      },
-      "multiple_images_with_text_MydGjE": {
-         "type": "multiple-images-with-text",
-         "blocks": {
-            "item_AjUNKA": {
-               "type": "item",
-               "settings": {
-                  "image": "shopify://shop_images/IMG_6692.png",
-                  "image_rotation_degrees": 1.5,
-                  "subheading": "(click bellow button)",
-                  "title": "Chapai",
-                  "content": "",
-                  "button_url": "",
-                  "button_text": ""
-               }
-            },
-            "item_3FKy6W": {
-               "type": "item",
-               "settings": {
-                  "image": "shopify://shop_images/IMG_6688.png",
-                  "image_rotation_degrees": 0,
-                  "subheading": "(click bellow button)",
-                  "title": "kadai",
-                  "content": "",
-                  "button_url": "",
-                  "button_text": ""
-               }
-            },
-            "item_twC3WP": {
-               "type": "item",
-               "settings": {
-                  "image": "shopify://shop_images/IMG_6689.png",
-                  "image_rotation_degrees": -2,
-                  "subheading": "(click bellow button)",
-                  "title": "Dhulai",
-                  "content": "",
-                  "button_url": "",
-                  "button_text": ""
-               }
-            }
-         },
-         "block_order": ["item_AjUNKA", "item_3FKy6W", "item_twC3WP"],
-         "settings": {
-            "full_width": true,
-            "images_layout": "stacked",
-            "collage_images_alignment": "shifted",
-            "background": "",
-            "background_gradient": "",
-            "text_color": "",
-            "button_background": "",
-            "button_text_color": ""
-         }
-      },
-
-      "scrolling_text_6FAqWL": {
-         "type": "scrolling-text",
-         "settings": {
-            "full_width": true,
-            "text": "For women who moves the world.",
-            "text_size": "small",
-            "text_style": "fill",
-            "scrolling_mode": "auto",
-            "scrolling_speed": 10,
-            "background": "",
-            "background_gradient": "",
-            "text_color": "#d9967e",
-            "text_gradient": ""
-         }
-      },
-
-      "testimonials_ixf9yp": {
-         "type": "testimonials",
-         "blocks": {
-            "testimonial_UaVxJR": {
-               "type": "testimonial",
-               "settings": {
-                  "image": "shopify://shop_images/IMG_4271.heic",
-                  "round_avatar": true,
-                  "show_rating": true,
-                  "rating": 5,
-                  "author": "M.G",
-                  "title": "",
-                  "content": "<p>Received my combo of Lavender and Black kurta first but I wanted to exchange black one due to size issues and Adhya just accepted my request, in addition they also obliged by sending green color which I liked in exchange of black. It was sweet of them to send a hand written note and a pair of earrings as a gift. How cute is that..Thank you Adhya. I'll definitely make you my go to chikankari place</p>"
-               }
-            },
-            "testimonial_eC3NMT": {
-               "type": "testimonial",
-               "settings": {
-                  "image": "shopify://shop_images/WhatsApp_Image_2024-09-24_at_12.26.21_PM.jpg",
-                  "round_avatar": true,
-                  "show_rating": true,
-                  "rating": 5,
-                  "author": "kirti pandey",
-                  "title": "Most comfiest Kurtis 💛",
-                  "content": "<p>It's my third wash still color didn't fade and fabric didn't shrink. Very comfortable fabric for using regularly. I ordered more 2 colors💛 As a makeup artist I have to travel and go on stages. This Kurti is perfect because it's breadthable and most imp very comfortable😍🤞Thankyou adhya chikankari for this wonderful kurtis</p>"
-               }
-            },
-            "testimonial_EFez83": {
-               "type": "testimonial",
-               "settings": {
-                  "image": "shopify://shop_images/WhatsApp_Image_2024-09-26_at_6.14.00_PM.jpg",
-                  "round_avatar": true,
-                  "show_rating": true,
-                  "rating": 5,
-                  "author": "Siddhi Naik",
-                  "title": "Beautifully Crafted Adhya Chikankari Kurti -A Must-Have!",
-                  "content": "<p>recently bought a Chikankari kurti from Adhya, and I'm absolutely thrilled with it! So happy with my purchase! The kurti is stunning and the fabric feels amazing. I highly recommend this elegant and comfortable kurti from Adhya! Thank you, Adhya!💗</p>"
-               }
-            },
-            "testimonial_WPP38X": {
-               "type": "testimonial",
-               "settings": {
-                  "image": "shopify://shop_images/0a5b9bf7-d34c-41f3-a51f-edccd8b5c98c.jpg",
-                  "round_avatar": true,
-                  "show_rating": true,
-                  "rating": 5,
-                  "author": "Soumita Ghosh",
-                  "title": "love this kurtis",
-                  "content": "<p>i have received my order<br/>yesterday.Lovely colour and design and very soft material. Thank you💗</p>"
-               }
-            },
-            "testimonial_AHtaBL": {
-               "type": "testimonial",
-               "settings": {
-                  "image": "shopify://shop_images/WhatsApp_Image_2024-09-26_at_6.14.46_PM.jpg",
-                  "round_avatar": true,
-                  "show_rating": true,
-                  "rating": 5,
-                  "author": "Arpita",
-                  "title": "",
-                  "content": "<p>By the way, the Kurtis are too good and earrings as well.. fit colour Everything is perfect 😍.it is actully value for money.fabric vey soft and perfect for everyday wear.</p>"
-               }
-            }
-         },
-         "block_order": [
-            "testimonial_UaVxJR",
-            "testimonial_eC3NMT",
-            "testimonial_EFez83",
-            "testimonial_WPP38X",
-            "testimonial_AHtaBL"
-         ],
-         "settings": {
-            "full_width": true,
-            "stack_testimonials": false,
-            "subheading": "",
-            "title": "Customers reviews",
-            "content": "<p>Read what our customers say.</p>",
-            "link_url": "",
-            "link_text": "",
-            "background": "",
-            "background_gradient": "",
-            "text_color": "",
-            "heading_color": "",
-            "heading_gradient": "",
-            "testimonial_card_background": "",
-            "testimonial_card_text_color": ""
-         }
-      },
-
-      "newsletter_Kawdrt": {
-         "type": "newsletter",
-         "disabled": true,
-         "settings": {
-            "full_width": true,
-            "image": "shopify://shop_images/now_8.png",
-            "show_icon": true,
-            "title": "Newsletter",
-            "content": "<p><strong>Sign up now and receive a FREE pair of oxidized earrings with your first purchase!</strong> Plus, be the first to know about exclusive offers and latest arrivals.</p>",
-            "button_text": "Subscribe",
-            "subtext": "",
-            "background": "#f7f7f7",
-            "background_gradient": "",
-            "text_color": "",
-            "button_background": "",
-            "button_text_color": ""
-         }
+  "sections": {
+    "scrolling_text_GtdaQe": {
+      "type": "scrolling-text",
+      "disabled": true,
+      "settings": {
+        "full_width": true,
+        "text": "Republic Day sale",
+        "text_size": "medium",
+        "text_style": "fill",
+        "scrolling_mode": "auto",
+        "scrolling_speed": 10,
+        "background": "",
+        "background_gradient": "linear-gradient(133deg, rgba(255, 103, 31, 1) 11%, rgba(255, 255, 255, 1) 49%, rgba(4, 106, 56, 1) 87%)",
+        "text_color": "#06038d",
+        "text_gradient": ""
       }
-   },
-   "order": [
-      "scrolling_text_GtdaQe",
-      "featured-collection",
-      "17273466324463fe67",
-      "featured_collection_MWKDhW",
-      "scrolling_text_6FAqWL",
-      "multiple_images_with_text_MydGjE",
-
-      "testimonials_ixf9yp",
-
-      "newsletter_Kawdrt"
-   ]
+    },
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "best-offers",
+        "products": [],
+        "full_width": true,
+        "stack_products": false,
+        "show_progress_bar": true,
+        "products_count": 8,
+        "products_per_row_mobile": "2",
+        "products_per_row_desktop": 4,
+        "subheading": "",
+        "title": "Best Offers",
+        "content": "",
+        "link_url": "",
+        "link_text": "",
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "heading_color": "",
+        "heading_gradient": "",
+        "product_card_background": "",
+        "product_card_text_color": ""
+      }
+    },
+    "17273466324463fe67": {
+      "type": "apps",
+      "settings": {
+        "full_width": true,
+        "remove_vertical_spacing": false,
+        "remove_horizontal_spacing": false,
+        "background": "",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "featured_collection_MWKDhW": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "new-arrival-final",
+        "products": [],
+        "full_width": true,
+        "stack_products": false,
+        "show_progress_bar": true,
+        "products_count": 8,
+        "products_per_row_mobile": "2",
+        "products_per_row_desktop": 4,
+        "subheading": "",
+        "title": "New Arrival",
+        "content": "",
+        "link_url": "",
+        "link_text": "View all",
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "heading_color": "",
+        "heading_gradient": "",
+        "product_card_background": "",
+        "product_card_text_color": ""
+      }
+    },
+    "multiple_images_with_text_MydGjE": {
+      "type": "multiple-images-with-text",
+      "blocks": {
+        "item_AjUNKA": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/IMG_6692.png",
+            "image_rotation_degrees": 1.5,
+            "subheading": "(click bellow button)",
+            "title": "Chapai",
+            "content": "",
+            "button_url": "",
+            "button_text": ""
+          }
+        },
+        "item_3FKy6W": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/IMG_6688.png",
+            "image_rotation_degrees": 0,
+            "subheading": "(click bellow button)",
+            "title": "kadai",
+            "content": "",
+            "button_url": "",
+            "button_text": ""
+          }
+        },
+        "item_twC3WP": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/IMG_6689.png",
+            "image_rotation_degrees": -2,
+            "subheading": "(click bellow button)",
+            "title": "Dhulai",
+            "content": "",
+            "button_url": "",
+            "button_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "item_AjUNKA",
+        "item_3FKy6W",
+        "item_twC3WP"
+      ],
+      "settings": {
+        "full_width": true,
+        "images_layout": "stacked",
+        "collage_images_alignment": "shifted",
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "button_background": "",
+        "button_text_color": ""
+      }
+    },
+    "scrolling_text_6FAqWL": {
+      "type": "scrolling-text",
+      "settings": {
+        "full_width": true,
+        "text": "For women who moves the world.",
+        "text_size": "small",
+        "text_style": "fill",
+        "scrolling_mode": "auto",
+        "scrolling_speed": 10,
+        "background": "",
+        "background_gradient": "",
+        "text_color": "#d9967e",
+        "text_gradient": ""
+      }
+    },
+    "testimonials_ixf9yp": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_UaVxJR": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_4271.heic",
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 5,
+            "author": "M.G",
+            "title": "",
+            "content": "<p>Received my combo of Lavender and Black kurta first but I wanted to exchange black one due to size issues and Adhya just accepted my request, in addition they also obliged by sending green color which I liked in exchange of black. It was sweet of them to send a hand written note and a pair of earrings as a gift. How cute is that..Thank you Adhya. I'll definitely make you my go to chikankari place</p>"
+          }
+        },
+        "testimonial_eC3NMT": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/WhatsApp_Image_2024-09-24_at_12.26.21_PM.jpg",
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 5,
+            "author": "kirti pandey",
+            "title": "Most comfiest Kurtis 💛",
+            "content": "<p>It's my third wash still color didn't fade and fabric didn't shrink. Very comfortable fabric for using regularly. I ordered more 2 colors💛 As a makeup artist I have to travel and go on stages. This Kurti is perfect because it's breadthable and most imp very comfortable😍🤞Thankyou adhya chikankari for this wonderful kurtis</p>"
+          }
+        },
+        "testimonial_EFez83": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/WhatsApp_Image_2024-09-26_at_6.14.00_PM.jpg",
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 5,
+            "author": "Siddhi Naik",
+            "title": "Beautifully Crafted Adhya Chikankari Kurti -A Must-Have!",
+            "content": "<p>recently bought a Chikankari kurti from Adhya, and I'm absolutely thrilled with it! So happy with my purchase! The kurti is stunning and the fabric feels amazing. I highly recommend this elegant and comfortable kurti from Adhya! Thank you, Adhya!💗</p>"
+          }
+        },
+        "testimonial_WPP38X": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/0a5b9bf7-d34c-41f3-a51f-edccd8b5c98c.jpg",
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 5,
+            "author": "Soumita Ghosh",
+            "title": "love this kurtis",
+            "content": "<p>i have received my order<br/>yesterday.Lovely colour and design and very soft material. Thank you💗</p>"
+          }
+        },
+        "testimonial_AHtaBL": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/WhatsApp_Image_2024-09-26_at_6.14.46_PM.jpg",
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 5,
+            "author": "Arpita",
+            "title": "",
+            "content": "<p>By the way, the Kurtis are too good and earrings as well.. fit colour Everything is perfect 😍.it is actully value for money.fabric vey soft and perfect for everyday wear.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_UaVxJR",
+        "testimonial_eC3NMT",
+        "testimonial_EFez83",
+        "testimonial_WPP38X",
+        "testimonial_AHtaBL"
+      ],
+      "settings": {
+        "full_width": true,
+        "stack_testimonials": false,
+        "subheading": "",
+        "title": "Customers reviews",
+        "content": "<p>Read what our customers say.</p>",
+        "link_url": "",
+        "link_text": "",
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "heading_color": "",
+        "heading_gradient": "",
+        "testimonial_card_background": "",
+        "testimonial_card_text_color": ""
+      }
+    },
+    "newsletter_Kawdrt": {
+      "type": "newsletter",
+      "disabled": true,
+      "settings": {
+        "full_width": true,
+        "image": "shopify://shop_images/now_8.png",
+        "show_icon": true,
+        "title": "Newsletter",
+        "content": "<p><strong>Sign up now and receive a FREE pair of oxidized earrings with your first purchase!</strong> Plus, be the first to know about exclusive offers and latest arrivals.</p>",
+        "button_text": "Subscribe",
+        "subtext": "",
+        "background": "#f7f7f7",
+        "background_gradient": "",
+        "text_color": "",
+        "button_background": "",
+        "button_text_color": ""
+      }
+    }
+  },
+  "order": [
+    "scrolling_text_GtdaQe",
+    "featured-collection",
+    "17273466324463fe67",
+    "featured_collection_MWKDhW",
+    "scrolling_text_6FAqWL",
+    "multiple_images_with_text_MydGjE",
+    "testimonials_ixf9yp",
+    "newsletter_Kawdrt"
+  ]
 }
