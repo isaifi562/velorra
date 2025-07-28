@@ -85,7 +85,7 @@
     "badges_border_radius": 5,
     "card_product_round_corners": true,
     "card_product_swap_image_on_hover": true,
-    "card_product_media_size": "1-1",
+    "card_product_media_size": "5-4",
     "card_product_media_crop": true,
     "card_product_image_alignment": "center",
     "enable_quickview_mobile": false,
