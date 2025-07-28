@@ -1,0 +1,132 @@
+{{- 'section-blog.css' | asset_url | stylesheet_tag -}}
+{{- 'component-card-article.css' | asset_url | stylesheet_tag -}}
+{{- 'component-article-meta.css' | asset_url | stylesheet_tag -}}
+
+<section class="blog color-background color-{{- section.settings.style -}}">
+  <header class="blog__head bd-b">
+    {%- if blog.all_tags.size > 0 -%}
+      <nav class="blog__nav flex caption">
+        <ul class="blog__links list-unstyled">
+          <li class="blog__link">
+            {%-
+              liquid
+              assign link_all_text = 'blog.categories.all.text' | t
+              assign link_all_title = 'blog.categories.all.title' | t
+              assign replace_string = 'class="mt-s mt-l--large link link--s link--no-icon'
+              unless request.path contains 'tagged'
+                assign replace_string = replace_string | append: ' is-active" href'
+              else
+                assign replace_string = replace_string | append: '" href'
+              endunless
+              echo link_all_text | link_to: blog.url, title: link_all_title | replace: 'href', replace_string
+              assign replace_string = ''
+            -%}
+          </li><!-- /.blog__link -->
+
+          {%- for tag in blog.all_tags -%}
+            {%- if tag contains 'time:' -%}
+              {%- continue -%}
+            {%- endif -%}
+
+            <li class="blog__link">
+              {%
+                liquid
+                assign replace_string = 'class="mt-s mt-l--large link link--s link--no-icon'
+                assign tag_handle = tag | handle
+                if request.path contains tag_handle
+                  assign replace_string = replace_string | append: ' is-active" href'
+                else
+                  assign replace_string = replace_string | append: '" href'
+                endif
+                echo tag | link_to_tag: tag | replace: 'href', replace_string
+                assign replace_string = ''
+              %}
+            </li><!-- /.blog__link -->
+          {%- endfor -%}
+        </ul><!-- /.blog__links list-unstyled -->
+      </nav><!-- /.blog__nav caption -->
+    {%- endif -%}
+  </header><!-- /.blog__head -->
+
+  {%- paginate blog.articles by 9 -%}
+    <div class="blog__body">
+      <div class="container">
+        {%- if blog.articles_count > 0 -%}
+          <div class="blog__grid grid grid--row-gap-s pt-l pb-l">
+            {%- for article_ref in blog.articles -%}
+              <div class="grid__item grid__item--lg-4">
+                {%- render 'card-article',
+                  article_ref: article_ref,
+                  show_author: section.settings.show_author,
+                  show_date: section.settings.show_date,
+                  show_excerpt: section.settings.show_excerpt,
+                  show_tags: section.settings.show_tags
+                -%}
+              </div><!-- /.grid__item grid__item--lg-4 -->
+            {%- endfor -%}
+          </div><!-- /.blog__grid grid -->
+        {%- else -%}
+          <h2 class="h5 regular center">{{- 'blog.empty' | t -}}</h2><!-- /.h5 regular center -->
+        {%- endif -%}
+      </div><!-- /.container container--narrow -->
+    </div><!-- /.blog__body -->
+
+    <div class="blog__pagination">
+      {%- if paginate.pages > 1 -%}
+        {%- render 'pagination', paginate: paginate, anchor: '' -%}
+      {%- endif -%}
+    </div><!-- /.blog__pagination -->
+  {%- endpaginate -%}
+</section><!-- /.blog -->
+
+{% schema %}
+{
+  "name": "t:sections.main-blog.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "t:sections.main-blog.settings.show_author.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "t:sections.main-blog.settings.show_date.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "t:sections.main-blog.settings.show_excerpt.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "t:sections.main-blog.settings.show_tags.label",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

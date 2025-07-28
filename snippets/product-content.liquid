@@ -1,0 +1,835 @@
+{%-
+  liquid
+  assign context = context | default: block.type
+  assign product_form_id = 'product-form-' | append: section.id
+  assign current_variant = product_ref.selected_or_first_available_variant
+  assign product_form_installment_id = 'product_form_installment-' | append: section.id
+
+  if context == 'title' or context == 'price'
+    assign product_form_installment_id = product_form_installment_id | append: '-' | append: context
+  endif
+
+  assign quickview = quickview | default: false
+  assign selling_plan_required_hide_actions = selling_plan_required_hide_actions | default: false
+-%}
+
+{%- if context == 'price' or context == 'title' -%}
+  {%- capture price_html -%}
+    <div class="product__price-container">
+      <div class="product__price-wrapper">
+        <div class="product__price p1" id="Product-Price-{{- section.id -}}-{{- context -}}" role="status">
+          {%- render 'price', product_ref: product_ref, use_variant: true -%}
+        </div><!-- /.product__price -->
+
+        {%- if cart.taxes_included or shop.shipping_policy.body != blank -%}
+          <div class="product__taxes">
+            <p class="p4 pt-0 pb-0 mb-0 mt-0">
+              {%-
+                liquid
+                if shop.shipping_policy_body != blank
+                  echo 'cart.shipping_at_checkout_html' | t: link: shop.shipping_policy.url
+                  echo ' '
+                endif
+
+                if cart.taxes_included
+                  echo 'cart.shipppig_at_checkout_taxes_included_html' | t
+                endif
+              -%}
+            </p>
+          </div><!-- /.p4 -->
+        {%- endif -%}
+      </div><!-- /.product__price-wrapper -->
+
+      {%- if product_ref != blank -%}
+        <div class="p4 product__price-installments">
+          {%- form 'product', product_ref, id: product_form_installment_id, class: 'installment' -%}
+            <input type="hidden" name="id" value="{{ current_variant.id }}">
+            {{- form | payment_terms -}}
+          {%- endform -%}
+        </div>
+      {%- endif -%}
+    </div><!-- /.product__price-container -->
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- case context -%}
+  {%- when 'badges' -%}
+    {%-
+      liquid
+      capture product_badges
+      render 'product-badges', product_ref: product_ref, class: 'product__badge', wrapper_class: 'product__badges'
+      endcapture
+      assign product_badges = product_badges | strip
+    -%}
+
+    <div id="Product-Badges-{{- section.id -}}">
+      {{- product_badges -}}
+    </div>
+
+    {%- when 'title' -%}
+      <div class="product__title-wrapper">
+        <h1 class="{{ block.settings.heading_size }} product__title color-headings mt-0 mb-0">
+          {%- if product_ref == blank -%}
+            {{- 'products.product.example_title' | t -}}
+          {%- else -%}
+            {{- product_ref.title | escape -}}
+          {%- endif -%}
+        </h1><!-- /.product__title -->
+
+        {%- if block.settings.price_with_title -%}
+          {{- price_html -}}
+        {%- endif -%}
+      </div>
+    {%- when 'type' -%}
+      {%- if product_ref.type == blank -%}
+        {%- continue -%}
+      {%- endif -%}
+
+      <p class="product__type p3 mt-0 mb-0">
+        <strong>
+          {{- product_ref.type | link_to_type -}}
+        </strong>
+      </p><!-- /.product__type -->
+    {%- when 'price' -%}
+      {{- price_html -}}
+    {%- when 'text' -%}
+      <p class="product__text p3">
+        {%- if block.settings.title == product_ref.vendor -%}
+          {{- product_ref.vendor | link_to_vendor -}}
+        {%- else -%}
+          {{- block.settings.title | escape -}}
+        {%- endif -%}
+      </p><!-- /.product__text -->
+    {%- when 'variant-selector' -%}
+      {%- if product_ref == blank -%}
+        {%- continue -%}
+      {%- endif -%}
+
+
+      <div class="product__selector{% if product_ref.has_only_default_variant %} hidden{% endif %}" id="ProductSelector-{{- section.id -}}">
+        <product-selector
+          class="product-selector {% if product_ref.variants.size == 1 %}product-selector--single{% endif %}"
+          data-url="{{- product_ref.url | within: collection -}}"
+          data-section-id="{{- section.id -}}"
+          data-product-id="{{- product_ref.id -}}"
+          data-form-id="#{{- product_form_id -}}"
+          data-installments-form-id-title="#{{- product_form_installment_id -}}-price"
+          data-installments-form-id-price="#{{- product_form_installment_id -}}-title"
+          {% if block.settings.enable_variant_scroll %}
+            data-scroll-to-variant
+          {% endif %}
+        >
+          {%- for option in product_ref.options_with_values -%}
+            <fieldset class="product-selector__wrapper">
+              <div class="product-selector__label p3 mt-0 mb-xs">
+                <div class="product-selector__label-inner">
+                  <legend class="product__selector__label-content p3">
+                    {{- option.name -}}: <strong data-option-selected-value>{{- option.selected_value | escape -}}</strong>
+                  </legend><!-- /.product__selector__label-content -->
+
+                  {%- if option.name == settings.swatches_size_option and block.settings.size_guide_page != blank -%}
+                    {%- assign size_guide_modal_id = 'SizeGuideModal-' | append: block.settings.size_guide_page.id -%}
+                    {%- assign size_guide_modal_class = 'color-' | append: section.settings.style -%}
+                    <modal-opener class="product-selector__size-link p4" data-modal="#{{- size_guide_modal_id -}}">
+                      <button  type="button" aria-haspopup="dialog">
+                        <span>{{- 'products.product.size_guide.opener' | t -}}</span>
+
+                        {%- render 'icon-measure' -%}
+                      </button>
+                    </modal-opener><!-- /product-selector__size-link -->
+
+                    {%- render 'modal-dialog',
+                      title: block.settings.size_guide_page.title,
+                      content: block.settings.size_guide_page.content,
+                      id: size_guide_modal_id,
+                      modifiers: 'size-guide,large',
+                      class: size_guide_modal_class
+                    -%}
+                  {%- endif -%}
+                </div><!-- /.product-selector__label-inner -->
+              </div>
+
+              {%-
+                liquid
+                assign is_size_button = false
+                assign is_other_option_button = false
+                assign show_default_swatches = false
+                assign first_value = option.values | first
+
+                if option.name == settings.swatches_size_option and block.settings.size_options_picker_type == 'button'
+                  assign is_size_button = true
+                endif
+
+                unless settings.swatches_option contains option.name
+                  if option.name != settings.swatches_size_option and block.settings.other_options_picker_type == 'button'
+                    assign is_other_option_button = true
+                  endif
+                endunless
+
+                if first_value.swatch.image != blank or first_value.swatch.color != blank
+                  assign show_default_swatches = true
+                endif
+              -%}
+
+              {%- if settings.swatches_option contains option.name or is_size_button or is_other_option_button or show_default_swatches -%}
+                <div class="product-selector__buttons-list">
+                  {%-
+                    liquid
+                    for value in option.values
+                      assign swatch_checked = false
+                      assign swatch_class = ''
+                      assign swatch_type = ''
+                      assign swatch_option_name = 'data-name="' | append: option.name | append: '"'
+
+                      unless settings.swatches_options contains option.name
+                        if is_size_button or is_other_option_button
+                          assign swatch_class = 'product-selector__button'
+                          assign swatch_type = option.name
+                        endif
+                      endunless
+
+                      if option.selected_value == value
+                        assign swatch_checked = true
+                      endif
+
+                      render 'swatch', swatch_id: product_ref.id, swatch_value: value, context: section.id, checked: swatch_checked, class: swatch_class, swatch_type: swatch_type, input_attr: swatch_option_name, option_name: option.name, placement_context: 'product', option_idx: option.position, variants_for_image: product_ref.variants, swatch: value.swatch
+                    endfor
+                  -%}
+                </div><!-- /.product-selector__buttons-list -->
+              {%- else -%}
+                {%-
+                  liquid
+                  assign label = option.name | escape
+                  assign id = 'Option-' | append: section.id | append: '-' | append: forloop.index0
+                  assign name = 'Product-Option-' | append: product_ref.id | append: '--Context-' | append: section.id
+                  assign attr = 'data-name="' | append: label | append: '"'
+                -%}
+
+                {%- capture options -%}
+                  {%- for value in option.values -%}
+                    <option
+                      value="{{- value | escape -}}"
+                      {% if option.selected_value == value %}selected="selected"{% endif %}
+                    >
+                      {{- value -}}
+                    </option>
+                  {%- endfor -%}
+                {%- endcapture -%}
+
+                {%- render 'select-input', id: id, name: name, options: options, class: 'product-selector__dropdown', attr: attr -%}
+
+                {%-
+                  liquid
+                  assign label = nil
+                  assign id = nil
+                  assign name = nil
+                  assign options = nil
+                -%}
+              {%- endif -%}
+            </fieldset><!-- /.product-selector__buttons -->
+          {%- endfor -%}
+
+          <p class="caption color-red hidden" data-error-wrapper></p><!-- /.caption color-red -->
+
+          <script type="application/json">
+            {{- product_ref.variants | json -}}
+          </script>
+        </product-selector><!-- /.product-selector -->
+      </div><!-- /.product__selector -->
+
+    {%- when 'custom-property-field' -%}
+      {% if settings.boxed_items_round_corners %}
+        <style>
+          .product__custom-field {
+            --border-radius-form-inputs: calc(var(--spacing-step) * 3);
+          }
+        </style>
+      {% endif %}
+      <div
+        class="product__custom-field"
+        custom-field="#{{ product_form_id }}"
+        {{ block.shopify_attributes }}
+      >
+        {%- liquid
+          assign field_name = 'properties[' | append: block.settings.title | append: ']'
+          assign label = block.settings.title
+          unless block.settings.type == 'checkbox'
+            assign label = label | append: ':'
+          endunless
+          assign placeholder = block.settings.placeholder
+          assign field_attr = 'form="' | append: product_form_id | append: '"'
+          assign field_id = label | append: block.id
+        -%}
+
+        {%- case block.settings.type -%}
+          {%- when 'text' -%}
+            {%- render 'text-input', id: field_id, label: label, placeholder: placeholder, type: 'text', name: field_name, attr: field_attr, value: '', required: block.settings.required -%}
+
+          {%- when 'long_text' -%}
+            {%- render 'textarea-input', id: field_id, label: label, placeholder: placeholder, attr: field_attr, required: block.settings.required, name: field_name, rows: 7 -%}
+
+          {%- when 'checkbox' -%}
+            <custom-property-checkbox class="product__custom-field-checkbox js-field-wrapper">
+              {%- render 'checkbox-input', name: " ", id: field_id, label: label, required: block.settings.required, value: block.settings.unchecked_text -%}
+
+              <input
+                type="hidden"
+                name="{{ field_name }}"
+                form="{{ product_form_id }}"
+                value="{{ block.settings.unchecked_text }}"
+                data-checked="{{ block.settings.checked_text }}"
+                data-unchecked="{{ block.settings.unchecked_text }}"
+              >
+            </custom-property-checkbox>
+
+          {%- when 'radios' -%}
+            {%- if block.settings.option_values != blank -%}
+              {%- assign radio_values_arr = block.settings.option_values | newline_to_br | split: '<br />' -%}
+              <fieldset class="product-selector__wrapper">
+                <legend class="p3 mb-xs">
+                  {{- label -}}
+                </legend>
+
+                {%- for value in radio_values_arr -%}
+                  {%- assign field_id = field_id | append: forloop.index -%}
+                  {%- render 'radio-input', name: field_name, label: value, value: value, checked: forloop.first, attr: field_attr, id: field_id -%}
+                {%- endfor -%}
+              </fieldset>
+            {%- endif -%}
+
+          {%- when 'dropdown' -%}
+            {%- if block.settings.option_values != blank -%}
+              {%- assign select_values_arr = block.settings.option_values | newline_to_br | split: '<br />' -%}
+
+              {%- capture options_html -%}
+                {%- for option in select_values_arr -%}
+                  <option value="{{ option | handleize }}">{{ option }}</option>
+                {%- endfor -%}
+              {%- endcapture -%}
+
+              {%- render 'select-input',
+                id: field_id,
+                label: label,
+                name: field_name,
+                options: options_html,
+                attr: field_attr,
+                required: block.settings.required
+              -%}
+            {%- endif -%}
+        {%- endcase -%}
+
+        {%-
+          liquid
+          assign label = nil
+          assign placeholder = nil
+          assign field_attr = nil
+          assign field_name = nil
+          assign field_id = nil
+        -%}
+      </div>
+    {%- when 'custom_liquid' -%}
+      {%- if product.gift_card? -%}
+        {%- continue -%}
+      {%- endif -%}
+
+      {{- block.settings.custom_liquid -}}
+    {%- when 'quantity-input' -%}
+      {%- if selling_plan_required_hide_actions and current_variant.requires_selling_plan -%}
+      {%- else -%}
+        <div class="product__quantity">
+          {%- render 'quantity-input', product_ref: product_ref, form: product_form_id, show_label: true -%}
+        </div><!-- /.product__quantity -->
+      {%- endif -%}
+    {%- when 'stock-notification' -%}
+      <div
+        class="product__stock-notification"
+        id="Product-Stock-Notification-{{ section.id }}"
+        {%- if block.settings.color != blank and block.settings.color != 'rgba(0,0,0,0)' -%}
+          style="--color-progress-bar: {{ block.settings.color }};"
+        {%- endif -%}
+      >
+        {%- if
+          current_variant.inventory_management != nil
+          and current_variant.inventory_policy != 'continue'
+          and current_variant.inventory_quantity <= block.settings.threshold
+        -%}
+          {%- unless current_variant.inventory_quantity <= 0 -%}
+            <p class="product__stock-notification-text p3 mt-0 mb-xs">
+              {{- 'products.product.stock_notification' | t: inventory: current_variant.inventory_quantity -}}
+            </p><!-- /.product__stock-notification-text -->
+
+            <div class="progress-bar">
+              <div class="progress-bar__progress">
+                <span class="progress-bar__progress-inner" style="width: {{ current_variant.inventory_quantity | times: 100.0 | divided_by: block.settings.threshold }}%;"></span><!-- /.progress-bar__progress-inner -->
+              </div><!-- /.progress-bar__progress -->
+            </div><!-- /.progress-bar -->
+          {%- endunless -%}
+        {%- endif -%}
+      </div><!-- /.product__stock-notification -->
+    {%- when 'pickup-availability' -%}
+      {%- assign product_pick_up_availabilities = product_ref.variants | map: 'store_availabilities' | where: 'pick_up_enabled', true -%}
+      {%- unless product_pick_up_availabilities -%}
+        {%- continue -%}
+      {%- endunless -%}
+
+      {{- 'component-pickup-availability.css' | asset_url | stylesheet_tag -}}
+      {%- assign pick_up_availabilities = current_variant.store_availabilities | where: 'pick_up_enabled', true -%}
+      <div class="product__pickup" id="Product-Pickup-availability-{{ section.id }}">
+        {%- if current_variant.available and pick_up_availabilities.size > 0 -%}
+          <pickup-availability
+            class="no-js-hidden"
+            data-modal="#Product-Pickup-availability-Modal-{{- current_variant.id -}}"
+            data-url="{{- routes.root_url -}}products/{{- product_ref.handle -}}?variant={{- current_variant.id -}}&section_id=pickup-availability&color-style={{- section.settings.style -}}"
+          >
+            <button type="button" aria-haspopup="dialog">
+              {%- render 'icon-pin' -%}
+
+              <span>{{- 'products.product.pickup_availability.button_html' | t -}}</span>
+            </button>
+          </pickup-availability>
+        {%- endif -%}
+      </div><!-- /.product__pickup -->
+
+      <script src="{{ 'pickup-availability.js' | asset_url }}" defer="defer" data-theme-script></script>
+    {%- when 'purchase-options' -%}
+      <div id="Product-Purchase-Options-{{- section.id -}}">
+        {%- if product_ref.selling_plan_groups.size != 0 and current_variant.selling_plan_allocations.size != 0 and current_variant.available -%}
+          {%- assign current_variant_selling_plan_allocations_group_ids = current_variant.selling_plan_allocations | map: 'selling_plan_group_id' | uniq -%}
+
+          <purchase-options class="product__plans mb-m" id="Product-Purchase-Options-{{- section.id -}}">
+            {%- if block.settings.title != blank -%}
+              <h2 class="product__plans-title h5 mt-0 mb-s">
+                {{- block.settings.title | escape -}}
+              </h2><!-- /.product__plans-title -->
+            {%- endif -%}
+
+            <fieldset class="product__plans-body">
+              <div class="product__plan-group{% if current_variant.requires_selling_plan %} hidden{% endif %}">
+                <div class="product__plan-group-inner">
+                  {%-
+                    liquid
+                    assign label = 'products.product.selling_plans.groups.one_time' | t
+                    assign checked = false
+                    if current_variant.requires_selling_plan == false and current_variant.selected_selling_plan_allocation == nil
+                      assign checked = true
+                    endif
+                    render 'radio-input', name: 'selling_plan_group', id: 'Product-Selling-Plan-Group--One-Time', label: label, value: 'one-time', checked: checked, class: 'product__plan-single'
+                    assign label = nil
+                    assign checked = nil
+                  -%}
+
+                  <div class="product__plan-price-single right">
+                    {%- if current_variant.compare_at_price > current_variant.price -%}
+                      <del class="p4">
+                        {%- if settings.show_currency_codes -%}
+                          {{- current_variant.compare_at_price | money_with_currency -}}
+                        {%- else -%}
+                          {{- current_variant.compare_at_price | money -}}
+                        {%- endif -%}
+                      </del>
+
+                      <br>
+
+                      <ins class="p3 bold">
+                        {%- if settings.show_currency_codes -%}
+                          {{- current_variant.price | money_with_currency -}}
+                        {%- else -%}
+                          {{- current_variant.price | money -}}
+                        {%- endif -%}
+                      </ins>
+                    {%- else -%}
+                      <span class="p3 bold">
+                        {%- if settings.show_currency_codes -%}
+                          {{- current_variant.price | money_with_currency -}}
+                        {%- else -%}
+                          {{- current_variant.price | money -}}
+                        {%- endif -%}
+                      </span>
+                    {%- endif -%}
+                  </div><!-- /.product__plan-price-single -->
+                </div><!-- /.product__plan-group-inner -->
+              </div><!-- /.product__plan-group -->
+
+              {%-
+                liquid
+                assign selling_plan_group_selected = false
+                assign selling_plan_selected = false
+              -%}
+              {%- for selling_plan_group in product_ref.selling_plan_groups -%}
+                {%- unless current_variant_selling_plan_allocations_group_ids contains selling_plan_group.id -%}
+                  {%- continue -%}
+                {%- endunless -%}
+
+                <div class="product__plan-group" data-selling-plan-group>
+                  {%-
+                    liquid
+                    assign label = selling_plan_group.name | escape
+                    assign id = 'Product-Selling-Plan-Group--' | append: selling_plan_group.id
+                    assign checked = false
+                    if current_variant.selected_selling_plan_allocation.selling_plan_group_id == selling_plan_group.id
+                      assign checked = true
+                      assign selling_plan_group_selected = true
+                    elsif current_variant.requires_selling_plan and current_variant.selected_selling_plan_allocation == nil and selling_plan_group_selected == false
+                      assign checked = true
+                      assign selling_plan_group_selected = true
+                    endif
+                    render 'radio-input', name: 'selling_plan_group', id: id, label: label, value: selling_plan_group.id, checked: checked, class: 'product__plans-group-selector mb-xs'
+                    assign label = nil
+                    assign id = nil
+                    assign checked = nil
+                  -%}
+
+                  {%- for selling_plan_group_option in selling_plan_group.options -%}
+                    <fieldset class="product__plans-group-options">
+                      <legend class="p3 uppercase mb-xs">{{- selling_plan_group_option.name -}}</legend>
+
+                      {%- for selling_plan in selling_plan_group.selling_plans -%}
+                        {%- assign current_variant_selling_plan_allocation = current_variant.selling_plan_allocations | where: 'selling_plan', selling_plan | first -%}
+
+                        <div class="product__plan">
+                          <div class="product__plan-info">
+                            {%-
+                              liquid
+                              assign label = selling_plan.name | escape
+                              assign id = 'Product-Selling-Plan--' | append: selling_plan.id
+                              assign checked = false
+                              if current_variant.selected_selling_plan_allocation.selling_plan.id == selling_plan.id
+                                assign checked = true
+                              elsif selling_plan.group_id == selling_plan_group.id and forloop.first and selling_plan_selected == false and current_variant.requires_selling_plan
+                                assign checked = true
+                                assign selling_plan_selected = true
+                              endif
+                              assign attr = 'form="' | append: product_form_id | append: '"'
+                              render 'radio-input', name: 'selling_plan', id: id, label: label, value: selling_plan.id checked: checked, attr: attr
+                              assign label = nil
+                              assign id = nil
+                              assign checked = nil
+                              assign attr = nil
+                            -%}
+
+                            {%- if selling_plan.description -%}
+                              <p class="product__plan-description p4 italic mt-0 mb-0">{{- selling_plan.description | escape -}}</p><!-- /.product__plan-description -->
+                            {%- endif -%}
+                          </div><!-- /.product__plan-info -->
+
+                          <div class="product__plan-price right">
+                            {%- if current_variant.price > current_variant_selling_plan_allocation.per_delivery_price -%}
+                              <del class="p4">
+                                {%- if settings.show_currency_codes -%}
+                                  {{- current_variant.price | money_with_currency -}}
+                                {%- else -%}
+                                  {{- current_variant.price | money -}}
+                                {%- endif -%}
+                              </del>
+
+                              <br>
+
+                              <ins class="p3 bold">
+                                {%- if settings.show_currency_codes -%}
+                                  {{- current_variant_selling_plan_allocation.per_delivery_price | money_with_currency -}}
+                                {%- else -%}
+                                  {{- current_variant_selling_plan_allocation.per_delivery_price | money -}}
+                                {%- endif -%}
+                              </ins>
+                            {%- else -%}
+                              <span class="p3 bold">
+                                {%- if settings.show_currency_codes -%}
+                                  {{- current_variant_selling_plan_allocation.price | money_with_currency -}}
+                                {%- else -%}
+                                  {{- current_variant_selling_plan_allocation.price | money -}}
+                                {%- endif -%}
+                              </span>
+                            {%- endif -%}
+                          </div><!-- /.product__plan-price -->
+                        </div><!-- /.product__plan -->
+                      {%- endfor -%}
+                    </fieldset><!-- /.product__plans-group-options -->
+                  {%- endfor -%}
+                </div><!-- /.product__plan-group -->
+              {%- endfor -%}
+            </fieldset><!-- /.product__plans-body -->
+          </purchase-options><!-- /.product__plans -->
+        {%- endif -%}
+      </div>
+
+      <script src="{{ 'purchase-options.js' | asset_url }}" defer="defer" data-theme-script></script>
+    {%- when 'buy-buttons' -%}
+      {%- if block.settings.accent_color != blank and block.settings.accent_color != 'rgba(0,0,0,0)' -%}
+        <style>
+          .product .product__actions {
+            --color-background-buttons-solid: {{ block.settings.accent_color }};
+            --color-buttons-outline: {{ block.settings.accent_color }};
+            --color-border-buttons-outline: {{ block.settings.accent_color }};
+          }
+        </style>
+      {%- endif -%}
+
+      {%- if product_ref == blank -%}
+        <div class="product__actions product__actions--empty">
+          {%-
+            liquid
+            assign value = 'products.product.sold_out' | t
+            render 'button', type: 'button', value: value, class: 'product__submit', disabled: true
+          -%}
+
+          <div class="product__actions-link mt-m">
+            {%-
+              liquid
+              assign link_value = 'products.product.view_product' | t
+              render 'button', type: 'button', css: 'link', value: link_value, styles: 'no-icon', disabled: true
+            -%}
+          </div><!-- /.product__actions-link -->
+        </div><!-- /.product__actions product__actions--empty -->
+        {%- continue -%}
+      {%- endif -%}
+
+      <div class="product__actions product-form" data-product-actions>
+        {%- if selling_plan_required_hide_actions and current_variant.requires_selling_plan -%}
+          {%- if quickview -%}
+            <div class="product__actions-link mt-m">
+              {%-
+                liquid
+                assign link_value = 'products.product.view_product' | t
+                if product_ref.requires_selling_plan
+                  assign link_value = 'products.product.view_product_subscriptions' | t
+                elsif product_ref.selling_plan_groups.size != 0
+                  assign link_value = 'products.product.view_product_and_subscriptions' | t
+                endif
+                render 'button', type: 'link', href: current_variant.url, css: 'link', value: link_value, styles: 'no-icon', attr: 'data-go-to-product'
+              -%}
+            </div><!-- /.product__actions-link -->
+          {%- endif -%}
+        {%- else -%}
+
+        {%-
+          liquid
+          assign gift_card_recipient_feature_active = false
+          if block.settings.show_gift_card_recipient and product_ref.gift_card?
+            assign gift_card_recipient_feature_active = true
+          endif
+
+          assign show_dynamic_checkout = false
+          if block.settings.show_dynamic_checkout and gift_card_recipient_feature_active == false
+            assign show_dynamic_checkout = true
+          endif
+        %}
+
+        {%- form 'product', product_ref, id: product_form_id, class: 'product__form', novalidate: 'novalidate' -%}
+            <input type="hidden" name="id" value="{{- current_variant.id -}}">
+
+            {%- if gift_card_recipient_feature_active -%}
+              {%- render 'gift-card-recipient-form', product: product_ref, form: form, section: section -%}
+            {%- endif -%}
+
+            {%-
+              liquid
+              assign value = 'products.product.sold_out' | t
+              assign disabled = true
+              assign attr = 'form="' | append: product_form_id | append: '"'
+              assign button_styles = ''
+              if current_variant.available
+                assign value = 'products.product.add_to_cart' | t
+                assign disabled = false
+              endif
+              unless show_dynamic_checkout
+                render 'button', type: 'submit', name: 'add', value: value, class: 'product__submit', disabled: disabled, attr: attr
+              else
+                assign button_styles = 'outline'
+              endunless
+            -%}
+
+            {%- if show_dynamic_checkout -%}
+              {%- render 'button', type: 'submit', name: 'add', value: value, class: 'product__submit', disabled: disabled, attr: attr, styles: button_styles -%}
+
+              {{- form | payment_button -}}
+            {%- endif -%}
+          {%- endform -%}
+
+          {%- if quickview == false and block.settings.show_contact_button and product_ref != blank -%}
+            <modal-opener class="no-js-hidden" data-modal="#Modal-Product-Contact-{{- product_ref.id -}}-{{- section.id -}}">
+              {%- assign value = 'products.product.contact' | t -%}
+              {%- render 'button', type: 'button', value: value, attr: 'aria-haspopup="dialog"', fullwidth: true, styles: 'outline', class: 'product__contact' -%}
+            </modal-opener>
+            {%-
+              liquid
+              assign form_posted_successfully = false
+              capture contact_form_posted
+                form 'contact'
+                  if form.posted_successfully?
+                    assign form_posted_successfully = true
+                  endif
+                endform
+              endcapture
+            -%}
+            {%- if form_posted_successfully -%}
+              <p class="p3 color-paragraphs center mb-0" tabindex="-1">{{- 'products.product.contact_success' | t -}}</p>
+            {%- endif -%}
+          {%- endif -%}
+
+          {%- if quickview -%}
+            <div class="product__actions-link mt-xs">
+              {%-
+                liquid
+                assign link_value = 'products.product.view_product' | t
+                if product_ref.requires_selling_plan
+                  assign link_value = 'products.product.view_product_subscriptions' | t
+                elsif product_ref.selling_plan_groups.size != 0
+                  assign link_value = 'products.product.view_product_and_subscriptions' | t
+                endif
+                render 'button', type: 'link', href: current_variant.url, css: 'link', value: link_value, styles: 'no-icon', attr: 'data-go-to-product'
+              -%}
+            </div><!-- /.product__actions-link -->
+          {%- endif -%}
+        {%- endif -%}
+      </div><!-- /.product__actions -->
+    {%- when 'link' -%}
+      <div class="product__actions-link">
+        {%-
+          liquid
+          assign link_value = 'products.product.view_product' | t
+          if product_ref.requires_selling_plan
+            assign link_value = 'products.product.view_product_subscriptions' | t
+          elsif product_ref.selling_plan_groups.size != 0
+            assign link_value = 'products.product.view_product_and_subscriptions' | t
+          endif
+          render 'button', type: 'link', href: current_variant.url, css: 'link', value: link_value, styles: 'no-icon', attr: 'data-go-to-product'
+        -%}
+      </div><!-- /.product__actions-link -->
+    {%- when 'product-content' -%}
+      {%-
+        liquid
+        assign product_description = product_ref.description | strip_html | strip
+        if product_description == blank
+          continue
+        endif
+      -%}
+
+      {%- if block.settings.collapsible -%}
+        {%- assign title = 'products.product.description' | t -%}
+        {%- render 'accordion-item',
+          title: title,
+          content: product_ref.description,
+          title_class: 'h6 semi-bold',
+          classes: 'mt-0 pb-gap accordion-item--product',
+          expanded_by_default: block.settings.show_expanded
+        -%}
+        {%- break -%}
+      {%- endif -%}
+
+      <div class="product__rte rte">
+        {{- product_ref.description -}}
+      </div><!-- /.product__rte -->
+    {%- when 'collapsible-tabs' -%}
+      {{- 'component-tabs.css' | asset_url | stylesheet_tag -}}
+      <collapsible-tabs class="tabs">
+        <header class="tabs__head">
+          <nav class="tabs__nav">
+            <ul class="list-unstyled">
+              {%- assign is_active_index = false -%}
+              {%- for i in (1..3) -%}
+                {%-
+                  liquid
+                  assign tab_title_key = 'tab_title_' | append: i
+                  if block.settings[tab_title_key] == blank
+                    continue
+                  endif
+                  if is_active_index == false
+                    assign is_active_index = forloop.index
+                  endif
+                -%}
+
+                <li>
+                  <a
+                    href="#Collapsible-Tab-{{- block.settings[tab_title_key] | handle -}}-{{- i -}}"
+                    class="link link--regular link--no-icon motion-reduce{% if forloop.index == is_active_index %} is-active{% endif %}"
+                    data-nav-button
+                  >
+                    {{- block.settings[tab_title_key] | escape -}}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </nav><!-- /.tabs__nav -->
+        </header><!-- /.tabs__head -->
+
+        <div class="tabs__body">
+          {%- assign is_active_index = false -%}
+          {%- for i in (1..3) -%}
+            {%-
+              liquid
+              assign tab_title_key = 'tab_title_' | append: i
+              assign tab_content_key = 'tab_content_' | append: i
+              assign tab_page_key = 'tab_page_' | append: i
+              if block.settings[tab_content_key] == blank and block.settings[tab_page_key] == blank
+                continue
+              endif
+              if is_active_index == false
+                assign is_active_index = forloop.index
+              endif
+            -%}
+
+            <div
+              class="tabs__tab rte product__tab{% if forloop.index == is_active_index %} is-active{% endif %}"
+              id="Collapsible-Tab-{{- block.settings[tab_title_key] | handle -}}-{{- i -}}"
+              data-tab
+            >
+              {%- if block.settings[tab_page_key].content != blank -%}
+                {{- block.settings[tab_page_key].content -}}
+              {%- else -%}
+                {{- block.settings[tab_content_key] -}}
+              {%- endif -%}
+            </div><!-- /.tabs__tab -->
+          {%- endfor -%}
+        </div><!-- /.tabs__body -->
+      </collapsible-tabs><!-- /.tabs -->
+      <script src="{{ 'component-collapsible-tabs.js' | asset_url }}" defer="defer" data-theme-script></script>
+    {%- when 'upsell-products' -%}
+      {%- render 'product-content-upsell', product: product, block: block -%}
+
+    {%- when 'collapsible-element' -%}
+      {%-
+        liquid
+        unless block.settings.page == blank and block.settings.text == blank or block.settings.title == blank
+          if block.settings.page.content != blank
+            assign content = block.settings.page.content
+          else
+            assign content = block.settings.text
+          endif
+
+          render 'accordion-item', icon_type: block.settings.icon_type, icon_image: block.settings.icon_image, title: block.settings.title, content: content, title_class: 'h6 semi-bold', classes: 'mt-0 pb-gap accordion-item--product'
+        endunless
+      -%}
+
+    {%- when 'countdown-timer' -%}
+      <script src="{{- 'countdown-timer.js' | asset_url -}}" defer="defer" data-theme-script></script>
+
+      {{- 'countdown-block.css' | asset_url | stylesheet_tag -}}
+
+      {% render 'countdown-block',
+        title: block.settings.title,
+        subtitle: block.settings.subtitle,
+        expiration_date: block.settings.expiration_date
+      %}
+
+    {%- when 'separator' -%}
+      <hr class="bd-b mt-0 mb-0" />
+
+    {%- when 'sku' -%}
+      <div
+        class="product__sku"
+        id="Product-SKU-{{ section.id }}"
+      >
+        <strong
+          data-sku-label
+          {% if block.settings.show_label == false or current_variant.sku == blank %}
+            class="visually-hidden"
+          {% endif %}
+        >{{- 'products.product.sku' | t -}}: </strong>
+
+        <span data-sku-value>{{ current_variant.sku }}</span>
+      </div>
+    {%- when '@app' -%}
+      <div class="product__app-block">
+        {%- render block -%}
+      </div><!-- /.product__app-block -->
+{%- endcase -%}

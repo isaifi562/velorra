@@ -1,0 +1,340 @@
+<link rel="stylesheet" href="{{- 'section-masonry.css' | asset_url -}}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{- 'swiper-bundle.min.css' | asset_url -}}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{- 'component-slider.css' | asset_url -}}" media="print" onload="this.media='all'">
+
+<noscript>
+  {{- 'section-masonry.css' | asset_url | stylesheet_tag -}}
+  {{- 'swiper-bundle.min.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-slider.css' | asset_url | stylesheet_tag -}}
+</noscript>
+
+<script src="{{- 'swiper-bundle.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+<script src="{{- 'slider-component.js' | asset_url -}}" defer="defer" data-theme-script></script>
+<script src="{{- 'slider-masonry.js' | asset_url -}}" defer="defer" data-theme-script></script>
+
+{%-
+  liquid
+  assign style = ''
+  if section.settings.enable_custom_background
+    if section.settings.background_gradient != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_gradient | append: '"'
+    elsif section.settings.background_color != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_color | append: '"'
+    else
+      assign style = ''
+    endif
+  endif
+  capture style_classes
+    echo 'color-background color-' | append: section.settings.style | append: ' ' | append: section.settings.outer_spacing | append: ' ' | append: section.settings.inner_spacing | append: ' '
+    if style != ''
+      echo ' section-background'
+    endif
+  endcapture
+-%}
+
+<section class="masonry{% if section.settings.side_margins %} masonry--side-margins{% endif %} {{ style_classes }}" {{ style }}>
+  {%-
+    liquid
+    assign container_class = 'container'
+    if section.settings.fullwidth
+      assign container_class = container_class | append: ' container--fullwidth'
+    endif
+    unless section.settings.side_margins
+      assign container_class = container_class | append: ' container--no-gutter'
+    endunless
+  -%}
+
+  <div class="{{- container_class -}}">
+    {%-
+      liquid
+      capture cards_html
+        assign spacer_forloop_index = 2
+        for block in section.blocks
+          assign spacer_offset = 4
+          render 'card-collection', image: block.settings.image, title: block.settings.title, subtitle: block.settings.subheading, url: block.settings.url, callout_text: block.settings.link_text, media_type: section.settings.media_type, card_size: 'small', card_content_layout: section.settings.card_content_layout, background_overlay: section.settings.show_cards_background, class: 'swiper-slide', button_style: block.settings.button_style, visibility: section.settings.card_content_visibility, show_title: section.settings.show_title
+
+          if forloop.index == spacer_forloop_index
+            assign spacer_forloop_index = spacer_offset | plus: forloop.index
+            echo '<div class="masonry__spacer"></div>'
+            echo '<div class="masonry__spacer"></div>'
+          endif
+        endfor
+      endcapture
+      assign slider_attr = ''
+      if section.settings.side_margins
+        assign slider_attr = 'data-fixed-width="310"'
+      endif
+      render 'slider-component', content: cards_html, element: 'slider-masonry', paging_styles: 'large', attr: slider_attr
+    -%}
+  </div><!-- /.container -->
+</section><!-- /.masonry -->
+
+{% schema %}
+{
+  "name": "t:sections.masonry.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "select",
+      "id": "outer_spacing",
+      "label": "t:sections.global.settings.outer-spacing.label",
+      "options": [
+        {
+          "value": "mt-0 mb-0 mt-0--large mb-0--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_1"
+        },
+        {
+          "value": "mt-s mb-s mt-s--large mb-s--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_2"
+        },
+        {
+          "value": "mt-l mb-l mt-l--large mb-l--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_3"
+        }
+      ],
+      "default": "mt-0 mb-0 mt-0--large mb-0--large"
+    },
+    {
+      "type": "select",
+      "id": "inner_spacing",
+      "label": "t:sections.global.settings.inner-spacing.label",
+      "options": [
+        {
+          "value": "spacing-none",
+          "label": "t:sections.global.settings.inner-spacing.options.option_1"
+        },
+        {
+          "value": "spacing-s spacing-s--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_2"
+        },
+        {
+          "value": "spacing-m spacing-m--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_3"
+        },
+        {
+          "value": "spacing-l spacing-l--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_4"
+        }
+      ],
+      "default": "spacing-s spacing-s--large"
+    },
+    {
+      "type": "checkbox",
+      "id": "fullwidth",
+      "label": "t:sections.masonry.settings.fullwidth.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "side_margins",
+      "label": "t:sections.masonry.settings.side_margins.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.section_colors.header",
+      "info": "t:sections.global.settings.section_colors.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_background",
+      "label": "t:sections.global.settings.section_colors.checkbox",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.global.settings.section_colors.color"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "t:sections.global.settings.section_colors.gradient"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.masonry.settings.header_cards.content"
+    },
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "t:sections.masonry.settings.media_type.label",
+      "options": [
+        {
+          "value": "aspect-ratio",
+          "label": "t:sections.masonry.settings.media_type.options.option_1"
+        },
+        {
+          "value": "2-3",
+          "label": "t:sections.masonry.settings.media_type.options.option_2"
+        },
+        {
+          "value": "1-1",
+          "label": "t:sections.masonry.settings.media_type.options.option_3"
+        },
+        {
+          "value": "3-2",
+          "label": "t:sections.masonry.settings.media_type.options.option_4"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.masonry.settings.media_type.options.option_5"
+        },
+        {
+          "value": "5-4",
+          "label": "t:sections.masonry.settings.media_type.options.option_6"
+        }
+      ],
+      "default": "3-2"
+    },
+    {
+      "type": "select",
+      "id": "card_content_layout",
+      "label": "t:sections.masonry.settings.card_content_layout.label",
+      "options": [
+        {
+          "value": "outside",
+          "label": "t:sections.masonry.settings.card_content_layout.options.option_2"
+        },
+        {
+          "value": "overlay",
+          "label": "t:sections.masonry.settings.card_content_layout.options.option_1"
+        },
+        {
+          "value": "overlay-center",
+          "label": "t:sections.main-list-collections.settings.card_content_layout.options.option_3"
+        }
+      ],
+      "default": "overlay"
+    },
+    {
+      "type": "select",
+      "id": "card_content_visibility",
+      "label": "t:sections.main-list-collections.settings.card_content_visibility.label",
+      "options": [
+        {
+          "value": "hover",
+          "label": "t:sections.main-list-collections.settings.card_content_visibility.options.option_1"
+        },
+        {
+          "value": "always",
+          "label": "t:sections.main-list-collections.settings.card_content_visibility.options.option_2"
+        }
+      ],
+      "default": "hover"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cards_background",
+      "label": "t:sections.masonry.settings.show_cards_background.label",
+      "info": "t:sections.masonry.settings.show_cards_background.info",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "t:sections.main-list-collections.settings.show_title.label",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "t:sections.masonry.blocks.item.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.masonry.blocks.item.settings.image.label"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "t:sections.masonry.blocks.item.settings.subheading.label"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.masonry.blocks.item.settings.heading.label",
+          "default": "Heading"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "t:sections.masonry.blocks.item.settings.url.label",
+          "default": "/"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "t:sections.masonry.blocks.item.settings.link_text.label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "t:sections.featured-collections.blocks.card.settings.button_style.label",
+          "info": "t:sections.featured-collections.blocks.card.settings.button_style.info",
+          "options": [
+            {
+              "value": "solid",
+              "label": "t:sections.featured-collections.blocks.card.settings.button_style.options.option_1"
+            },
+            {
+              "value": "outline",
+              "label": "t:sections.featured-collections.blocks.card.settings.button_style.options.option_2"
+            }
+          ],
+          "default": "outline"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.masonry.name",
+      "blocks": [
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "*"
+    ],
+    "groups": [
+      "aside"
+    ]
+  }
+}
+{% endschema %}

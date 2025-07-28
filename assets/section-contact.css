@@ -1,0 +1,40 @@
+.contact__info-item + .contact__info-item {
+  margin-top: calc(var(--spacing-step) * 4);
+}
+
+.contact .contact-links p {
+  margin-top: 0;
+}
+
+.contact .contact-links :last-child {
+  flex: 1;
+  word-break: break-all;
+}
+
+.contact .contact-links svg {
+  width: 2.4rem;
+  height: 2.4rem;
+  margin-top: -0.2rem;
+}
+
+@media screen and (min-width: 750px) {
+  .contact .contact-links svg {
+    margin-top: 0.2rem;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .contact__info {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+  }
+
+  .contact__info-item {
+    flex: 0 1 32rem;
+  }
+
+  .contact__info-item + .contact__info-item {
+    margin-top: 0;
+  }
+}

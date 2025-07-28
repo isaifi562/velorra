@@ -1,0 +1,165 @@
+{%- liquid
+  assign placement = placement | default: 'header'
+  assign enable_country = enable_country | default: false
+  assign enable_language = enable_language | default: false
+  assign enable_country_flag = enable_country_flag | default: false
+  assign enable_country_name = enable_country_name | default: false
+-%}
+
+{%- capture country_select_html -%}
+  {%- for country in localization.available_countries -%}
+    <div class="localization-dropdown__option">
+      <input
+        class="visually-hidden"
+        type="radio"
+        value="{{- country.iso_code -}}"
+        id="Country-Code-{{- country.iso_code -}}"
+        name="country_code"
+        {%- if country == localization.country %} checked{% endif %}
+      />
+
+      <label for="Country-Code-{{- country.iso_code -}}">
+        <span>
+          {% if enable_country_flag %}
+            {{ country | image_url: width: 20 | image_tag }}
+          {% endif %}
+          {{ country.name }}
+        </span> <span>({{ country.currency.iso_code }} {{ country.currency.symbol }})</span>
+      </label>
+    </div>
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- capture language_select_html -%}
+  {%- for language in localization.available_languages -%}
+    <div class="localization-dropdown__option">
+      <input
+        class="visually-hidden"
+        type="radio"
+        value="{{- language.iso_code -}}"
+        id="Language-Code-{{- language.iso_code -}}"
+        name="locale_code"
+        {%- if language == localization.language %} checked{% endif %}
+      />
+
+      <label for="Language-Code-{{- language.iso_code -}}">
+        <span>{{- language.endonym_name -}}</span>
+      </label>
+    </div>
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- assign form_id = 'Form-Localization-' | append: section.id -%}
+{%- form 'localization', id: form_id -%}
+  <div
+    class="localization-dropdowns localization-dropdowns--{{ placement }}"
+    id="localization-dropdowns-{{- section.id -}}"
+  >
+    {%- if enable_country -%}
+      <localization-dropdown
+        class="localization-dropdown localization-dropdown--{{ placement }} block"
+        id="country-dropdown"
+        data-placement="{{- placement -}}"
+      >
+        <details>
+          <summary data-localization-summary>
+            {% if enable_country_flag %}
+              {{ localization.country | image_url: width: 20 | image_tag }}
+            {% endif %}
+
+            {% if enable_country_name %}
+              {{ localization.country }}
+            {% endif %}
+
+            {%- if settings.localization_price_indicator == 'iso_with_symbol' -%}
+              ({{ cart.currency.iso_code }} {{ cart.currency.symbol }})
+
+            {%- elsif settings.localization_price_indicator == 'iso_only' -%}
+              ({{ cart.currency.iso_code }})
+
+            {%- elsif settings.localization_price_indicator == 'symbol_only' -%}
+              ({{ cart.currency.symbol }})
+            {%- endif -%}
+
+            {% render 'icon-chevron-down-2' %}
+          </summary>
+
+          <div>
+            <div
+              class="localization-dropdown__overlay"
+              data-close
+              aria-label="{{- 'accessibility.close' | t -}}"
+              tabindex="-1"
+            >
+            </div>
+
+            <div class="localization-dropdown__dropdown">
+              <div class="localization-dropdown__header large-up-hide">
+                {{- 'general.localization.country_code_label' | t -}}
+
+                <button
+                  type="button"
+                  aria-label="{{- 'accessibility.close' | t -}}"
+                  class="localization-dropdown__close"
+                  data-close
+                >
+                  {%- render 'icon-close' -%}
+                </button><!-- /.localization-dropdown__close -->
+              </div><!-- /.localization-dropdown__header -->
+
+              <div class="localization-dropdown__options" data-localization-scroll-container>
+                {{- country_select_html -}}
+              </div><!-- /.localization-dropdown__options -->
+            </div>
+          </div>
+
+        </details>
+      </localization-dropdown>
+    {%- endif -%}
+
+    {%- if enable_language -%}
+      <localization-dropdown
+        class="localization-dropdown localization-dropdown--{{ placement }} block"
+        id="language-dropdown"
+        data-placement="{{- placement -}}"
+      >
+        <details>
+          <summary>
+            {{ localization.language.endonym_name }}
+
+            {% render 'icon-chevron-down-2' %}
+          </summary>
+
+          <div>
+            <div
+              class="localization-dropdown__overlay"
+              data-close
+              aria-label="{{- 'accessibility.close' | t -}}"
+              tabindex="-1"
+            >
+            </div>
+
+            <div class="localization-dropdown__dropdown">
+              <div class="localization-dropdown__header large-up-hide">
+                {{- 'general.localization.language_code_label' | t -}}
+
+                <button
+                  type="button"
+                  aria-label="{{- 'accessibility.close' | t -}}"
+                  class="localization-dropdown__close"
+                  data-close
+                >
+                  {%- render 'icon-close' -%}
+                </button><!-- /.localization-dropdown__close -->
+              </div><!-- /.localization-dropdown__header -->
+
+              <div class="localization-dropdown__options">
+                {{- language_select_html -}}
+              </div><!-- /.localization-dropdown__options -->
+            </div>
+          </div>
+        </details>
+      </localization-dropdown>
+    {%- endif -%}
+  </div>
+{%- endform -%}

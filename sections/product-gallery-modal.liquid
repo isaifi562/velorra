@@ -1,0 +1,48 @@
+{%-
+  liquid
+  capture color_style
+    render 'get-parameter', param: 'color-style'
+  endcapture
+  capture media_type
+    render 'get-parameter', param: 'media-type'
+  endcapture
+  capture active_media_id
+    render 'get-parameter', param: 'active-media-id'
+  endcapture
+  assign active_media_id = active_media_id | plus: 0
+-%}
+
+<product-modal id="ProductModal-{{- product.id -}}" class="product-gallery motion-reduce color-{{- color_style -}}" data-remove>
+  <div
+    class="product-gallery__dialog motion-reduce"
+    role="dialog"
+    tabindex="-1"
+    aria-label="{{- 'products.product.modal.label' | t -}}"
+    aria-modal="true"
+  >
+    <button
+      id="ModalClose-{{- product.id -}}"
+      type="button"
+      class="product-gallery__close"
+      aria-label="{{- 'accessibility.close' | t -}}"
+    >{%- render 'icon-close' -%}</button>
+
+    <div
+      class="product__gallery-content"
+      role="document"
+      aria-label="{{- 'products.product.modal.label' | t -}}"
+      tabindex="0"
+    >
+      {%-
+        liquid
+        for media in product.media
+          if media.id == active_media_id
+            render 'product-media', product_ref: product, media: media, is_gallery_media: true
+
+            break
+          endif
+        endfor
+      -%}
+    </div><!-- /.product__gallery-content -->
+  </div><!-- /.product-gallery__dialog -->
+</product-modal>

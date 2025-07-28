@@ -1,0 +1,117 @@
+{% comment %}
+  Renders an article card
+  Accepts:
+    - article_ref: {Object} Article Liquid object
+    - show_excerpt: {Bool} Show article excerpt. Default is true
+    - show_meta: {Bool} Show article meta. Default is true
+    - class: {String} Additional classes
+    - is_page {Bool} Is page card
+    - show_author {Bool} Show author
+    - show_excerpt {Bool} Show excerpt
+    - show_date {Bool} Show date
+
+    Usage:
+    {%- render 'card-article', article_ref: blog.articles[0] -%}
+
+  Requires:
+    - component-card-article.css
+    - component-article-meta.css
+{% endcomment %}
+
+<article class="card-article color-paragraphs {{ class }}">
+  <a href="{{- article_ref.url -}}" class="card-article__media media media--3-4 mb-s color-headings">
+    <span class="visually-hidden">
+      {%- if article_ref != blank -%}
+        {{- article_ref.title | escape -}}
+      {%- else -%}
+        {{ 'article.title' | t }}
+      {%- endif -%}
+    </span>
+
+    {%-
+      liquid
+      if article_ref.image != blank
+        assign image_src = article_ref.image | image_url: width: 500
+        capture image_srcset
+          render 'srcset', image: article_ref.image
+        endcapture
+        assign image_alt = article_ref.image.alt | escape
+        render 'image', src: image_src, srcset: image_srcset, sizes: 'auto', alt: image_alt, width: article_ref.image.width, height: article_ref.image.height
+      else
+        if is_page
+          echo 'image' | placeholder_svg_tag: 'collection-2'
+        else
+          echo 'image' | placeholder_svg_tag: 'placeholder-svg'
+        endif
+      endif
+    -%}
+  </a>
+
+  <div class="card-article__body">
+    <div class="card-article__meta mb-xs">
+      {%- unless is_page -%}
+        {%- if show_date -%}
+          {%- assign article_published_at = article_ref.published_at | default: 'now' -%}
+          <time datetime="{{- article_published_at -}}" class="sh sh--4">
+            {{- article_published_at | date: format: 'day_month_year' -}}
+          </time>
+        {%- endif -%}
+      {%- else -%}
+        Page
+      {%- endunless -%}
+    </div><!-- /.card-article__meta -->
+
+    <h4 class="card-article__title h5 mt-0 mb-s color-headings">
+      {%- if article_ref != blank -%}
+        <a href="{{- article_ref.url -}}" class="full-unstyled-link">{{- article_ref.title | escape -}}</a>
+      {%- else -%}
+        {{ 'article.title' | t }}
+      {%- endif -%}
+    </h4><!-- /.card-article__title -->
+
+    {%- unless show_meta == false -%}
+      {%- render 'article-meta', article_ref: article_ref, show_author: show_author -%}
+    {%- endunless -%}
+
+    {%- if article_ref.tags.size > 0 and show_tags -%}
+      <ul class="card-article__tags list-unstyled flex mb-xs">
+        {%- for tag in article_ref.tags -%}
+          {%- if tag contains 'time:' -%}
+            {%- continue -%}
+          {%- endif -%}
+
+          <li class="card-article__tag">
+            {%- assign tag_handle = tag | handle -%}
+
+            <a href="{{- blog.url | append: '/tagged/' | append: tag_handle -}}" class="full-unstyled-link p5">
+              {%- unless forloop.first -%}, {% endunless -%}{{- tag -}}
+            </a>
+          </li><!-- ./card-article__tag -->
+        {%- endfor -%}
+      </ul><!-- /.card-article__tags list-unstyled -->
+    {%- endif -%}
+
+    {%- unless is_page -%}
+      {%- if article_ref.excerpt_or_content != blank and show_excerpt != false -%}
+        <div class="card-article__entry p4">
+          {{- article_ref.excerpt_or_content | strip_html | truncate: 140 -}}
+        </div><!-- /.card-article__entry -->
+      {%- endif -%}
+    {%- else -%}
+      {%- if article_ref.content != blank -%}
+        <div class="card-article__entry p4">
+          {{- article_ref.content | strip_html | truncate: 140 -}}
+        </div><!-- /.card-article__entry -->
+      {%- endif -%}
+    {%- endunless -%}
+
+    <div class="card-article__actions mt-s mb-xs">
+      {%-
+        liquid
+        assign value = 'blog.read_more' | t
+        assign href = article_ref.url | default: '/'
+        render 'button', type: 'link', href: href, css: 'link', styles: 's', value: value
+      -%}
+    </div><!-- /.card-article__actions -->
+  </div><!-- /.card-article__body -->
+</article><!-- /.card-article -->

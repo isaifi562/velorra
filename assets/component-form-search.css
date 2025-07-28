@@ -1,0 +1,95 @@
+.form-search {
+  position: relative;
+  z-index: 1;
+}
+
+.form-search__icon {
+  display: block;
+  width: 2.4rem;
+  height: 2.4rem;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--spacing-step) * 4);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.form-search--no-padding .form-search__icon {
+  left: 0;
+}
+
+.form-search__icon svg,
+.form-search__close svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+input[type='search']::-webkit-search-decoration,
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-results-button,
+input[type='search']::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+}
+
+.form-search__input {
+  color: var(--color-paragraphs);
+  background-color: var(--color-background);
+  font-family: inherit;
+  width: 100%;
+  height: 7.2rem;
+  padding: calc(var(--spacing-step) * 3) calc(var(--spacing-step) * 9);
+  border: none;
+  border-radius: 0;
+  outline: none;
+}
+
+.form-search__input ~ .form-search__input__outline {
+  display: none;
+  pointer-events: none;
+}
+
+.form-search__input:focus-visible + .form-search__input__outline {
+  display: block;
+  position: absolute;
+  inset: calc(var(--spacing-step) * 1.5) calc(var(--spacing-step) * 8);
+  border: 0.1rem solid currentColor;
+  opacity: 0.7;
+}
+
+@media screen and (min-width: 990px) {
+  .form-search__input:focus-visible + .form-search__input__outline {
+    inset: calc(var(--spacing-step) * 1.5)
+      calc(var(--spacing-step) * 4.5);
+  }
+}
+
+.form-search--no-padding .form-search__input {
+  padding-left: calc(var(--spacing-step) * 6);
+  padding-right: calc(var(--spacing-step) * 5);
+}
+
+.form-search__input::placeholder {
+  color: currentColor;
+  font: inherit;
+}
+
+.form-search__close {
+  color: currentColor;
+  display: block;
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0;
+  margin: auto;
+  background: none;
+  border: none;
+  border-radius: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  cursor: pointer;
+}

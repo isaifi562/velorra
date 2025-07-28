@@ -1,0 +1,176 @@
+{% comment %}
+    Renders single product media
+    Accepts:
+    - media: {Object} Liquid media object
+    - product_ref: {Object} Liquid Product object
+    Usage:
+    {%- render 'product-media', media: product_ref.featured_media, product_ref: product_ref -%}
+{% endcomment %}
+
+{%- assign media_size = media_size | default: 'portrait' -%}
+{%- assign media_aspect_ratio = media.aspect_ratio | default: media.preview_image.aspect_ratio -%}
+
+<div class="product__image">
+  {%- capture media_image -%}
+    {%-
+      liquid
+      assign image_src = media.preview_image | image_url: width: 500
+      capture image_srcset
+        render 'srcset', image: media.preview_image
+      endcapture
+      assign image_alt = media.alt | escape
+      if preload_media
+        echo media.preview_image | image_url: width: 500 | image_tag: preload: true, srcset: image_srcset, alt: image_alt, class: 'visually-hidden'
+      endif
+      render 'image', src: image_src, srcset: image_srcset, sizes: 'auto', alt: image_alt, width: media.preview_image.width, height: media.preview_image.height
+    -%}
+  {%- endcapture -%}
+
+  {%- capture media_html -%}
+    <div
+      class="media media--{{ media_size }}"
+      {% if media_size == 'aspect-ratio' %}
+        style="aspect-ratio: {{ media_aspect_ratio }};"
+      {% endif %}
+      data-media-id="{{- media.id -}}"
+    >
+      {{- media_image -}}
+    </div><!-- /.media -->
+  {%- endcapture -%}
+
+  {%- if media.media_type == 'image' -%}
+    {%- if enable_zoom -%}
+      <a
+        href="{{- media.preview_image | image_url: width: media.preview_image.width -}}"
+        class="product__gallery-opener block"
+        data-pswp-image
+        data-pswp-src="{{- media.preview_image | image_url: width: media.preview_image.width -}}"
+        data-pswp-srcset="{{- image_srcset -}}"
+        data-pswp-width="{{- media.preview_image.width -}}"
+        data-pswp-height="{{- media.preview_image.height -}}"
+        target="_blank"
+      >
+        {%- unless disable_zoom_icon -%}
+          <span class="product__gallery-opener__icon motion-reduce">
+            {%- render 'icon-plus-large' -%}
+          </span>
+        {%- endunless -%}
+
+        {{- media_html -}}
+      </a><!-- /.product__gallery-opener -->
+    {%- else -%}
+      {{- media_html -}}
+    {%- endif -%}
+  {%- else -%}
+    {%- capture deferred_media_html -%}
+      <button class="deferred-media__button" id="Deferred-Poster-Modal-{{- media.id -}}" type="button">
+        <span class="media media--{{ media_size }}"
+          {% if media_size == 'aspect-ratio' %}
+            style="aspect-ratio: {{ media_aspect_ratio }}"
+          {% endif %}
+        >
+          {{- media_image -}}
+        </span>
+
+        {%- if media.media_type == 'model' -%}
+          {%- render 'icon-3d' -%}
+        {%- else -%}
+          {%- render 'icon-play-outlined' -%}
+        {%- endif -%}
+      </button>
+
+      <template>
+        <div class="deferred-media__wrapper media media--{{ media_size }}"
+          {% if media_size == 'aspect-ratio' %}
+            style="aspect-ratio: {{ media_aspect_ratio }}"
+          {% endif %}
+        >
+          {%- case media.media_type -%}
+            {%- when 'external_video' -%}
+              {%- assign video_class = 'js-' | append: media.host -%}
+              {{- media | external_video_url: autoplay: true, loop: true | external_video_tag: class: video_class, loading: 'lazy' -}}
+            {%- when 'video' -%}
+              {{- media | media_tag: image_size: '2048x', autoplay: true, loop: true, controls: true, preload: 'none' -}}
+            {%- else -%}
+              {{- media | media_tag: image_size: '2048x', toggleable: true -}}
+          {%- endcase -%}
+        </div><!-- /.deferred-media__wrapper -->
+      </template>
+
+      <div
+        class="media {% if is_gallery_media %}media--fit-contain{% else %}media--{{ media_size }}{% endif %}"
+        {% if media_size == 'aspect-ratio' %}
+          style="aspect-ratio: {{ media_aspect_ratio }}"
+        {% endif %}
+        data-template-output
+      ></div>
+    {%- endcapture -%}
+
+    {%- capture xr_button_html -%}
+      {%- assign xr_button_value = 'products.product.media.xr_button' | t -%}
+      {%- capture xr_button_attr -%}
+        aria-label="{{- 'products.product.media.xr_button_label' | t -}}"
+        data-shopify-xr
+        data-shopify-model3d-id="{{- media.id -}}"
+        data-shopify-title="{{- product_ref.title | escape -}}"
+        data-shopify-xr-hidden
+      {%- endcapture -%}
+      {%- render 'button', type: 'button', value: xr_button_value, class: 'product__xr-button', icon_type: '3d', attr: xr_button_attr -%}
+    {%- endcapture -%}
+
+    {%- if is_gallery_media -%}
+      {%- if media.media_type != 'model' -%}
+        <deferred-media class="deferred-media">
+          {{- deferred_media_html -}}
+        </deferred-media><!-- /.deferred-media -->
+      {%- else -%}
+        <product-model class="deferred-media relative">
+          {{- deferred_media_html -}}
+
+          {{- xr_button_html -}}
+        </product-model><!-- /.deferred-media -->
+      {%- endif -%}
+    {%- else -%}
+      <product-modal-opener
+        class="product__gallery-opener large-up-hide"
+        data-modal="#ProductModal-{{- product_ref.id -}}"
+        data-url="{{- routes.root_url -}}products/{{- product_ref.handle -}}?section_id=product-gallery-modal&active-media-id={{- media.id -}}&color-style={{- section.settings.style -}}&media-type={{- media.media_type -}}"
+        data-type="{{- media.media_type -}}"
+      >
+        <span class="product__gallery-opener__icon motion-reduce">
+          {%- if media.media_type == 'model' -%}
+            {%- render 'icon-3d' -%}
+          {%- else -%}
+            {%- render 'icon-play-outlined' -%}
+          {%- endif -%}
+        </span>
+
+        <div class="media media--{{ media_size }}"
+          {% if media_size == 'aspect-ratio' %}
+            style="aspect-ratio: {{ media_aspect_ratio }}"
+          {% endif %}
+        >
+          {{- media_image -}}
+        </div><!-- /.media -->
+
+        <button class="product__gallery-toggle" type="button" aria-haspopup="dialog" data-media-id="{{- media.id -}}">
+          <span class="visually-hidden">
+            {{- 'products.product.media.open_media' | t: index: position -}}
+          </span>
+        </button>
+      </product-modal-opener>
+
+      {%- if media.media_type != 'model' -%}
+        <deferred-media class="deferred-media small-hide medium-hide">
+          {{- deferred_media_html -}}
+        </deferred-media><!-- /.deferred-media -->
+      {%- else -%}
+        <product-model class="deferred-media small-hide medium-hide relative">
+          {{- deferred_media_html -}}
+
+          {{- xr_button_html -}}
+        </product-model><!-- /.deferred-media -->
+      {%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+</div><!-- /.product__image -->

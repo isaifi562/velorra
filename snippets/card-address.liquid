@@ -1,0 +1,48 @@
+{% comment %}
+  Info:
+  Renders address element.
+
+  Accepts:
+  - heading {String} (optional) Heading - translatable string
+  - address {Object} customer.address
+  - show_buttons {Boolean}
+
+  Usage:
+    {%-
+      liquid
+      assign heading = 'customer.addresses.default' | t
+      render 'card-address', heading: heading, address: customer.default_address
+    -%}
+{% endcomment %}
+
+{%- if heading -%}
+  <h3 class="h5 mt-0 mb-s mb-m--large color-headings">
+    {{- heading -}}
+  </h3><!-- /.h5 -->
+{%- endif -%}
+
+<address class="p3">
+  {{- address | format_address -}}
+</address>
+
+{%- if show_buttons -%}
+  <div class="address__actions flex flex--center mt-s pb-xs pb-l--large">
+    {%-
+      liquid
+      assign value = 'customer.addresses.edit_address' | t
+      assign href = '#EditAddress_' | append: address.id
+      render 'button', type: 'link', href: href, css: 'link', class: 'address__button', value: value, no_icon: true
+    -%}
+
+    {%- unless address == customer.default_address -%}
+      <form method="post" action="{{- routes.account_addresses_url -}}/{{ address.id }}">
+        <input type="hidden" name="_method" value="delete">
+        {%-
+          liquid
+          assign value = 'customer.addresses.delete_address' | t
+          render 'button', type: 'button', name: 'update', type: 'submit', css: 'link', class: 'address__button', value: value, no_icon: true
+        -%}
+      </form>
+    {%- endunless -%}
+  </div><!-- /.address__actions -->
+{%- endif -%}

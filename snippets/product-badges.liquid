@@ -1,0 +1,77 @@
+{% comment %}
+    Renders a product badges
+
+    Accepts:
+    - product_ref: {Object} Product Liquid object
+    - class: {String} CSS class to apply to each badge
+    - wrapper_class: {String} CSS class to apply to badges wrapper
+
+    Usage:
+    {%- render 'product-badges', product_ref: product_ref, class: 'card-product__badge' -%}
+{% endcomment %}
+
+
+{%-
+  liquid
+  assign product_tags = product_ref.tags | join: ','
+  assign wrapper_class = wrapper_class | default: ''
+
+  assign current_variant = product_ref.selected_or_first_available_variant
+-%}
+
+{%- unless settings.disable_badges or product_tags contains 'hide-badges' -%}
+  <div class="badges {{ wrapper_class }}">
+    {%-
+      liquid
+      assign loop_index = 0
+
+      for tag in product_ref.tags
+        assign loop_index = loop_index | plus: 1
+        unless tag contains 'badge:'
+          continue
+        endunless
+        assign tag_text = tag | remove: 'badge:' | strip
+        echo '<span class="' | append: class | append: ' badge p4 bold">' | append: tag_text | append: '</span>'
+        if loop_index == 3
+          break
+        endif
+      endfor
+      assign product_created_days_offset_seconds = settings.product_created_days_offset | times: 86400
+      assign product_created_days_offset_seconds_difference = 'now' | date: '%s' | minus: product_created_days_offset_seconds
+      assign product_created_seconds = product_ref.created_at | date: '%s' | plus: 0
+      assign show_sale_tag = true
+      if product_tags contains 'hide-sale' or settings.disable_sale_badge
+        assign show_sale_tag = false
+      endif
+
+      capture sale_value
+        if settings.sale_badge_discount == 'percent'
+          assign sale_percent = current_variant.compare_at_price | times: 1.0 | minus: current_variant.price | divided_by: current_variant.compare_at_price | times: 100 | round: 0
+
+          # Don't show percentage if it's lower than 1%
+          if sale_percent > 0
+            echo sale_percent | append: '%' | prepend: '-'
+          endif
+        elsif settings.sale_badge_discount == 'flat'
+          echo current_variant.compare_at_price | minus: current_variant.price | money | prepend: '-'
+        endif
+      endcapture
+    -%}
+
+
+    {%- if product_created_days_offset_seconds_difference <= product_created_seconds -%}
+      <span class="{{ class }} badge badge--new p4 bold">{{- 'products.product.new' | t -}}</span>
+    {%- endif -%}
+
+    {%- if product_ref.available == false -%}
+      <span class="{{ class }} badge badge--sold-out p4 bold">{{- 'products.product.sold_out' | t -}}</span>
+    {%- elsif current_variant.compare_at_price > current_variant.price and show_sale_tag -%}
+      <span class="{{ class }} badge badge--sale js-sale-badge p4 bold" data-sale-badge-type="{{- settings.sale_badge_discount -}}" data-sale-badge-text="{{- 'products.product.sale' | t }}">
+        {{- 'products.product.sale' | t }}
+
+        {{ sale_value }}
+      </span>
+    {%- endif -%}
+  </div><!-- /.badges -->
+{%- endunless -%}
+

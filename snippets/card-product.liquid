@@ -1,0 +1,391 @@
+{% comment %}
+    Renders a product card
+    Accepts:
+    - product_ref: {Object} Product Liquid object
+    - current_variant: {Object} Product Variant liquid object
+    - collection_ref: {Object} Collection Liquid object
+    - class: {String} CSS class to apply to the card
+    - context: {String} Context from which the snippet is called. Defaults to section id.
+    Usage:
+    {%- render 'card-product', product_ref: product_ref -%}
+
+    Requires:
+    - component-card-product.css
+    - component-badge.css
+
+    - component-card-product.js
+{% endcomment %}
+
+{%-
+  liquid
+  assign variant_preselected = false
+  assign context = context | default: section.id
+  assign media_size = settings.card_product_media_size
+  assign current_variant = current_variant | default: product_ref.variants[0]
+  assign product_url = product_ref.url | within: collection_ref
+
+  if current_variant
+    assign variant_preselected = true
+  endif
+
+  # Find swatches option
+  if settings.swatches_option contains ','
+    assign settings_swatch_options = settings.swatches_option | split: ','
+    for settings_swatch_option in settings_swatch_options
+      assign stripped_swatch_setting = settings_swatch_option | strip
+      if product_ref.options_by_name[stripped_swatch_setting] != blank
+        assign swatches_option = product_ref.options_by_name[stripped_swatch_setting]
+        break
+      endif
+      assign swatches_option = false
+    endfor
+  else
+    for option in product_ref.options_with_values
+      assign first_value = option.values | first
+
+      if first_value.swatch.image != blank or first_value.swatch.color != blank
+        assign swatches_option = option
+
+        break
+      endif
+    endfor
+
+    unless swatches_option
+      assign swatches_option = product_ref.options_by_name[settings.swatches_option] | default: false
+    endunless
+  endif
+
+  if media_size == 'aspect-ratio' and product_ref.featured_image == nil
+    assign media_size = '1-1'
+  endif
+
+  assign media_class = 'media media--no-hover media--' | append: media_size
+
+  if settings.card_product_media_crop == false
+    assign media_class = media_class | append: ' media--no-crop'
+  else
+    assign media_class = media_class | append: ' media--crop-' | append: settings.card_product_image_alignment
+  endif
+
+  comment
+    Find available options values
+  endcomment
+  assign available_variant_options_1 = ''
+  assign available_variant_options_2 = ''
+  assign available_variant_options_3 = ''
+
+  for variant in product_ref.variants
+    if variant.available
+      assign available_variant_options_1 = available_variant_options_1 | append: variant.option1 | append: '|@#@|'
+      assign available_variant_options_2 = available_variant_options_2 | append: variant.option2 | append: '|@#@|'
+      assign available_variant_options_3 = available_variant_options_3 | append: variant.option3 | append: '|@#@|'
+    endif
+  endfor
+
+  assign available_variant_options_1_array = available_variant_options_1 | split: '|@#@|' | uniq | compact
+  assign available_variant_options_2_array = available_variant_options_2 | split: '|@#@|' | uniq | compact
+  assign available_variant_options_3_array = available_variant_options_3 | split: '|@#@|' | uniq | compact
+-%}
+
+<card-product
+  class="card-product {{ class }}"
+  data-product-url="{%- if collection_ref -%}/collections/{{- collection_ref.handle -}}{%- endif -%}/products/{{- product_ref.handle -}}"
+  data-swatch-option-index="{{- swatches_option.position -}}"
+  data-active-variant-id="{{- current_variant.id -}}"
+  data-money-format="{{- shop.money_format | escape -}}"
+  {%- if settings.quickbuy_low_inventory_limit -%}
+    data-low-quantity-limit="{{ settings.quickbuy_low_inventory_limit }}"
+  {%- endif -%}
+>
+  <div class="card-product__main">
+    <a
+      {% if product_ref and product_ref != empty %}href="{{- product_url -}}"{% endif %}
+      class="card-product__media {{ media_class }}"
+      data-url
+      data-media
+      {% if settings.card_product_media_size == 'aspect-ratio' %}
+        style="padding-top: {%- render 'aspect-ratio', aspect_ratio: product_ref.featured_image.aspect_ratio -%}%;"
+      {% endif %}
+    >
+      {%- if product_ref and product_ref != empty -%}
+        <span class="visually-hidden">{{- product_ref.title | escape -}}</span>
+      {%- endif -%}
+
+      {%-
+        liquid
+        assign current_variant_image = product_ref.featured_media
+        if variant_preselected and current_variant.image
+          assign current_variant_image = current_variant.image
+        endif
+        if current_variant_image
+          assign image_src = current_variant_image | image_url: width: 500
+          capture image_srcset
+            render 'srcset', image: current_variant_image
+          endcapture
+
+          assign image_alt = current_variant_image.alt | escape
+          render 'image', src: image_src, srcset: image_srcset, sizes: 'auto', alt: image_alt, width: current_variant_image.width, height: current_variant_image.height, attr: 'data-image-primary'
+
+          if product_ref.images[1] and settings.card_product_swap_image_on_hover and variant_preselected == false
+            assign image_secondary_src = product_ref.images[1] | image_url: width: 500
+            capture image_secondary_srcset
+              render 'srcset', image: product_ref.images[1]
+            endcapture
+            assign image_secondary_alt = product_ref.images[1].alt | escape
+            render 'image', src: image_secondary_src, srcset: image_secondary_srcset, sizes: 'auto', alt: image_secondary_alt, width: product_ref.images[1].width, height: product_ref.images[1].height, attr: 'data-image-secondary'
+          endif
+        else
+          echo 'image' | placeholder_svg_tag
+        endif
+      -%}
+    </a>
+
+    <div class="card-product__actions{% unless settings.desktop_quickview_type == 'text_button' %} card-product__actions--mobile-icon{% endunless %}">
+      {%-
+        liquid
+        capture product_badges
+        render 'product-badges', product_ref: product_ref, class: 'card-product__badge', wrapper_class: 'card-product__badges'
+        endcapture
+        assign product_badges = product_badges | strip
+        echo product_badges
+
+        comment
+          Quickbuy and Quickview visibility logic
+        endcomment
+        assign show_quickview = false
+
+        assign atc_option = product_ref.options_by_name[settings.quickbuy_variant_option]
+
+        if settings.enable_quickview_desktop or settings.enable_quickview_mobile
+          assign show_quickview = true
+          capture quickview_class
+            if settings.enable_quickview_desktop == false
+              echo 'medium-hide large-up-hide'
+            elsif settings.enable_quickview_mobile == false
+              echo 'small-hide'
+            endif
+          endcapture
+        endif
+      -%}
+
+      {%- if show_quickview -%}
+        {%- assign no_js_button_class = 'card-product__button no-js ' | append: quickview_class -%}
+        <div class="card-product__callout motion-reduce {{ quickview_class }}">
+          {%- assign callout_button_text = 'products.product.quickview.callout' | t -%}
+          {%- capture attr -%}
+            data-url="{{- product_url -}}"
+            data-quickview-callout
+          {%- endcapture -%}
+          <quickview-opener data-modal="#Product-Quickview-Modal-{{- product_ref.id -}}--quickview" class="no-js-hidden">
+            {%- render 'button', type: 'button', value: callout_button_text, fullwidth: true, styles: 's', class: 'card-product__button', icon_type: 'eye', icon_animation_alternate: true, attr: attr -%}
+          </quickview-opener>
+
+          {%- render 'button', type: 'link', href: product_url, value: callout_button_text, fullwidth: true, styles: 's', class: no_js_button_class, icon_type: 'eye', icon_animation_alternate: true, attr: attr -%}
+        </div><!-- /.card-product__callout -->
+      {%- endif -%}
+
+      {%- if settings.enable_quickbuy_desktop or settings.enable_quickbuy_mobile -%}
+        {%- liquid
+          comment
+            Quickbuy logic:
+            1. No variant options = ATC button
+            2. 1 variant options(swatches) = ATC button
+            3. 1 variant options(no swatch or atc_option) = View product button
+            4. 2 variant options(swatches and atc_option) = ATC variant options
+            5. 3 variant options = View product button
+            6. 2 variant options with missing swatches or atc_option = View product button
+            7. swatches option is same as atc_option = View product button
+          endcomment
+          assign active_desktop = settings.enable_quickbuy_desktop
+          assign active_mobile = settings.enable_quickbuy_mobile
+
+          for atc_option in product_ref.options_with_values
+            if atc_option.name == settings.quickbuy_variant_option
+              assign option_index = forloop.index
+            endif
+          endfor
+
+          assign show_view_product_button = false
+          assign show_atc_button = false
+
+          if product_ref.has_only_default_variant
+            assign show_atc_button = true
+
+          elsif product_ref.options.size == 3
+            assign show_view_product_button = true
+
+          elsif atc_option == blank
+            if swatches_option and product_ref.options.size == 1
+              assign show_atc_button = true
+            else
+              assign show_view_product_button = true
+            endif
+
+          elsif product_ref.options.size == 2 and swatches_option == false
+            assign show_view_product_button = true
+          elsif swatches_option.position == atc_option.position
+            assign show_view_product_button = true
+          endif
+        -%}
+        {%- if atc_option or show_atc_button or show_view_product_button -%}
+          <div
+            class="card-product__quickbuy{% if show_atc_button or show_view_product_button %} transparent{% endif %}{% unless active_mobile %} small-hide medium-hide {% endunless %}{% unless active_desktop %} large-up-hide{% endunless %}"
+            data-quickbuy-wrapper
+          >
+            {%- if product_ref != blank -%}
+              {%- assign form_id = product_ref.id | append: section.id -%}
+              {%- form 'product', product_ref, id: form_id, class: 'quickbuy-form js-quickbuy-form' -%}
+                <input type="hidden" name="id" value="">
+                <input type="hidden" name="quantity" value="1">
+
+                {%- liquid
+                  if show_atc_button
+                    assign sold_out_value = 'products.product.sold_out' | t
+                    assign add_to_cart_value = 'products.product.add_to_cart' | t
+                    assign value = sold_out_value
+                    assign disabled = true
+                    assign attr = 'data-sold-out-string="' | append: sold_out_value | append: '"' | append: 'data-atc-string="' | append: add_to_cart_value | append: '"'
+
+                    if current_variant.available
+                      assign value = add_to_cart_value
+                      assign disabled = false
+                    endif
+                    render 'button', type: 'submit', value: value, class: 'card-product__submit-btn', disabled: disabled, attr: attr, styles: 's'
+                  endif
+
+                  if show_view_product_button
+                    assign value =  'products.product.card_view_product' | t
+
+                    render 'button', type: 'link', href: product_url, value: value, class: 'card-product__submit-btn', styles: 's'
+                  endif
+                -%}
+              {%- endform -%}
+            {%- endif -%}
+
+            {%- if atc_option and show_atc_button != true and show_view_product_button != true -%}
+              <ul class="card-product__quickbuy-options">
+                {%- for value in atc_option.values -%}
+                  {% comment %}
+                    Find if value is available.
+                  {% endcomment %}
+                  {%- liquid
+                    assign is_available = false
+
+                    case option_index
+                      when 1
+                        if available_variant_options_1_array contains value
+                          assign is_available = true
+                        endif
+
+                      when 2
+                        if available_variant_options_2_array contains value
+                          assign is_available = true
+                        endif
+
+                      when 3
+                        if available_variant_options_3_array contains value
+                          assign is_available = true
+                        endif
+                    endcase
+                  -%}
+
+                  <li>
+                    <button
+                      class="card-product__quickbuy-button p3"
+                      data-option="{{ atc_option.position }}"
+                      data-value="{{ value }}"
+                      data-last-units-message="{{ 'products.product.last_units' | t }}"
+                      {%- unless is_available -%}
+                        disabled
+                      {%- endunless -%}
+                    >
+                      <span>{{ value }}</span>
+                    </button>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+
+            <div class="card-product__quickbuy-error caption color-red hidden center" data-error-wrapper></div>
+
+            <span class="card-product__quickbuy-loader motion-reduce"></span>
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    </div><!-- /.card-product__actions -->
+  </div><!-- /.card-product__main -->
+
+  <div class="card-product__meta mt-s">
+    <h4 class="card-product__title h6 mt-0 mb-xs">
+      {%- if product_ref and product_ref != empty -%}
+        <a href="{{- product_url -}}" class="inline-unstyled-link" data-url>{{- product_ref.title | escape -}}</a>
+      {%- else -%}
+        {{- 'products.product.title' | t -}}
+      {%- endif -%}
+    </h4><!-- /.card-product__title h6 mt-0 mb-xs -->
+
+    <div class="card-product__price p3">
+      {%- render 'price', product_ref: product_ref, price_class: '', use_variant: true -%}
+    </div><!-- /.card-product__price p3 -->
+
+    {%- if swatches_option -%}
+      <ul class="card-product__swatches list-unstyled no-js-hidden" role="list">
+        {%- for value in swatches_option.values -%}
+          <li class="card-product__swatch">
+            {%-
+              liquid
+              assign swatch_option_position = swatches_option.position | minus: 1
+              assign swatch_checked = false
+              if value == current_variant.options[swatch_option_position]
+                assign swatch_checked = true
+              endif
+
+              render 'swatch', swatch_id: product_ref.id, swatch_value: value, context: context, checked: swatch_checked, input_attr: 'data-swatch', placement_context: 'card', variants_for_image: product_ref.variants, option_idx: swatches_option.position, swatch: value.swatch
+            -%}
+          </li><!-- /.card-product__swatch -->
+
+          {%- if forloop.index == 5 and swatches_option.values.size > 5 -%}
+            <li class="card-product__swatch card-product__swatch--plus-more p4 p4--fixed">
+              <span>+{{- swatches_option.values.size | minus: 5 -}}</span>
+            </li>
+
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </ul><!-- /.card-product__swatches -->
+    {%- endif -%}
+  </div><!-- /.card-product__meta mt-s -->
+
+  <script type="application/json" data-variants>
+    {{- product_ref.variants | json -}}
+  </script>
+
+  <script type="application/json" data-variants-quantity>
+    {
+      {%- for variant in product_ref.variants -%}
+        {%- unless forloop.first -%},{%- endunless -%}
+        "{{ variant.id }}": {
+          "management": "{{ variant.inventory_management }}",
+          "policy": "{{ variant.inventory_policy }}",
+          "quantity": {{ variant.inventory_quantity }}
+        }
+      {%- endfor -%}
+    }
+  </script>
+
+  <script type="application/json" data-variants-images>
+    [
+    {%- for variant in product_ref.variants -%}
+      {%- unless forloop.first -%},{%- endunless -%}
+      {%- assign variant_image = variant.image | default: product_ref.featured_image -%}
+      {
+        "id": {{ variant.id | json }},
+        "image": {
+          "src": "{{ variant_image | image_url: width: 500 }}",
+          "srcset": "{%- render 'srcset', image: variant_image -%}"
+        }
+      }
+    {%- endfor -%}
+    ]
+  </script>
+</card-product><!-- /.card-product -->

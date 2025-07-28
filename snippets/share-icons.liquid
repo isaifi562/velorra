@@ -1,0 +1,58 @@
+{% comment %}
+  Renders share links (Facebook, Twitter, Pinterest, Email)
+
+  Accepts:
+  object: {Object} - Article, Product, Collection
+{% endcomment %}
+
+{{- 'component-share-icons.css' | asset_url | stylesheet_tag -}}
+
+{%-
+  liquid
+  assign share_url = shop.url | append: request.path
+  assign share_url_encoded = share_url | url_encode
+  assign share_title = object.title | default: product.title | default: page.title | default: collection.title
+  assign share_title_encoded = share_title | url_encode
+  assign share_image = object.image | image_url: width: 800 | url_encode
+  assign mailto_title_prefix = 'See our page: '
+  capture mailto_body
+    echo share_title | append: '--' | append: share_url
+    echo object.content | default: object.description | truncatewords: 20 | strip_html
+  endcapture
+-%}
+
+<div class="share-icons pt-l pb-l color-headings">
+	<ul class="list-unstyled list-flex list-flex--center pt">
+    <li class="share__item">
+      <a href="https://facebook.com/sharer/sharer.php?u={{ share_url_encoded }}" target="_blank" title="{{- 'share.facebook_title' | t -}}" aria-label="{{- 'share.facebook_title' | t -}}" class="share__link p4 flex flex--center">
+        {%- render 'icon-facebook' -%}
+
+        {{- 'share.facebook_label' | t -}}
+      </a>
+    </li>
+
+    <li class="share__item">
+      <a href="https://twitter.com/intent/tweet/?text={{ share_title_encoded }}&amp;url={{ share_url_encoded }}" target="_blank" title="{{- 'share.twitter_title' | t -}}" aria-label="{{- 'share.twitter_title' | t -}}" class="share__link p4 flex flex--center">
+        {%- render 'icon-twitter' -%}
+
+        {{- 'share.twitter_label' | t -}}
+      </a>
+    </li>
+
+    <li class="share__item">
+      <a href="https://pinterest.com/pin/create/button/?url={{ share_url_encoded }}&amp;media={{ share_image }}&amp;description={{ share_title_encoded }}" target="_blank" title="{{- 'share.pinterest_title' | t -}}" aria-label="{{- 'share.pinterest_title' | t -}}" class="share__link p4 flex flex--center">
+        {%- render 'icon-pinterest' -%}
+
+        {{- 'share.pinterest_label' | t -}}
+      </a>
+    </li>
+
+    <li class="share__item">
+      <a href="mailto:?subject={{ mailto_title_prefix | append: share_title_encoded }}&amp;body={{ mailto_body | url_encode }}" target="_blank" title="{{- 'share.email_title' | t -}}" aria-label="{{- 'share.email_title' | t -}}" class="share__link p4 flex flex--center">
+        {%- render 'icon-envelope' -%}
+
+        {{- 'share.email_label' | t -}}
+      </a>
+    </li>
+	</ul>
+</div><!-- /.share-icons -->

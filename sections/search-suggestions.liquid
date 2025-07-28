@@ -1,0 +1,28 @@
+{%- if predictive_search.performed -%}
+  <div id="predictive-search-results">
+    <div class="search__suggestions-inner">
+      {%- if predictive_search.resources.queries.size > 0 -%}
+        <div class="search__suggestions-results-inner">
+          <p class="search__suggestions-results-title h5">
+            {{- 'predictive_search.similar_searches' | t -}}
+
+            <button
+              class="search__suggestions-close"
+              type="button"
+              aria-label="{{- 'accessibility.close' | t -}}"
+              data-close
+            >
+              {%- render 'icon-close' -%}
+            </button>
+          </p><!-- /.search__suggestions-results-title h5 -->
+
+          {%- for query_resource in predictive_search.resources.queries -%}
+            <div class="search__suggestions-results-item p4">
+              <a href="{{- query_resource.url -}}" class="full-unstyled-link search__suggestions-query focus-inset" data-result>{{- query_resource.text -}}</a>
+            </div><!-- /.search__suggestions-results-item -->
+          {%- endfor -%}
+        </div><!-- /.search__suggestions-results-inner -->
+      {%- endif -%}
+    </div><!-- /.search__suggestions-inner -->
+  </div><!-- #predictive-search-results -->
+{%- endif -%}

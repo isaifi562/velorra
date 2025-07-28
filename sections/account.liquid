@@ -1,0 +1,84 @@
+{{- 'account-dashboard.css' | asset_url | stylesheet_tag -}}
+
+<div class="account-dashboard color-background color-paragraphs color-{{ section.settings.style }}">
+  <header class="container account__head">
+    <p class="sh sh--3 mb-0 mt-0">{{- 'customer.account.greeting_text' | t -}}</p><!-- /.sh--3 -->
+
+    <p class="h3 mt-xs mb-0 color-headings">{{- customer.first_name | escape -}}</p><!-- /.h3 -->
+  </header><!-- /.account__head -->
+
+  <div class="account__body">
+    <nav class="account__nav pb-s pb-0--large bd-b">
+      <div class="container container--no-gutter">
+        <ul class="list-unstyled flex">
+          <li>
+            <a href="{{- routes.account_url -}}" class="p4 link-underline flex pt-s pb-s {%- if template.name == 'account' and template.suffix == nil %} is-active{%- endif -%}">{{- 'customer.account.tabs.account' | t -}}</a><!-- /.p4 -->
+          </li>
+
+          <li>
+            <a href="{{- routes.account_url -}}?view=order-history" class="p4 link-underline flex pt-s pb-s {%- if template.name == 'account' and template.suffix != nil %} is-active{%- endif -%}">{{- 'customer.account.tabs.order_history' | t -}}</a><!-- /.p4 -->
+          </li>
+
+          <li>
+            <a href="{{- routes.account_addresses_url -}}" class="p4 link-underline flex pt-s pb-s {%- if template.name == 'addresses' %} is-active{%- endif -%}">{{- 'customer.account.tabs.address' | t -}}</a><!-- /.p4 -->
+          </li>
+
+          <li class="account__logout">
+            <a href="{{- routes.account_logout_url -}}" class="p4 link-underline pt-s pb-s flex flex--center">
+              {%- render 'icon-logout' -%}
+
+              {{- 'customer.logout' | t -}}
+            </a><!-- /.p4 -->
+          </li>
+        </ul>
+      </div><!-- /.container -->
+    </nav><!-- /.account__nav -->
+
+    <div class="container account__content">
+      {%-
+        liquid
+        case template.name
+          when 'account'
+            if template.suffix == nil
+              render 'account-overview'
+            else
+              render 'order-history'
+            endif
+          when 'order'
+            render 'order-details'
+          when 'addresses'
+            render 'addresses'
+        endcase
+      -%}
+    </div><!-- /.account__content -->
+  </div><!-- /.account__body -->
+</div><!-- /.account-dashboard -->
+
+{% schema %}
+{
+  "name": "t:sections.account.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,23 @@
+{%- if settings.phone != blank or settings.email != blank -%}
+  <ul class="contact-links p4 list-unstyled">
+    {%- if settings.phone != blank -%}
+      <li>
+        <a href="tel:{{- settings.phone -}}" class="inline-unstyled-link">
+          {%- render 'icon-phone' -%}
+
+          <span>{{- settings.phone -}}</span>
+        </a>
+      </li>
+    {%- endif -%}
+
+    {%- if settings.email != blank -%}
+      <li>
+        <a href="mailto:{{- settings.email -}}" class="inline-unstyled-link">
+        {%- render 'icon-envelope' -%}
+
+          <span class="underline">{{- settings.email -}}</span>
+        </a>
+      </li>
+    {%- endif -%}
+  </ul><!-- /.contact-links p4 list-unstyled -->
+{%- endif -%}

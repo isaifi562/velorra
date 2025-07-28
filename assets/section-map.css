@@ -1,0 +1,14 @@
+.no-js .map {
+  display: none;
+}
+
+.map iframe {
+  width: 100%;
+  min-height: 104.53vw;
+}
+
+@media (min-width: 990px) {
+  .map iframe {
+    min-height: 31.25vw;
+  }
+}

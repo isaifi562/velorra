@@ -1,0 +1,17 @@
+/* ------------------------------------------------------------ *\
+  form-recipient
+\* ------------------------------------------------------------ */
+
+.form-recipient {
+  display: block;
+  width: 100%;
+}
+
+.form-recipient .form-recipient__fields {
+  display: none;
+}
+
+.form-recipient [data-recipient-checkbox]:checked ~ .form-recipient__fields {
+  display: block;
+  width: 100%;
+}

@@ -1,0 +1,161 @@
+{%- comment -%}
+  Accepts:
+
+  - menu {Linklist}
+  - highlighted_links {String}
+  - show_on_desktop {Boolean}
+{%- endcomment -%}
+
+<header-drawer class="header-drawer {%- unless show_on_desktop %} large-up-hide{%- endunless -%}">
+  <details id="Details-menu-drawer-container" class="header-drawer__container">
+    <summary class="header-drawer__button focus-inset" aria-label="{{- 'accessibility.menu' | t -}}">
+      {%- render 'icon-hamburger' -%}
+      {%- render 'icon-close' -%}
+    </summary><!-- /.header-drawer__button focus-inset -->
+
+    <div class="header-drawer__content" id="menu-drawer" tabindex="-1">
+      <div class="header-drawer__overlay" data-drawer-overlay></div>
+
+      <div class="header-drawer__search">
+        {%- render 'form-search' -%}
+      </div><!-- /.header-drawer__search -->
+
+      <div class="header-drawer__body" data-scroll-container>
+        <nav class="header-drawer__nav">
+          <ul class="header-drawer__menu list-unstyled" role="list">
+            {%- for link in menu.links -%}
+              {%- liquid
+                assign link_color = false
+                capture link_color
+                  render 'highlight-link', link: link, highlighted_links: highlighted_links
+                endcapture
+              -%}
+
+              <li class="header-drawer__menu-item">
+                {%- if link.links.size > 0 -%}
+                  <details id="Details-menu-drawer-menu-item-{{- forloop.index -}}">
+
+                    <summary class="header-drawer__link p2 focus-inset{% if link.child_active %} is-current{% endif %}">
+                      <a
+                        href="{{- link.url -}}"
+                        class="header-drawer__link full-unstyled-link focus-inset{% if link.current %} is-current{% endif %}"
+                        {% if link.current %} aria-current="page"{% endif %}
+                        {% if link_color %} style="color: {{ link_color }};"{% endif %}
+                      >
+                        {{- link.title | escape -}}
+                      </a>
+
+                      <div class="header-drawer__link-arrow">
+                        {%- render 'icon-chevron-right' -%}
+                      </div><!-- /.header-drawer__link-arrow -->
+                    </summary>
+
+                    <div class="header-drawer__submenu" id="link-{{- link.title | escape -}}" tabindex="-1" data-scroll-container>
+                      <button
+                        onclick="this.closest('details').querySelector('summary').click()"
+                        class="header-drawer__back p3"
+                      >
+                        {%- render 'icon-chevron-left' -%}
+
+                        <span>{{- 'accessibility.back' | t -}}</span>
+                      </button>
+
+                      <span class="header-drawer__title uppercase p5">
+                        {{- link.title -}}
+                      </span>
+
+                      <ul class="header-drawer__menu list-unstyled" role="list" tabindex="-1">
+                        {%- for child_link in link.links -%}
+                          <li class="header-drawer__menu-item">
+                            {%- if child_link.links.size > 0 -%}
+                              <details id="Details-menu-drawer-submenu-{{- forloop.index -}}">
+                                <summary class="header-drawer__link focus-inset">
+                                  <a href="{{- child_link.url -}}" class="header-drawer__link full-unstyled-link focus-inset{% if child_link.current %} is-current{% endif %}"{% if child_link.current %} aria-current="page"{% endif %}>{{- child_link.title | escape -}}</a>
+
+                                  <div class="header-drawer__link-arrow">
+                                    {%- render 'icon-chevron-right' -%}
+                                  </div><!-- /.header-drawer__link-arrow -->
+                                </summary>
+
+                                <div class="header-drawer__submenu" id="childlink-{{- child_link.title | escape -}}" data-scroll-container>
+                                  <button
+                                    onclick="this.closest('details').querySelector('summary').click()"
+                                    class="header-drawer__back p3"
+                                  >
+                                    {%- render 'icon-chevron-left' -%}
+
+                                    <span>{{- 'accessibility.back' | t -}}</span>
+                                  </button>
+
+                                  <span class="header-drawer__title uppercase p5">
+                                    {{- link.title }} / {{ child_link.title -}}
+                                  </span>
+
+                                  <ul class="header-drawer__menu list-unstyled" role="list" tabindex="-1">
+                                    {%- for grand_child_link in child_link.links -%}
+                                      <li class="header-drawer__menu-item">
+                                        <a href="{{- grand_child_link.url -}}" class="header-drawer__link full-unstyled-link focus-inset{% if grand_child_link.current %} is-current{% endif %}"{% if grand_child_link.current %} aria-current="page"{% endif %}>
+                                          {{- grand_child_link.title | escape -}}
+                                        </a>
+                                      </li><!-- /.header-drawer__menu-item -->
+                                    {%- endfor -%}
+                                  </ul><!-- /.header-drawer__menu list-unstyled -->
+                                </div><!-- /.header-drawer__submenu -->
+                              </details>
+                            {%- else -%}
+                              <a href="{{- child_link.url -}}" class="header-drawer__link full-unstyled-link focus-inset{% if child_link.current %} is-current{% endif %}"{% if child_link.current %} aria-current="page"{% endif %}>
+                                {{- child_link.title | escape -}}
+                              </a>
+                            {%- endif -%}
+                          </li><!-- /.header-drawer__menu-item -->
+                        {%- endfor -%}
+                      </ul><!-- /.header-drawer__menu list-unstyled -->
+                    </div><!-- /.header-drawer__submenu -->
+                  </details>
+                {%- else -%}
+                  <a
+                    href="{{- link.url -}}"
+                    class="header-drawer__link p2 full-unstyled-link focus-inset{% if link.current %} is-current{% endif %}"
+                    {% if link.current %}aria-current="page"{% endif %}
+                  >{{- link.title | escape -}}</a>
+                {%- endif -%}
+              </li><!-- /.header-drawer__menu-item -->
+            {%- endfor -%}
+          </ul><!-- /.header-drawer__menu list-unstyled -->
+        </nav><!-- /.header-drawer__nav -->
+      </div><!-- /.header-drawer__body -->
+
+      <div class="header-drawer__foot">
+        <ul class="list-unstyled">
+          <li>
+            <a
+              href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+              class="full-unstyled-link p3"
+            >
+              {%- render 'icon-user' -%}
+              <span>
+                {%- if customer -%}
+                  {{- 'accessibility.account' | t -}}
+                {%- else -%}
+                  {{- 'accessibility.sign_in' | t -}}
+                {%- endif -%}
+              </span>
+            </a>
+          </li>
+        </ul><!-- /.list-unstyled -->
+
+        {%- if section.settings.enable_country or section.settings.enable_language -%}
+          <div class="header-drawer__localization large-up-hide">
+            {% render 'localization-dropdowns',
+              placement: 'sidenav',
+              enable_country: section.settings.enable_country,
+              enable_country_name: section.settings.enable_country_name,
+              enable_country_flag: section.settings.enable_country_flag,
+              enable_language: section.settings.enable_language
+            %}
+          </div><!-- /.header-drawer__localization -->
+        {%- endif -%}
+      </div><!-- /.header-drawer__foot -->
+    </div><!-- /#menu-drawer.header-drawer__content -->
+  </details><!-- /#Details-menu-drawer-container.header-drawer__container -->
+</header-drawer><!-- /.header-drawer large-up-hide -->

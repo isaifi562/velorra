@@ -1,0 +1,65 @@
+{{- 'component-breadcrumbs.css' | asset_url | stylesheet_tag -}}
+
+{%-
+  liquid
+  assign class = class | default: ''
+  assign container_class = 'container'
+  if position == 'left'
+    assign container_class = container_class | append: ' container--fullwidth'
+  endif
+  capture divider_html
+    echo '<li class="breadcrumbs__item breadcrumbs__item--divider">/</li><!-- /.breadcrumbs__item breadcrumbs__item--divider -->'
+  endcapture
+-%}
+
+<nav role="navigation" aria-label="{{- 'general.breadcrumbs.label' | t -}}" class="breadcrumbs p4 pt-s pb-s bd-b pt-m--large pb-m--large {{ class }}">
+  <div class="{{- container_class -}}">
+    <ul class="breadcrumbs__items list-unstyled" role="list">
+      <li class="breadcrumbs__item">
+        <a href="{{- routes.root_url -}}" class="breadcrumbs__link full-unstyled-link motion-reduce">
+          {{- 'general.breadcrumbs.home' | t -}}
+        </a>
+      </li><!-- /.breadcrumbs__item -->
+
+      {{- divider_html -}}
+
+      {%- if product -%}
+        <li class="breadcrumbs__item">
+          <a href="{{- routes.collections_url -}}" class="breadcrumbs__link full-unstyled-link motion-reduce">
+            {{- 'general.breadcrumbs.collections' | t -}}
+          </a>
+        </li><!-- /.breadcrumbs__item -->
+
+        {{- divider_html -}}
+      {%- endif -%}
+
+      {%- if product and collection -%}
+        <li class="breadcrumbs__item">
+          <a href="{{- collection.url -}}" class="breadcrumbs__link full-unstyled-link motion-reduce">
+            {{- collection.title | escape -}}
+          </a>
+        </li><!-- /.breadcrumbs__item -->
+
+        {{- divider_html -}}
+      {%- endif -%}
+
+      {%- if blog -%}
+        <li class="breadcrumbs__item">
+          <a href="{{- blog.url -}}" class="breadcrumbs__link full-unstyled-link motion-reduce">
+            {{- blog.title -}}
+          </a>
+        </li><!-- /.breadcrumbs__item -->
+
+        {{- divider_html -}}
+      {%- endif -%}
+
+      <li class="breadcrumbs__item">
+        {%- assign current_title = product.title | default: collection.title | default: page_title -%}
+        {%- if search -%}
+          {%- assign current_title = 'search.title' | t -%}
+        {%- endif -%}
+        <span class="breadcrumbs__link is-active">{{- current_title | escape -}}</span>
+      </li><!-- /.breadcrumbs__item -->
+    </ul><!-- /.breadcrumbs__items list-unstyled -->
+  </div><!-- /.container -->
+</nav><!-- /.breadcrumbs -->

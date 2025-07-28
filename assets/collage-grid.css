@@ -1,0 +1,29 @@
+/* ------------------------------------------------------------ *\
+  collage-grid
+\* ------------------------------------------------------------ */
+
+.collage-grid__head {
+  display: flex;
+  justify-content: var(--justify-content);
+  text-align: var(--text-align);
+}
+
+.collage-grid__grid {
+  padding-block: var(--gap);
+  display: grid;
+  grid-template-columns: 100%;
+  gap: var(--gap);
+}
+
+.collage-grid .slider__pagination {
+  position: absolute;
+  bottom: var(--spacing-step);
+  z-index: 1;
+  left: 0;
+}
+
+@media (min-width: 990px) {
+  .collage-grid__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

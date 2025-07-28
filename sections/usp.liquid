@@ -1,0 +1,241 @@
+{%- if section.blocks.size > 0 -%}
+  <link rel="stylesheet" href="{{ 'section-usp.css' | asset_url }}" media="print" onload="this.media='all'">
+
+  {%-
+    liquid
+    assign style = ''
+    if section.settings.enable_custom_background
+      if section.settings.background_gradient != blank
+        assign style = ' style="--section-background:' | append: section.settings.background_gradient | append: '"'
+      elsif section.settings.background_color != blank
+        assign style = ' style="--section-background:' | append: section.settings.background_color | append: '"'
+      else
+        assign style = ''
+      endif
+    endif
+
+    capture style_classes
+      if style != ''
+        echo ' section-background'
+      endif
+    endcapture
+  -%}
+
+  <section class="usp usp--{{ section.settings.layout }} bd-t color-paragraphs color-background color-{{ section.settings.style }} {{ style_classes }}" {{ style }}>
+    <div class="container">
+      <ul class="grid list-unstyled">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.title == blank and block.settings.text == blank -%}
+            {%- continue -%}
+          {%- endif -%}
+
+          <li class="grid__item grid__item--xs-6 grid__item--s-{{- 12 | divided_by: section.blocks.size -}}">
+            <div class="usp__icon">
+              {% render 'icon-get', icon: block.settings.icon_type %}
+            </div><!-- /.usp__icon -->
+
+            <div class="usp__content">
+              {%- if block.settings.title != blank -%}
+                <h5 class="h6 mt-0 mb-xs color-headings">{{- block.settings.title | escape -}}</h5><!-- h6 mt-0 mb-xs color-headings -->
+              {%- endif -%}
+
+              {%- if block.settings.text != blank -%}
+                <p class="p4 mt-0 mb-0">{{- block.settings.text | escape -}}</p><!-- p4 mt-0 mb-0 -->
+              {%- endif -%}
+            </div><!-- /.usp__content -->
+          </li><!-- /.grid__item -->
+        {%- endfor -%}
+      </ul><!-- /.grid -->
+    </div><!-- /.container -->
+  </section><!-- /.usp bd-t color-paragraphs color-background -->
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.usp.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:sections.usp.settings.layout.label",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.usp.settings.layout.options.option_1"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.usp.settings.layout.options.option_2"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.section_colors.header",
+      "info": "t:sections.global.settings.section_colors.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_background",
+      "label": "t:sections.global.settings.section_colors.checkbox",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.global.settings.section_colors.color"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "t:sections.global.settings.section_colors.gradient"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "t:sections.usp.blocks.item.name",
+      "type": "item",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.usp.blocks.item.settings.title.label",
+          "default": "Promotional heading"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "t:sections.usp.blocks.item.settings.text.label",
+          "default": "Provide descriptive text, engaging your customers."
+        },
+        {
+          "type": "select",
+          "id": "icon_type",
+          "label": "t:sections.usp.blocks.item.settings.icon_type.label",
+          "options": [
+            {
+              "value": "none",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_1"
+            },
+            {
+              "value": "truck",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_2"
+            },
+            {
+              "value": "card",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_3"
+            },
+            {
+              "value": "cash",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_4"
+            },
+            {
+              "value": "shield-check",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_5"
+            },
+            {
+              "value": "globe",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_6"
+            },
+            {
+              "value": "pin",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_7"
+            },
+            {
+              "value": "lock",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_8"
+            },
+            {
+              "value": "mail",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_9"
+            },
+            {
+              "value": "ruler",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_10"
+            },
+            {
+              "value": "phone",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_11"
+            },
+            {
+              "value": "check",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_12"
+            },
+            {
+              "value": "tag",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_13"
+            },
+            {
+              "value": "calendar",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_14"
+            },
+            {
+              "value": "refresh",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_15"
+            },
+            {
+              "value": "exclamation_mark",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_16"
+            },
+            {
+              "value": "question_mark",
+              "label": "t:sections.usp.blocks.item.settings.icon_type.options.option_17"
+            }
+          ],
+          "default": "none"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.usp.name",
+      "blocks": [
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "*"
+    ],
+    "groups": [
+      "aside",
+      "footer"
+    ]
+  }
+}
+{% endschema %}

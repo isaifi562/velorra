@@ -1,0 +1,101 @@
+/* ------------------------------------------------------------ *\
+  image-gallery
+\* ------------------------------------------------------------ */
+
+image-gallery,
+image-gallery-slider {
+  display: block;
+}
+
+image-gallery-slider[data-no-arrows] .slider__arrows,
+image-gallery-slider[data-no-pagination] .slider__pagination {
+  display: none;
+}
+
+.image-gallery__images {
+  grid-template-columns: repeat(var(--grid-column-count), 1fr);
+  gap: var(--grid-gap);
+}
+
+@media screen and (min-width: 750px) {
+  .image-gallery__images {
+    grid-template-columns: repeat(var(--grid-column-count-desktop), 1fr);
+  }
+}
+
+.image-gallery__images--grid {
+  display: grid;
+}
+
+.image-gallery__image {
+  position: relative;
+  font-size: 0;
+}
+
+.image-gallery__image img,
+.image-gallery__image svg {
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--media-ratio);
+  object-fit: cover;
+}
+
+.image-gallery__icon {
+  color: var(--color-paragraphs);
+  background-color: var(--color-background-transparent-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5.6rem;
+  height: 5.6rem;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  transition: opacity var(--duration-default)
+    var(--transition-cubic-bezier);
+  z-index: 2;
+}
+
+.image-gallery__icon svg {
+  width: auto;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .image-gallery__icon {
+    opacity: 0;
+  }
+
+  .image-gallery__image:hover .image-gallery__icon {
+    opacity: 1;
+  }
+}
+
+.image-gallery__images .slider__pagination {
+  margin-top: var(--spacing-step);
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 990px) {
+  @media screen  {
+    .image-gallery__images .slider-component .slider__arrows {
+      transform: translateY(calc(-50% - 0.8rem));
+    }
+  }
+}
+
+.image-gallery-thumbs {
+  padding: calc(var(--spacing-step) * 2);
+}
+
+.image-gallery-thumbs .media {
+  cursor: pointer;
+  transition: opacity var(--duration-default) ease-in-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .image-gallery-thumbs .media:hover {
+    opacity: 0.5;
+  }
+}

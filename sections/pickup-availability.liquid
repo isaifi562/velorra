@@ -1,0 +1,65 @@
+{%-
+  liquid
+  capture color_style
+    render 'get-parameter', param: 'color-style'
+  endcapture
+  assign pick_up_availabilities = product.selected_variant.store_availabilities
+  assign product_title = product.title | escape
+-%}
+{%- capture modal_content -%}
+  <h2 class="h4 mt-0 mb-xs">{{- product_title -}}</h2>
+
+  {%- unless product.has_only_default_variant -%}
+    <ul class="pickup-availability-modal__options list-unstyled p3">
+      {%-
+        liquid
+        for product_option in product.options_with_values
+          for value in product_option.values
+            if value != product_option.selected_value
+              continue
+            endif
+
+            echo '<li>'
+            echo product_option.name | append: ': ' | append: '<strong>' | append: value | append: '</strong>'
+            echo '</li>'
+          endfor
+        endfor
+      -%}
+    </ul>
+  {%- endunless -%}
+
+  <ul class="pickup-availability-modal__list list-unstyled mt-l">
+    {%- for availability in pick_up_availabilities -%}
+      <li class="pickup-availability-modal__list-item">
+        <h3 class="h5 mt-0 mb-xs">{{- availability.location.name | escape -}}</h3>
+
+        <p class="pickup-availability-modal__status{% unless availability.available %} is-inactive{% endunless %} p4 mt-0 mb-s">
+          {%- if availability.available -%}
+            {% render 'icon-tick' %} {{ 'products.product.pickup_availability.pick_up_available' | t }}, {{ availability.pick_up_time | downcase }}
+          {%- else -%}
+            {% render 'icon-dot' %} {{ 'products.product.pickup_availability.pick_up_unavailable' | t }}
+          {%- endif -%}
+        </p>
+
+        <div class="p4">
+          {%- assign address = availability.location.address -%}
+
+          <address>
+            {{ address | format_address | replace: '<p', '<p class="mt-0 mb-0"' }}
+
+            {%- if address.phone.size > 0 -%}
+              <p class="mt-0 mb-0">{{ address.phone }}</p>
+            {%- endif -%}
+          </address>
+        </div>
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endcapture -%}
+{%-
+  liquid
+  assign title = 'products.product.pickup_availability.modal_title' | t: title: product_title
+  assign id = 'Product-Pickup-availability-Modal-' | append: product.selected_variant.id
+  assign class = 'pickup-availability-modal' | append: ' color-' | append: color_style
+  render 'modal-dialog', title: title, content: modal_content, id: id, modifiers: 'pickup-availability', remove: true, class: class
+-%}

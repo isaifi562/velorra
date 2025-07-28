@@ -1,0 +1,196 @@
+.spr-starrating.spr-summary-starrating {
+  align-items: center;
+}
+
+.spr-starrating.spr-summary-starrating .spr-stars span[role='img'],
+.spr-form-input.spr-starrating {
+  display: flex;
+  align-items: center;
+}
+
+.spr-form-input.spr-starrating,
+.spr-form-input.spr-starrating a::before,
+#shopify-product-reviews .spr-icon-star::before,
+#shopify-product-reviews .spr-icon-star-empty::before,
+#shopify-product-reviews .spr-icon-star-half::before,
+#shopify-product-reviews .spr-icon-star-half-alt::before {
+  color: var(--color-paragraphs);
+  font-size: 1.6rem;
+}
+
+.spr-form-input.spr-starrating a,
+#shopify-product-reviews .spr-icon-star-empty {
+  opacity: 1;
+}
+
+.spr-starrating.spr-summary-starrating .spr-stars,
+.spr-starrating.spr-summary-starrating
+  .spr-stars
+  span[role='img']
+  svg {
+  margin-right: var(--spacing-step);
+}
+
+#shopify-product-reviews {
+  padding: calc(var(--spacing-step) * 4) 0;
+  margin: calc(var(--spacing-step) * 2) 0 !important;
+}
+
+#shopify-product-reviews .spr-container {
+  max-width: var(--page-width);
+  padding: 0 var(--page-gap);
+  margin: 0 auto;
+  border: none;
+}
+
+#shopify-product-reviews .spr-summary {
+  text-align: left;
+}
+
+#shopify-product-reviews .spr-summary-caption,
+#shopify-product-reviews .spr-header-title {
+  display: block;
+  margin-bottom: calc(var(--spacing-step) * 3);
+}
+
+@media screen and (min-width: 990px) {
+  #shopify-product-reviews {
+    padding: calc(var(--spacing-step) * 9) 0;
+  }
+
+  #shopify-product-reviews .spr-container {
+    padding: 0 var(--page-gap-desktop);
+  }
+
+  #shopify-product-reviews .spr-summary {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  #shopify-product-reviews .spr-summary-caption {
+    margin-bottom: 0;
+  }
+}
+
+#shopify-product-reviews .spr-summary::before,
+#shopify-product-reviews .spr-summary::after {
+  content: none;
+}
+
+#shopify-product-reviews .spr-summary-actions {
+  display: block;
+  margin-left: auto;
+}
+
+#shopify-product-reviews .spr-summary-actions-newreview {
+  float: none;
+  min-width: 20rem;
+  width: 100%;
+}
+
+@media screen and (min-width: 990px) {
+  #shopify-product-reviews .spr-summary-actions-newreview {
+    width: auto;
+  }
+}
+
+#shopify-product-reviews .spr-header-title {
+  text-align: left;
+}
+
+#shopify-product-reviews .spr-review,
+#shopify-product-reviews .spr-form {
+  border-color: var(--color-seperators);
+  border-width: 0.1rem;
+}
+
+#shopify-product-reviews .spr-form {
+  padding: calc(var(--spacing-step) * 3) 0 0 0;
+  margin: calc(var(--spacing-step) * 3) 0 0 0;
+}
+
+#shopify-product-reviews .spr-form-label {
+  line-height: inherit;
+}
+
+#shopify-product-reviews .spr-form-input-textarea {
+  background-color: transparent !important;
+  padding: 0 !important;
+  height: 100% !important;
+  min-height: auto;
+  resize: none;
+}
+
+#shopify-product-reviews .spr-starrating.spr-summary-starrating {
+  margin-bottom: calc(var(--spacing-step) * 2);
+  margin-right: calc(var(--spacing-step) * 2);
+}
+
+#shopify-product-reviews .spr-starrating.spr-summary-starrating i {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (min-width: 990px) {
+  #shopify-product-reviews .spr-starrating.spr-summary-starrating {
+    margin-bottom: 0;
+  }
+}
+
+#shopify-product-reviews .spr-review {
+  margin-bottom: calc(var(--spacing-step) * 2);
+}
+
+#shopify-product-reviews .spr-review:first-child {
+  margin-top: calc(var(--spacing-step) * 5);
+}
+
+#shopify-product-reviews .spr-review-header-starratings {
+  margin-bottom: var(--spacing-step);
+}
+
+#shopify-product-reviews .spr-review-header-starratings .spr-icon {
+  margin-right: var(--spacing-step);
+}
+
+#shopify-product-reviews .spr-review-header-title {
+  margin-bottom: var(--spacing-step);
+}
+
+#shopify-product-reviews .spr-review-header-byline {
+  font-style: normal;
+  margin-bottom: var(--spacing-step);
+}
+
+#shopify-product-reviews .spr-review-reportreview {
+  text-decoration: none;
+}
+
+#shopify-product-reviews .spr-review-reportreview:hover {
+  text-decoration: underline;
+}
+
+@media screen and (min-width: 990px) {
+  #shopify-product-reviews .spr-review-header-title,
+  #shopify-product-reviews .spr-review-header-starratings,
+  #shopify-product-reviews .spr-review-header-byline {
+    margin-bottom: calc(var(--spacing-step) * 2);
+  }
+}
+
+.spr-starrating.spr-summary-starrating a {
+  padding-right: 0;
+  color: currentColor;
+  text-decoration: none;
+}
+
+.spr-pagination a {
+  color: currentColor;
+}
+
+.spr-pagination-page.is-active,
+.spr-pagination-page a {
+  padding: 0 var(--spacing-step);
+}

@@ -1,0 +1,47 @@
+<div class="order-history">
+  <h1 class="h4 mt-0 mb-xl color-headings">{{- 'customer.account.order_history' | t -}}</h1><!-- /.h4 -->
+
+  {%- if customer.orders.size > 0 -%}
+    {%- paginate customer.orders by 8 -%}
+      <div class="account__table mb-m" id="orders">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="p3 bold">{{- 'customer.orders.order' | t -}}</th>
+
+              <th class="p3 bold">{{- 'customer.orders.order_date' | t -}}</th>
+
+              <th class="p3 bold">{{- 'customer.orders.payment_status' | t -}}</th>
+
+              <th class="p3 bold">{{- 'customer.orders.fulfillment_status' | t -}}</th>
+
+              <th class="p3 bold">{{- 'customer.orders.total' | t -}}</th>
+            </tr>
+          </thead>
+
+          <tbody class="p3">
+            {%- for order in customer.orders -%}
+              {%- render 'order-row-item', order: order -%}
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div><!-- /.account__table -->
+
+      {%- capture pagination_html -%}
+        {%- render 'pagination', paginate: paginate, anchor: '#orders' -%}
+      {%- endcapture -%}
+
+      {%- assign pagination_html_trimmed = pagination_html | strip -%}
+
+      {%- if pagination_html_trimmed.size > 0 -%}
+        <div class="account__paging">
+          {{- pagination_html_trimmed -}}
+        </div><!-- /.account__paging -->
+      {%- endif -%}
+    {%- endpaginate -%}
+  {%- else -%}
+    <p class="p1">
+      {{- 'customer.orders.orders_empty' | t -}}
+    </p><!-- /.h3 -->
+  {%- endif -%}
+</div><!-- /.order-history -->

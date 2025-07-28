@@ -1,0 +1,125 @@
+{%- comment -%}
+  Renders cart drawer
+
+  Usage:
+  {%- render 'cart-drawer' -%}
+{%- endcomment -%}
+
+{{- 'component-cart-drawer.css' | asset_url | stylesheet_tag -}}
+{{- 'component-form-elements.css' | asset_url | stylesheet_tag -}}
+
+<link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'section-cart.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>
+  {{- 'component-cart-items.css' | asset_url | stylesheet_tag -}}
+  {{- 'section-cart.css' | asset_url | stylesheet_tag -}}
+</noscript>
+
+<script src="{{- 'cart.js' | asset_url -}}" defer="defer"></script>
+<script src="{{- 'cart-drawer.js' | asset_url -}}" defer="defer"></script>
+<script src="{{- 'cart-drawer-upsell.js' | asset_url -}}" defer="defer"></script>
+
+<cart-drawer>
+  <div class="cart-drawer color-{{- settings.cart_drawer_style -}}" id="CartDrawer">
+    <div id="CartDrawer-Overlay"class="cart-drawer__overlay"></div><!-- /.cart-drawer__overlay -->
+
+    <div
+      class="cart-drawer__inner motion-reduce"
+      role="dialog"
+      aria-modal="true"
+      aria-label="{{- 'cart.title' | t -}}"
+      tabindex="-1"
+    >
+      <div class="cart-drawer__head">
+        <p class="cart-drawer__title h4" data-cart-title>
+          {{ 'cart.title' | t }}{% if cart.item_count > 0 %} ({{ cart.item_count }}){% endif %}
+        </p><!-- /.cart-drawer__title h4 -->
+
+        <button
+          class="cart-drawer__close"
+          type="button"
+          onclick="this.closest('cart-drawer').close()"
+          aria-label="{{- 'accessibility.close' | t -}}"
+          data-drawer-close
+        >
+          {%- render 'icon-close' -%}
+        </button>
+      </div><!-- /.cart-drawer__head -->
+
+      {%- render 'shipping-bar', class: 'cart-drawer__shipping-bar' -%}
+
+      <div class="cart-drawer__body" id="CartDrawer-Body">
+        {%- if cart == empty -%}
+          <div class="cart-drawer__empty center">
+            <div class="cart-drawer__empty-inner">
+              <p class="h5">{{- 'cart.empty' | t -}}</p>
+
+              <div class="cart-drawer__empty-actions">
+                {%-
+                  liquid
+                  assign button_value = 'cart.shop_now' | t
+                  render 'button', type: 'link', href: settings.empty_cart_link, css: 'link', value: button_value, styles: 's'
+                -%}
+              </div><!-- /.cart-drawer__empty-actions -->
+            </div><!-- /.cart-drawer__empty-inner -->
+          </div><!-- /.cart-drawer__empty center -->
+
+          {%- render 'cart-drawer-upsells',
+            title: settings.cart_empty_upsell_title,
+            resources: settings.cart_empty_upsell_product_list
+          -%}
+        {%- else -%}
+          <cart-drawer-items>
+            <form
+              action="{{- routes.cart_url -}}"
+              id="CartDrawer-Form"
+              class="cart-drawer__form"
+              method="post"
+            >
+              <div class="cart-drawer__contents" id="CartDrawer-CartItems">
+                <table class="cart-drawer__items" role="table">
+                  <tbody>
+                    {%- for line_item in cart.items -%}
+                      {%- render 'line-item', line_item: line_item -%}
+                    {%- endfor -%}
+                  </tbody>
+                </table><!-- /.cart-drawer__items -->
+              </div><!-- /#CartDrawer-CartItems.cart-drawer__contents -->
+            </form>
+          </cart-drawer-items>
+
+          {%- if settings.cart_upsell_use_recommendations_api -%}
+            {%- assign upsell_url = routes.product_recommendations_url | append: '?section_id=cart-drawer&product_id=' | append: cart.items[0].product_id | append: '&limit=4' -%}
+            {%- render 'cart-drawer-upsells',
+              title: settings.cart_upsell_title,
+              url: upsell_url
+            -%}
+          {%- elsif settings.cart_upsell_product_list != blank -%}
+            {%- render 'cart-drawer-upsells',
+              title: settings.cart_upsell_title,
+              resources: settings.cart_upsell_product_list
+            -%}
+          {%- endif -%}
+        {%- endif -%}
+      </div><!-- /.cart-drawer__body -->
+
+      <div class="cart-drawer__summary" data-cart-summary>
+        {%- if cart != empty -%}
+          <form
+            action="{{- routes.cart_url -}}"
+            id="CartDrawer-FormSummary"
+            class="cart-drawer__form-summary"
+            method="post"
+          >
+            {%- render 'cart-summary',
+              show_cart_link: true,
+              show_checkout_button: settings.enable_checkout_button,
+              class: 'cart-drawer__summary-inner'
+            -%}
+          </form>
+        {%- endif -%}
+      </div><!-- /.cart-drawer__summary -->
+    </div><!-- /.cart-drawer__inner -->
+  </div><!-- /#CartDrawer.cart-drawer -->
+</cart-drawer>

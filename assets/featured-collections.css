@@ -1,0 +1,15 @@
+/* ------------------------------------------------------------ *\
+  featured-collections
+\* ------------------------------------------------------------ */
+
+.featured-collections__content {
+  max-width: 80rem;
+}
+
+.featured-collections__inner.center .featured-collections__content {
+  margin-inline: auto;
+}
+
+.featured-collections__inner.right .featured-collections__content {
+  margin-inline-start: auto;
+}

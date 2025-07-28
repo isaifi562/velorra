@@ -1,0 +1,204 @@
+.account-dashboard {
+  padding-block: var(--spacing-step);
+}
+
+.account__head {
+  padding: calc(var(--spacing-step) * 3) calc(var(--spacing-step) * 4);
+}
+
+.account__nav {
+  overflow-x: auto;
+  margin-bottom: calc(var(--spacing-step) * -1);
+}
+
+.account__nav ul {
+  flex-wrap: nowrap;
+  width: max-content;
+  padding-inline: calc(var(--spacing-step) * 4);
+}
+
+.account__nav li {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.account__nav li + li {
+  margin-left: calc(var(--spacing-step) * 7);
+}
+
+.account__nav a {
+  text-decoration: none;
+  min-width: max-content;
+  position: relative;
+}
+
+.account__nav a:after {
+  content: '';
+  background-color: currentColor;
+  height: 0.2rem;
+  border-radius: 1rem;
+  position: absolute;
+  inset: auto 0 0 0;
+  transform: scaleX(0);
+  transition: transform var(--duration-default) ease-in-out;
+}
+
+.account__nav a:hover:after,
+.account__nav a.is-active:after {
+  transform: scaleX(1);
+}
+
+.account__logout svg {
+  margin-right: var(--spacing-step);
+}
+
+.account__content {
+  padding: calc(var(--spacing-step) * 5) calc(var(--spacing-step) * 4) calc(var(--spacing-step) * 7);
+}
+
+.account__table table {
+  width: 100%;
+}
+
+.account__table del + ins {
+  margin-left: var(--spacing-step);
+}
+
+.account address,
+.account__table tbody {
+  line-height: 1.57;
+}
+
+.account__table tr {
+  margin-block: calc(var(--spacing-step) * 3);
+}
+
+.account__table tr + tr {
+  padding-top: calc(var(--spacing-step) * 3);
+  border-top: 0.1rem solid var(--color-seperators);
+}
+
+.account__table td + td {
+  margin-top: var(--spacing-step);
+}
+
+.account__table tfoot {
+  border-top: 0.1rem solid var(--color-seperators);
+  border-bottom: 0.1rem solid var(--color-seperators);
+}
+
+.account__table tfoot p {
+  margin: 0;
+}
+
+.account__table tfoot p + p {
+  margin-top: var(--spacing-step);
+}
+
+.order__address + .order__address {
+  margin-top: calc(var(--spacing-step) * 5);
+}
+
+.order__addresses p {
+  margin-bottom: 0;
+}
+
+.account__paging {
+  display: flex;
+  justify-content: center;
+  padding-block: calc(var(--spacing-step) * 3);
+  margin-top: calc(var(--spacing-step) * 3);
+}
+
+@media screen and (max-width: 989px) {
+  .account__table thead {
+    display: none;
+  }
+
+  .account__table table,
+  .account__table tbody,
+  .account__table tfoot,
+  .account__table tr,
+  .account__table td {
+    display: block;
+  }
+
+  .account__table table tbody td,
+  .account__table table tfoot td {
+    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+  }
+
+  .account__table table tbody td::before {
+    content: attr(data-heading)': ';
+    font-weight: 700;
+    color: var(--color-paragraphs);
+    display: inline;
+    padding-right: 1rem;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .account__nav ul {
+    width: 100%;
+  }
+
+  .account__nav .account__logout {
+    margin-left: auto;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .account__table table {
+    text-align: left;
+    border: 0.1rem solid var(--color-seperators);
+    border-collapse: collapse;
+  }
+
+  .account__table th,
+  .account__table td {
+    padding: calc(var(--spacing-step) * 3) calc(var(--spacing-step) * 2);
+    border: 0.1rem solid var(--color-seperators);
+  }
+
+  .account__table table th:last-child,
+  .account__table table td:last-child {
+    text-align: right;
+  }
+
+  .account__col--orders {
+    flex: 1;
+  }
+
+  .account__col--address {
+    width: 30rem;
+    padding-left: 3rem;
+  }
+
+  .account__address {
+    text-align: right;
+  }
+
+  .account__paging {
+    justify-content: flex-end;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  .account-overview__inner,
+  .order__inner {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .account-overview__orders {
+    margin-bottom: 0;
+  }
+
+  .account__content {
+    padding-block: calc(var(--spacing-step) * 10) calc(var(--spacing-step) * 14);
+  }
+}

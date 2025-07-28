@@ -1,0 +1,307 @@
+{% comment %}
+    Renders single facet
+    Accepts:
+    - index: {Int} facet index
+    - section_id: {String} section id
+    - filter: {Object} filter liquid object
+    - style: {String} Accepts: 'accordion' or 'list'. Default: 'list'
+    - accordion_open: {Boolean} if accordion, set open/closed initial state.
+    - is_columns: {Boolean} set filter to show in 2 columns
+    Usage:
+    {%- render 'facet', index: forloop.index, section_id: section.id, filter: filter -%}
+{% endcomment %}
+
+{% liquid
+  assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,TRY,UYU,VES,VND' | split: ','
+  assign uses_comma_decimals = false
+  if currencies_using_comma_decimals contains cart.currency.iso_code
+    assign uses_comma_decimals = true
+  endif
+  assign filter_name_handle = filter.label | handle
+  assign swatches_option_handle = settings.swatches_option | handle
+  assign style = style | default: 'list'
+  assign accordion_open = accordion_open | default: false
+%}
+
+{%- capture facet_options -%}
+  {%- case filter.type -%}
+    {%- when 'list' -%}
+      <ul class="facet__list list-unstyled" role="list">
+        {%- for value in filter.values -%}
+          <li class="facet__item">
+            {%-
+              liquid
+              assign is_swatch = false
+              assign filter_disabled = false
+              assign filter_checked = false
+              assign filter_id = filter.label | escape | append: '-' | append: forloop.index
+              assign filter_label = value.label | escape
+
+              if filter.presentation == 'swatch' or filter.presentation == 'image' or filter_name_handle == swatches_option_handle
+                assign is_swatch = true
+              endif
+
+              if value.count == 0 and value.active == false
+                assign filter_disabled = true
+              endif
+
+              if value.active
+                assign filter_checked = true
+              endif
+
+              if is_swatch
+                render 'swatch', type: 'checkbox', swatch_id: filter_id, swatch_value: value.value, context: 'Filters', name: value.param_name, checked: filter_checked, disabled: filter_disabled, placement_context: 'filters', swatch: value.swatch, image: value.image
+              else
+                render 'checkbox-input', id: filter_id, label: filter_label, name: value.param_name, disabled: filter_disabled, value: value.value, checked: filter_checked
+              endif
+            -%}
+          </li><!-- /.facet__item -->
+        {%- endfor -%}
+      </ul><!-- /.facet__list list-unstyled -->
+
+      {%-
+        liquid
+        comment
+          Show-more button.
+        endcomment
+        if filter.values.size > 5 and filter_name_handle != swatches_option_handle and is_columns != true
+          assign value = 'collection.facets.show_more' | t
+          assign href = filter.label | prepend: '#'
+          assign attr = 'facets-show-more-trigger="' | append: filter.label | append: '"'
+          render 'button', type: 'link', href: href, css: 'link', styles: 's', value: value, class: 'facets__more', attr: attr
+        endif
+      -%}
+
+    {%- when 'price_range' -%}
+      {%- liquid
+        assign symbol_space = cart.currency.symbol | replace: '.', '' | size
+
+        if cart.currency.symbol contains '.'
+          assign symbol_space = symbol_space | plus: 0.5
+        endif
+      -%}
+
+      <price-range
+        class="facet__price"
+        data-range-active-color="var(--color-form-label)"
+        data-range-inactive-color="color-mix(in srgb, var(--color-form-label) 5%, transparent)"
+        style="--currency-symbol-length: {{ symbol_space }}rem;"
+      >
+        <div class="facet__price-row">
+          <div class="facet__price-field-wrapper">
+            <span class="facet__price-currency p3">{{- cart.currency.symbol -}}</span>
+
+            {%-
+              liquid
+              comment
+                Min value.
+              endcomment
+
+              assign label = 'collection.facets.from' | t
+              assign id = 'Filter-' | append: filter.label | escape | append: '-' | append: context | append: '-GTE'
+
+              if filter.min_value.value
+                if uses_comma_decimals
+                  assign value = filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.'
+                else
+
+                  assign value = filter.min_value.value | money_without_currency | replace: ',', ''
+                endif
+              endif
+
+              if uses_comma_decimals
+                assign max = filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.'
+              else
+
+                assign max = filter.range_max | money_without_currency | replace: ',', ''
+              endif
+
+              render 'text-input', type: 'number', name: filter.min_value.param_name, id: id, value: value, label: label, placeholder: 0, min: 0, max: max, hide_label: true
+            -%}
+
+            {%- comment -%}
+              Min value slider.
+            {%- endcomment -%}
+            {%- capture min_value_slider -%}
+              {%- liquid
+                assign id = id | append: '-fromRange'
+
+                unless value
+                  assign value = 0
+                endunless
+              -%}
+
+              <input
+                js-price-range-from
+                id="{{ id }}"
+                type="range"
+                value="{{ value }}"
+                min="0"
+                max="{{ max }}"
+              />
+            {%- endcapture -%}
+
+            {%- liquid
+              assign label = nil
+              assign id = nil
+              assign value = nil
+              assign max = nil
+            -%}
+          </div><!-- /.facet__price-field-wrapper -->
+
+          <span class="facet__price-field-spacer">-</span>
+
+          <div class="facet__price-field-wrapper">
+            <span class="facet__price-currency p3">{{- cart.currency.symbol -}}</span>
+
+            {%-
+              liquid
+              comment
+                Max value.
+              endcomment
+
+              assign label = 'collection.facets.to' | t
+              assign id = 'Filter-' | append: filter.label | escape | append: '-' | append: context | append: '-LTE'
+
+              if filter.max_value.value
+                if uses_comma_decimals
+                  assign value = filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.'
+
+                else
+                  assign value = filter.max_value.value | money_without_currency | replace: ',', ''
+                endif
+              endif
+
+              if uses_comma_decimals
+                assign placeholder = filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.'
+                assign max = filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.'
+
+              else
+                assign placeholder = filter.range_max | money_without_currency | replace: ',', ''
+                assign max = filter.range_max | money_without_currency | replace: ',', ''
+              endif
+
+              render 'text-input', type: 'number', name: filter.max_value.param_name, id: id, value: value, label: label, placeholder: placeholder, min: 0, max: max, hide_label: true
+            -%}
+
+            {%- comment -%}
+              Max value slider.
+            {%- endcomment -%}
+            {%- capture max_value_slider -%}
+              {%- liquid
+                assign id = id | append: '-toRange'
+                unless value
+                  assign value = max
+                endunless
+              -%}
+
+              <input
+                js-price-range-to
+                id="{{ id }}"
+                type="range"
+                value="{{ value }}"
+                min="0"
+                max="{{ max }}"
+              />
+            {%- endcapture -%}
+
+            {%- liquid
+              assign label = nil
+              assign id = nil
+              assign value = nil
+              assign max = nil
+              assign placeholder = nil
+            -%}
+          </div><!-- /.facet__price-field-wrapper -->
+        </div>
+
+        <div class="facet__price-row">
+          <div class="facet__price-range">
+            {{ min_value_slider }}
+            {{ max_value_slider }}
+          </div>
+        </div>
+      </price-range><!-- /.facet__price -->
+  {%- endcase -%}
+{%- endcapture -%}
+
+{%- liquid
+  comment
+    Default content classes.
+  endcomment
+  capture default_content_classes
+    echo ' js-filter'
+
+    if is_swatch
+      echo ' facet--swatches'
+    endif
+
+    if is_columns == true
+      echo ' facet--multicol'
+    endif
+  endcapture
+-%}
+
+{%- if style == 'accordion' -%}
+  {%- liquid
+    assign title = filter.label | escape
+    assign content_attr = 'data-index="' | append: context | append: '-' | append: index | append: '"'
+    assign content_class = 'facet__accordion-content ' | append: default_content_classes
+  -%}
+
+  {%- if filter.operator == 'AND' -%}
+    {%- capture facet_options -%}
+      <span class="facet__title-sub">{{ 'collection.facets.match_all' | t }}</span>
+
+      {{ facet_options }}
+    {%- endcapture -%}
+  {%- endif -%}
+
+  {%- render 'accordion-item',
+    title: title,
+    content: facet_options,
+    title_class: 'h6',
+    classes: 'accordion-item--facet pb-m',
+    content_class: content_class,
+    content_attr: content_attr,
+    expanded_by_default: accordion_open
+  -%}
+
+{%- else -%}
+  {%- liquid
+    capture content_class
+      echo 'facet p2 pt-s'
+
+      if has_border
+        echo ' facet--has-border'
+      endif
+
+      if filter.values.size > 5 and filter_name_handle != swatches_option_handle and is_columns != true
+        echo ' facet--hide-extra'
+      endif
+
+      echo default_content_classes
+    endcapture
+  -%}
+
+  <div
+    class="{{ content_class }}"
+    data-index="{{ context }}-{{ index }}"
+  >
+    <div class="facet__inner">
+      <div class="facet__head">
+        <h3 class="facet__title mt-0 mb-0 h6">
+          {{- filter.label | escape -}}
+
+          {%- if filter.operator == 'AND' -%}
+            <span class="facet__title-sub">({{ 'collection.facets.match_all' | t }})</span>
+          {%- endif -%}
+        </h3><!-- /.facet__title mt-0 mb-0 h6 -->
+      </div><!-- /.facet__head -->
+
+      <div class="facet__body pt-m pb-m bd-b">
+        {{ facet_options }}
+      </div><!-- /.facet__body -->
+    </div><!-- /.facet__inner -->
+  </div><!-- /.disclosure-has-popup.facets__disclosure.caption -->
+{%- endif -%}

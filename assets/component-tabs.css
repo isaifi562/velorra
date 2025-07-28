@@ -1,0 +1,35 @@
+collapsible-tabs {
+  display: block;
+}
+
+.tabs__nav,
+.tabs__nav li {
+  margin-bottom: var(--spacing-step);
+}
+
+.tabs__nav ul {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+@media screen and (min-width: 750px) {
+  .tabs__nav ul {
+    flex-flow: row wrap;
+    margin-bottom: calc(var(--spacing-step) * -1);
+  }
+}
+
+.tabs__nav li {
+  margin-right: calc(var(--spacing-step) * 4);
+}
+
+.tabs__tab {
+  display: none;
+}
+
+.tabs__tab.is-active,
+.tabs__tab:target {
+  display: block;
+}

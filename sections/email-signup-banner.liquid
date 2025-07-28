@@ -1,0 +1,165 @@
+{%-
+  liquid
+  assign style = ''
+  if section.settings.enable_custom_background
+    if section.settings.background_gradient != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_gradient | append: '"'
+    elsif section.settings.background_color != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_color | append: '"'
+    else
+      assign style = ''
+    endif
+  endif
+  capture style_classes
+    echo 'color-' | append: section.settings.style | append: ' color-background center '
+    if style != ''
+      echo ' section-background'
+    endif
+  endcapture
+-%}
+
+<link rel="stylesheet" href="{{ 'component-text-content.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'section-newsletter.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-form-elements.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>
+  {{- 'component-form-elements.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-text-content.css' | asset_url | stylesheet_tag -}}
+  {{- 'section-newsletter.css' | asset_url | stylesheet_tag -}}
+</noscript>
+
+<div class="section__wrapper {{ style_classes }} {{ section.settings.outer_spacing }} {{ section.settings.inner_spacing }} " {{ style }}>
+  <div class="container">
+    {%-
+      liquid
+      if section.settings.heading != blank or section.settings.paragraph != blank
+        render 'text-content', heading_value: section.settings.heading, heading_class: 'h3', heading_size_tag: 'h3', paragraph_value: section.settings.paragraph, paragraph_class: 'p3'
+      endif
+    -%}
+
+    <div class="section__form mt-m mt-xxl--large">
+      {% render 'newsletter-form', namespace: section.id, button_type: 'button' %}
+    </div><!-- /.section__form -->
+  </div><!-- /.container container--narrow -->
+</div><!-- /.section__wrapper -->
+
+{% schema %}
+{
+  "name": "t:sections.newsletter.name",
+  "tag": "section",
+  "class": "section-newsletter",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-2"
+    },
+    {
+      "type": "select",
+      "id": "outer_spacing",
+      "label": "t:sections.global.settings.outer-spacing.label",
+      "options": [
+        {
+          "value": "mt-0 mb-0 mt-0--large mb-0--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_1"
+        },
+        {
+          "value": "mt-s mb-s mt-s--large mb-s--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_2"
+        },
+        {
+          "value": "mt-l mb-l mt-l--large mb-l--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_3"
+        }
+      ],
+      "default": "mt-0 mb-0 mt-0--large mb-0--large"
+    },
+    {
+      "type": "select",
+      "id": "inner_spacing",
+      "label": "t:sections.global.settings.inner-spacing.label",
+      "options": [
+        {
+          "value": "spacing-none",
+          "label": "t:sections.global.settings.inner-spacing.options.option_1"
+        },
+        {
+          "value": "spacing-s spacing-s--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_2"
+        },
+        {
+          "value": "spacing-m spacing-m--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_3"
+        },
+        {
+          "value": "spacing-l spacing-l--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_4"
+        }
+      ],
+      "default": "spacing-s spacing-s--large"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "t:sections.global.settings.heading.label",
+      "default": "<p>Subscribe <em><strong>to newsletter</strong></em></p>"
+    },
+    {
+      "type": "richtext",
+      "id": "paragraph",
+      "label": "t:sections.global.settings.paragraph.label",
+      "default": "<p>Add descriptive text to invite your users to sign up for your newsletter.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.section_colors.header",
+      "info": "t:sections.global.settings.section_colors.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_background",
+      "label": "t:sections.global.settings.section_colors.checkbox",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.global.settings.section_colors.color"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "t:sections.global.settings.section_colors.gradient"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.newsletter.name"
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "*"
+    ],
+    "groups": [
+      "aside",
+      "footer"
+    ]
+  }
+}
+{% endschema %}

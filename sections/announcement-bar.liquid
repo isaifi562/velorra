@@ -1,0 +1,293 @@
+{{- 'section-announcement-bar.css' | asset_url | stylesheet_tag: preload: true -}}
+{{- 'swiper-bundle.min.css' | asset_url | stylesheet_tag: preload: true -}}
+{{- 'localization-dropdown.css' | asset_url | stylesheet_tag: preload: true -}}
+
+<script src="{{- 'swiper-bundle.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+<script src="{{- 'announcement-bar.js' | asset_url -}}" defer="defer" data-theme-script></script>
+
+<script src="{{- 'dropdown-disclosure.js' | asset_url -}}" defer data-theme-script></script>
+<script src="{{- 'localization-dropdown.js' | asset_url -}}" defer data-theme-script></script>
+
+{%- liquid
+  assign style = ''
+  if section.settings.enable_custom_background
+    if section.settings.background_gradient != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_gradient | append: '"'
+    elsif section.settings.background_color != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_color | append: '"'
+    else
+      assign style = ''
+    endif
+  endif
+
+  if section.settings.enable_custom_color
+    assign color = section.settings.text_color
+  else
+    assign color = 'var(--color-paragraphs)'
+  endif
+
+  capture style_classes
+    echo 'color-' | append: section.settings.style | append: ' color-background '
+    if style != ''
+      echo ' section-background'
+    endif
+  endcapture
+-%}
+
+{%- style -%}
+  .announcement-bar,
+  .announcement-bar .color-paragraphs {
+    color: {{ color }};
+  }
+{%- endstyle -%}
+
+{%- if section.settings.enable -%}
+  <announcement-bar
+    class="announcement-bar p4 {{ style_classes }} hidden {%- if section.blocks.size == 0 %} small-hide medium-hide{%- endif -%}"  {{ style }}
+    data-slider-type="{{- section.settings.type -}}"
+  >
+    <div class="container container--fullwidth">
+      <div class="announcement-bar__inner {%- if section.settings.enable_contact_links == false and section.settings.content_horizontal_alignment == 'left' %} announcement-bar__inner--left{% endif %}{% if section.settings.enable_contact_links == false and settings.enable_country == false and settings.enable_language == false %} announcement-bar__inner--full{% endif %}{%- if section.blocks.size == 0 %} announcement-bar__inner--no-content{% endif %}">
+        <div class="announcement-bar__links announcement-bar__utils p4 small-hide medium-hide">
+          {%- if section.settings.enable_contact_links -%}
+            {%- render 'contact-links' -%}
+          {%- endif -%}
+        </div><!-- /.announcement-bar__links announcement-bar__utils -->
+
+        {%- if section.blocks.size > 0 -%}
+          {%- capture content_class -%}
+            {{ section.settings.content_horizontal_alignment }}
+            {% if section.settings.type == 'controls' and section.blocks.size > 1 %} announcement-bar__content--has-arrows{% endif %}
+            {% if section.settings.enable_close %} announcement-bar__content--has-close{% endif %}
+          {%- endcapture -%}
+          <div class="announcement-bar__content {{ content_class }}">
+            <div class="swiper">
+              {%- if section.settings.type == 'controls' and section.blocks.size > 1 -%}
+                <div class="announcement-bar__arrows slider__arrows">
+                  <button class="announcement-bar__arrow announcement-bar__arrow--left" data-arrow-prev aria-label="{{- 'accessibility.previous' | t -}}">
+                    {%- render 'icon-chevron-left' -%}
+                  </button>
+
+                  <button class="announcement-bar__arrow announcement-bar__arrow--right" data-arrow-next aria-label="{{- 'accessibility.previous' | t -}}">
+                    {%- render 'icon-chevron-right' -%}
+                  </button>
+                </div><!-- /.announcement-bar__arrows slider__arrows -->
+              {%- endif -%}
+
+              <div class="swiper-wrapper">
+                {%- for block in section.blocks -%}
+                  {%- if block.settings.title == blank -%}
+                    {%- continue -%}
+                  {%- endif -%}
+
+                  <div class="swiper-slide">
+                    {%- render 'text-content', paragraph_value: block.settings.title, paragraph_class: 'announcement-bar__item', class: 'announcement-bar__item-' -%}
+                  </div><!-- /.swiper-slide -->
+                {%- endfor -%}
+              </div><!-- /.swiper -->
+            </div><!-- /.swiper-wrapper -->
+          </div><!-- /.announcement-bar__content -->
+        {%- endif -%}
+
+        <div class="announcement-bar__utils announcement-bar__utils--right">
+          {%- if section.settings.enable_country
+            or section.settings.enable_language
+            or section.settings.enable_close
+          -%}
+            {%- if section.settings.enable_country or section.settings.enable_language -%}
+              <div class="announcement-bar__currency small-hide medium-hide">
+                {% render 'localization-dropdowns',
+                  placement: 'header',
+                  enable_country: section.settings.enable_country,
+                  enable_country_name: section.settings.enable_country_name,
+                  enable_country_flag: section.settings.enable_country_flag,
+                  enable_language: section.settings.enable_language
+                %}
+              </div><!-- /.announcement-bar__currency -->
+            {%- endif -%}
+
+            {%- if section.settings.enable_close -%}
+              <button class="announcement-bar__close p4" data-close-button aria-label="{{- 'accessibility.close' | t -}}">
+                {%- render 'icon-close' -%}
+              </button>
+            {%- endif -%}
+          {%- endif -%}
+        </div><!-- /.announcement-bar__utils announcement-bar__utils--right -->
+      </div><!-- /.announcement-bar__inner -->
+    </div><!-- /.container container--fullwidth -->
+  </announcement-bar><!-- /.announcement-bar -->
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.announcement-bar.name",
+  "class": "shopify-section-announcement-bar",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.section_colors.header",
+      "info": "t:sections.global.settings.section_colors.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_background",
+      "label": "t:sections.global.settings.section_colors.checkbox",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.global.settings.section_colors.color"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "t:sections.global.settings.section_colors.gradient"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.marquee.settings.text_color_header.content",
+      "info": "t:sections.marquee.settings.text_color_header.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_color",
+      "label": "t:sections.marquee.settings.enable_custom_color.label",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.marquee.settings.text_color.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.announcement-bar.headers.general"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "t:sections.announcement-bar.settings.enable.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_close",
+      "label": "t:sections.announcement-bar.settings.enable_close.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_contact_links",
+      "label": "t:sections.announcement-bar.settings.enable_contact_links.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.announcement-bar.headers.content"
+    },
+    {
+      "type": "select",
+      "id": "content_horizontal_alignment",
+      "label": "t:sections.announcement-bar.settings.content_horizontal_alignment.label",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.announcement-bar.settings.content_horizontal_alignment.options.option_1"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.announcement-bar.settings.content_horizontal_alignment.options.option_2"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "type",
+      "label": "t:sections.announcement-bar.settings.type.label",
+      "options": [
+        {
+          "value": "loop",
+          "label": "t:sections.announcement-bar.settings.type.options.option_1"
+        },
+        {
+          "value": "controls",
+          "label": "t:sections.announcement-bar.settings.type.options.option_2"
+        }
+      ],
+      "default": "loop",
+      "info": "t:sections.announcement-bar.settings.type.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.localization.header_country.content",
+      "info": "t:sections.global.settings.localization.header_country.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_country",
+      "label": "t:sections.global.settings.localization.enable_country.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_country_name",
+      "label": "t:sections.global.settings.localization.enable_country_name.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_country_flag",
+      "label": "t:sections.global.settings.localization.enable_country_flag.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.localization.header_language.content",
+      "info": "t:sections.global.settings.localization.header_language.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_language",
+      "label": "t:sections.global.settings.localization.enable_language.label",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "name": "t:sections.announcement-bar.blocks.content_item.name",
+      "type": "content_item",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "title",
+          "label": "t:sections.announcement-bar.blocks.content_item.settings.content.label",
+          "default": "<p>Announcement text here</p>"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

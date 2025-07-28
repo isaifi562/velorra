@@ -1,0 +1,62 @@
+@media screen and (min-width: 990px) {
+  .section-image-with-text--fullwidth {
+    --image-height-based-on-container: calc((var(--page-width) / 2 - var(--page-gap-desktop)) * var(--image-aspect-ratio));
+    --image-height-based-on-viewport: calc((100vw / 2 - var(--page-gap-desktop)) * var(--image-aspect-ratio));
+    --image-height: min(var(--image-height-based-on-container), var(--image-height-based-on-viewport));
+    min-height: var(--image-height);
+  }
+
+  .section-image-with-text--fullwidth :is(.section__wrapper, .section__container, .section__grid) {
+    min-height: var(--image-height);
+  }
+
+  .section-image-with-text--fullwidth .section__wrapper {
+    position: relative;
+  }
+
+  .section-image-with-text--fullwidth .section__media {
+    position: static;
+  }
+
+  .section-image-with-text--fullwidth .section__media img,
+  .section-image-with-text--fullwidth .section__media .media__loader {
+    transform-origin: 0 0;
+    width: 50%;
+    height: var(--image-height);
+  }
+
+  .section-image-with-text--fullwidth .section__media svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+  }
+
+  .section-image-with-text--fullwidth.section-image-with-text--flipped
+    .section__media
+    img,
+  .section-image-with-text--fullwidth.section-image-with-text--flipped
+    .section__media
+    svg,
+  .section-image-with-text--fullwidth.section-image-with-text--flipped
+    .section__media
+    .media__loader {
+    left: 50%;
+  }
+
+  .section-image-with-text--fullwidth.section-image-with-text--align-top img {
+    top: 0;
+    bottom: auto;
+  }
+
+  .section-image-with-text--fullwidth.section-image-with-text--align-center img {
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+  }
+
+  .section-image-with-text--fullwidth.section-image-with-text--align-bottom img {
+    top: auto;
+    bottom: 0;
+  }
+}

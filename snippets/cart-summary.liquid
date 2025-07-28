@@ -1,0 +1,94 @@
+{%- comment -%}
+  Renders cart summary
+
+  Accepts:
+  - show_cart_link {Boolean} Show the view cart link
+  - show_checkout_button {Boolean} Show the checkout button
+  - class {String} Additional classes
+  - shipping_bar: {Bool} Show shipping bar
+
+  Usage:
+  {%- render 'cart-summary' -%}
+{%- endcomment -%}
+
+<div class="cart-summary {{ class }}" id="cart-summary">
+  <div class="cart-summary__total">
+    <strong class="cart-summary__total-title h5">
+      {{- 'cart.subtotal' | t -}}
+    </strong>
+
+    <strong class="cart-summary__total-value h6">
+      {%- if settings.show_currency_codes -%}
+        {{- cart.total_price | money_with_currency -}}
+      {%- else -%}
+        {{- cart.total_price | money -}}
+      {%- endif -%}
+    </strong>
+  </div><!-- /.cart-summary__total -->
+
+  {%- if cart.cart_level_discount_applications.size > 0 -%}
+    <ul class="list-unstyled h4" role="list" aria-label="{{- 'customer.order.discount' | t -}}">
+      {%- for discount in cart.cart_level_discount_applications -%}
+        <li>
+          {%- if settings.show_currency_codes -%}
+            {{ discount.title }}
+            (-{{ discount.total_allocated_amount | money_with_currency }})
+          {%- else -%}
+            {{- line_item.original_line_price | money -}}
+            {{ discount.title }}
+            (-{{ discount.total_allocated_amount | money }})
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul><!-- /.list-unstyled h4 -->
+  {%- endif -%}
+
+  <p class="cart-summary__taxes p3">
+    {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+      {{ 'cart.shipping_tax_policy_html' | t: link: shop.shipping_policy.url }}
+    {%- elsif cart.taxes_included -%}
+      {{ 'cart.shipppig_at_checkout_taxes_included_html' | t }}
+    {%- elsif shop.shipping_policy.body != blank -%}
+      {{ 'cart.shipping_at_checkout_html' | t: link: shop.shipping_policy.url }}
+    {%- else -%}
+      {{ 'cart.shipping_tax' | t }}
+    {%- endif -%}
+  </p><!-- /.cart-summary__taxes p3 -->
+
+  {%-
+    liquid
+    if shipping_bar
+      render 'shipping-bar', class: 'cart__shipping-bar'
+    endif
+  -%}
+
+  {%- if settings.enable_checkout_button and settings.enable_terms and shop.terms_of_service != blank -%}
+    {%- assign terms_url = shop.terms_of_service.url -%}
+    {%- assign terms_text = 'cart.terms_html' | t: terms_url: terms_url -%}
+
+    <div class="cart__terms mb-s">
+      {%- render 'checkbox-input', id: 'Terms-Conditions', label: terms_text, name: 'terms', required: true -%}
+    </div><!-- /.cart__terms -->
+  {%- endif -%}
+
+  <div class="cart-summary__actions">
+    {%-
+      liquid
+      if show_cart_link
+        assign value = 'cart.view_cart' | t
+        render 'button', type: 'link', value: value, class: 'cart-summary__button', style: 'outlined', href: routes.cart_url
+      endif
+
+      if show_checkout_button
+        assign value = 'cart.checkout' | t
+        assign classes = 'cart-summary__button'
+        if settings.enable_terms
+          assign classes = classes | append: ' not-allowed'
+        endif
+        render 'button', type: 'submit', name: 'checkout', value: value, class: classes
+      endif
+
+      assign value = nil
+    -%}
+  </div><!-- /.cart-summary__actions -->
+</div><!-- /.cart-summary -->

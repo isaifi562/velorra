@@ -1,0 +1,274 @@
+{%-
+  liquid
+  assign current_variant = product.selected_or_first_available_variant
+  capture section_id
+    render 'get-parameter', param: 'section_id'
+  endcapture
+-%}
+
+{%- if section_id == 'quickview' -%}
+  <template id="quickview">
+    {%- capture content -%}
+      <link rel="stylesheet" href="{{ 'section-product.css' | asset_url }}" media="print" onload="this.media='all'">
+      <link rel="stylesheet" href="{{ 'component-badge.css' | asset_url }}" media="print" onload="this.media='all'">
+
+      <noscript>
+        {{- 'section-product.css' | asset_url | stylesheet_tag -}}
+        {{- 'component-badge.css' | asset_url | stylesheet_tag -}}
+      </noscript>
+      <script src="{{- 'product-selector.js' | asset_url -}}" defer="defer" data-theme-script></script>
+      <product-quickview data-url="{{- product.url -}}">
+        <div class="product__inner">
+          {%- if product.media.size > 0 -%}
+            <div class="product__media">
+              {%-
+                liquid
+                assign image  = product.featured_image
+
+                if settings.enable_images_filtering
+                  assign color_option_position = product.options_by_name[settings.swatches_option].position | minus: 1
+                  assign current_color = current_variant.options[color_option_position]
+                  assign color_splitter = '|' | append: settings.swatches_option | downcase | append: ':'
+                  for product_image in product.images
+                    assign image_color = product_image.alt | split: color_splitter | last
+                    if image_color != current_color
+                      continue
+                    endif
+
+                    assign image = product_image
+
+                    break
+                  endfor
+                elsif current_variant.image
+                  assign image = current_variant.image
+                endif
+              -%}
+
+              <div
+                class="media media--{{ section.settings.media_size }}"
+                {% if section.settings.media_size == 'aspect-ratio' %}
+                  style="padding-bottom: {% render 'aspect-ratio', aspect_ratio: image.aspect_ratio %}%"
+                {% endif %}
+                data-image
+                {% if settings.enable_images_filtering %}
+                  data-image-color="{{- image.alt | split: color_splitter | last -}}"
+                {% else %}
+                  data-variant-ids="{{- image.variants | map: 'id' | join: ',' -}}"
+                {% endif %}
+              >
+                {%-
+                  liquid
+                  assign image_src = image | image_url: width: 500
+                  capture image_srcset
+                    render 'srcset', image: image
+                  endcapture
+                  assign sizes = 'auto'
+                  assign image_alt = image.alt | escape
+                  render 'image', src: image_src, srcset: image_srcset, sizes: sizes, alt: image_alt, width: image.width, height: image.height
+                -%}
+              </div><!-- /.media -->
+
+              {% assign images_colors = '' %}
+              {% for product_image in product.images %}
+                {%-
+                  liquid
+                  if product_image == image
+                    continue
+                  endif
+                  if settings.enable_images_filtering
+                    if product_image.alt contains color_splitter
+                      assign current_image_color = product_image.alt | split: color_splitter | last
+                      if images_colors contains current_image_color
+                        continue
+                      endif
+                      assign images_colors = images_colors | append: ',' | append: current_image_color
+                      assign image_wrapper_attr = 'data-image-color="' | append : current_image_color | append: '"'
+                    endif
+                  elsif product_image.attached_to_variant?
+                    assign image_variant_ids = product_image.variants | map: 'id' | join: ','
+                    assign image_wrapper_attr = 'data-variant-ids="' | append: image_variant_ids | append: '"'
+                  endif
+                  assign image_src = product_image | image_url: width: 500
+                  capture image_srcset
+                    render 'srcset', image: product_image
+                  endcapture
+                  assign sizes = 'auto'
+                  assign image_alt = product_image.alt | escape
+                -%}
+                <div
+                  class="media hidden media--{{ section.settings.media_size }}"
+                  {% if section.settings.media_size == 'aspect-ratio' %}
+                    style="padding-bottom: {% render 'aspect-ratio', aspect_ratio: product_image.aspect_ratio %}%"
+                  {% endif %}
+                  data-image
+                  {{ image_wrapper_attr }}
+                >
+                  {%- render 'image', src: image_src, srcset: image_srcset, sizes: sizes, alt: image_alt, width: product_image.width, height: product_image.height -%}
+                </div><!-- /.media -->
+              {% endfor %}
+            </div><!-- /.product__media -->
+          {%- endif -%}
+
+          <div class="product__content">
+            {%- render 'product-content' for section.blocks as block, product_ref: product, quickview: true, selling_plan_required_hide_actions: true -%}
+          </div><!-- /.product__content -->
+        </div><!-- /.product__inner -->
+      </product-quickview>
+    {%- endcapture -%}
+    {%-
+      liquid
+      assign title = product.title | escape | append: ' - ' | append: 'Quickview'
+      assign id = 'Product-Quickview-Modal-' | append: product.id | append: '--' | append: section.id
+      assign class = 'product-quickview product product--quickview color-' | append: section.settings.style
+      render 'modal-dialog', title: title, content: content, id: id, class: class, modifiers: 'quickview', remove: true
+    -%}
+  </template>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.quickview.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.quickview.settings.paragraph_info.content"
+    },
+    {
+      "type": "select",
+      "id": "media_size",
+      "label": "t:sections.main-product.settings.gallery_image_size.label",
+      "options": [
+        {
+          "value": "aspect-ratio",
+          "label": "t:sections.main-product.settings.gallery_image_size.options.option_1"
+        },
+        {
+          "value": "2-3",
+          "label": "t:sections.main-product.settings.gallery_image_size.options.option_2"
+        },
+        {
+          "value": "1-1",
+          "label": "t:sections.main-product.settings.gallery_image_size.options.option_3"
+        },
+        {
+          "value": "3-2",
+          "label": "t:sections.main-product.settings.gallery_image_size.options.option_4"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.main-product.settings.gallery_image_size.options.option_5"
+        },
+        {
+          "value": "5-4",
+          "label": "t:sections.main-product.settings.gallery_image_size.options.option_6"
+        }
+      ],
+      "default": "portrait"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "name": "t:sections.main-product.blocks.title.name",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "t:sections.main-product.blocks.price.name",
+      "limit": 1
+    },
+    {
+      "type": "variant-selector",
+      "name": "t:sections.main-product.blocks.variant-selector.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:sections.main-product.blocks.variant-selector.settings.header_variant_picker.content"
+        },
+        {
+          "type": "select",
+          "id": "size_options_picker_type",
+          "label": "t:sections.main-product.blocks.variant-selector.settings.size_options.label",
+          "options": [
+            {
+              "value": "button",
+              "label": "t:sections.main-product.blocks.variant-selector.settings.other_options.options.option_1"
+            },
+            {
+              "value": "select",
+              "label": "t:sections.main-product.blocks.variant-selector.settings.other_options.options.option_2"
+            }
+          ],
+          "default": "button"
+        },
+        {
+          "type": "select",
+          "id": "other_options_picker_type",
+          "label": "t:sections.main-product.blocks.variant-selector.settings.other_options.label",
+          "options": [
+            {
+              "value": "button",
+              "label": "t:sections.main-product.blocks.variant-selector.settings.other_options.options.option_1"
+            },
+            {
+              "value": "select",
+              "label": "t:sections.main-product.blocks.variant-selector.settings.other_options.options.option_2"
+            }
+          ],
+          "default": "select"
+        }
+      ]
+    },
+    {
+      "type": "quantity-input",
+      "name": "t:sections.main-product.blocks.quantity-input.name",
+      "limit": 1
+    },
+    {
+      "type": "buy-buttons",
+      "name": "t:sections.main-product.blocks.buy-buttons.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "label": "t:sections.main-product.blocks.buy-buttons.settings.show_dynamic_checkout.label",
+          "info": "t:sections.main-product.blocks.buy-buttons.settings.show_dynamic_checkout.info",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_gift_card_recipient",
+          "default": false,
+          "label": "t:sections.main-product.blocks.buy-buttons.settings.show_gift_card_recipient.label",
+          "info": "t:sections.main-product.blocks.buy-buttons.settings.show_gift_card_recipient.info"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}

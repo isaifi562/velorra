@@ -1,0 +1,32 @@
+{% comment %}
+    Renders a result card
+    Accepts:
+    - result: {Object}  Liquid object (article/page)
+    - class: {String} CSS class to apply to the card
+    Usage:
+    {%- render 'card-result', result: result, class: 'grid__item grid__item--lg-3' -%}
+{% endcomment %}
+
+<div class="card-result {{ class }}">
+  <a href="{{- result.url -}}" class="media media--5-4">
+    <span class="visually-hidden">{{- result.title | escape -}}</span>
+
+    {%-
+      liquid
+      if result.image
+        assign image_src = result.image | image_url: width: 500
+        capture image_srcset
+          render 'srcset', image: result.image
+        endcapture
+        assign image_alt = result.image.alt | escape
+        render 'image', src: image_src, srcset: image_srcset, sizes: 'auto', alt: image_alt, width: result.image.width, height: result.image.height
+      endif
+    -%}
+  </a>
+
+  <h4 class="caption">
+    <a href="{{- result.url -}}" class="full-unstyled-link">{{- result.title | escape -}}</a>
+  </h4><!-- /.caption -->
+
+  <span class="badge">{{- result.object_type | capitalize -}}</span>
+</div><!-- /.card-result -->

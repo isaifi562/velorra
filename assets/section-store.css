@@ -1,0 +1,59 @@
+.store__wrapper {
+  padding: calc(var(--spacing-step) * 6) calc(var(--spacing-step) * 4)
+    calc(var(--spacing-step) * 7);
+}
+
+.store__item + .store__item {
+  margin-top: calc(var(--spacing-step) * 3);
+}
+
+.store__item p {
+  margin: 0;
+}
+
+.store__item svg {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+.store__actions {
+  margin: calc(var(--spacing-step) * 4) 0 0;
+}
+
+.store__actions .button + .button {
+  margin-top: calc(var(--spacing-step) * 2);
+}
+
+@media screen and (min-width: 990px) {
+  .shopify-section:last-child .store {
+    margin-bottom: calc(var(--spacing-step) * 2);
+  }
+
+  .store__inner {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+  }
+
+  .store--reverse .store__inner {
+    flex-flow: row-reverse wrap;
+  }
+
+  .store__details {
+    min-width: 40rem;
+  }
+
+  .store__media {
+    flex: 1;
+  }
+
+  .store__wrapper {
+    padding: calc(var(--spacing-step) * 7);
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .store__details {
+    min-width: 58.2rem;
+  }
+}

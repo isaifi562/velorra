@@ -1,0 +1,51 @@
+<div class="color-{{ section.settings.style }} color-background color-paragraphs">
+  <section
+    class="container container--narrow rte page-content"
+    {% comment %}
+      Remove background color gaps caused by containing elements margin
+    {% endcomment %}
+    style="padding-top: 0.1rem; padding-bottom: 4rem;"
+  >
+    {%- unless section.settings.hide_heading -%}
+      <h1 class="h1 center">{{- page.title | escape -}}</h1><!-- /.h1 center -->
+    {%- endunless -%}
+
+    <div class="page-content">
+      {{- page.content -}}
+    </div><!-- /.page-content -->
+  </section><!-- /.container container--narrow rte -->
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-page.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_heading",
+      "label": "t:sections.main-page.settings.hide_heading.label",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

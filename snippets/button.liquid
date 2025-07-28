@@ -1,0 +1,125 @@
+{% comment %}
+  Renders button UI element
+  Accepts:
+  - type: {String} button type, default is 'button'
+  - name: {String} button name
+  - id: {String} button id
+  - value: {String} button value
+  - href: {String} button href, only if type is 'link'
+  - css: {String} button css class. Accepts: 'link' or 'button'. Defaults to 'button'
+  - class: {String} button class
+  - styles: {String} button style, comma-separated list of styles. Ex.: 's,m,l'. Output: 'button--s, button--m, button--l'
+  - fullwidth: {Boolean} button fullwidth, default is false
+  - disabled: {Boolean} button disabled, default is false
+  - attr: {String} button attributes, accepts any html attribute
+  - no_icon: {Boolean} Hide icon
+
+  Usage:
+  {%- render 'button', name: 'update', type: 'submit', value: 'Update' -%}
+  {%- render 'button', type: 'link', href: request.path, css: 'link', value: 'Shop Now' -%}
+{% endcomment %}
+
+{%-
+  liquid
+  assign type = type | default: 'button'
+  assign name = name | default: false
+  assign id = id | default: false
+  assign value = value | default: false
+  assign href = href | default: false
+  assign css = css | default: 'button'
+  assign class = class | default: ''
+  assign styles = styles | default: ''
+  assign fullwidth = fullwidth | default: false
+  assign attr = attr | default: false
+  assign disabled = disabled | default: false
+  assign classes = class | append: ' ' | append: css
+  assign no_icon = no_icon | default: false
+  if styles != ''
+    assign styles_array = styles | split: ','
+    for style in styles_array
+      assign classes = classes | append: ' ' | append: css | append: '--' | append: style
+    endfor
+  endif
+  if fullwidth
+    assign classes = classes | append: ' ' | append: css | append: '--full'
+  endif
+  if no_icon or settings.buttons_disable_icon_on_hover
+    assign classes = classes | append: ' ' | append: css | append: '--no-icon'
+  endif
+  if icon_animation_alternate
+    assign classes = classes | append: ' ' | append: css | append: '--icon-animation-alternate'
+  endif
+-%}
+
+{%- if value -%}
+  {%-
+    liquid
+    capture button_icon_html
+      if css == 'link'
+        case icon_name
+          when 'icon-chevron-left'
+            render 'icon-chevron-left'
+          when 'icon-chevron-right'
+            render 'icon-chevron-right'
+          else
+            render 'icon-button-plus'
+        endcase
+      elsif icon_type == 'eye'
+        render 'icon-eye'
+      elsif icon_type == '3d'
+        render 'icon-3d'
+      endif
+
+      unless icon_type
+        if styles contains 'left'
+          render 'icon-arrow-button-left'
+        else
+          render 'icon-arrow-button-right'
+        endif
+      endunless
+    endcapture
+  -%}
+
+  {%- if type == 'link' -%}
+    {%- if href -%}
+      <a
+        {% if id %}id="{{- id -}}"{% endif %}
+        {% if attr %}{{ attr }}{% endif %}
+        {% if disabled %}disabled{% endif %}
+        href="{{- href -}}"
+        class="{{ classes }} motion-reduce"
+      >
+        <span>{{- value -}}</span>
+
+        {{- button_icon_html -}}
+      </a>
+    {%- endif -%}
+  {%- else -%}
+    <button
+      type="{{- type -}}"
+      {% if id %}id="{{- id -}}"{% endif %}
+      {% if name %}name="{{- name -}}"{% endif %}
+      {% if attr %}{{ attr }}{% endif %}
+      {% if disabled %}disabled{% endif %}
+      class="{{ classes }} motion-reduce"
+    >
+      <span>
+        {%- if name == 'checkout' -%}
+          <span class="button__icon-static">
+            {% render 'icon-lock' %}
+          </span>
+        {%- endif -%}
+
+        {{- value -}}
+      </span>
+
+      {%- if icon_type == 'eye' -%}
+        <i class="button__icon-static">
+          {% render 'icon-eye' %}
+        </i>
+      {%- else -%}
+        {{- button_icon_html -}}
+      {%- endif -%}
+    </button>
+  {%- endif -%}
+{%- endif -%}

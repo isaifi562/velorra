@@ -1,0 +1,27 @@
+.card-article {
+  border-radius: var(--border-radius-featured-cards);
+  overflow: hidden;
+}
+
+.card-article__media {
+  border-radius: 0 0 var(--border-radius-featured-cards)
+    var(--border-radius-featured-cards);
+}
+
+.card-article__media svg {
+  background-color: var(--color-background);
+}
+
+.card-article__media svg path {
+  fill: currentColor;
+}
+
+.card-article__body {
+  padding: 0 var(--spacing-step);
+}
+
+@media screen and (min-width: 990px) {
+  .card-article__title {
+    max-width: 75%;
+  }
+}

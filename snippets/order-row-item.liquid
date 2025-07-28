@@ -1,0 +1,25 @@
+<tr>
+  <td data-heading="{{- 'customer.orders.order' | t -}}">
+    <a href="{{- order.customer_url -}}" class="link-underline bold">{{- order.name -}}</a><!-- /.link-underline -->
+  </td>
+
+  <td data-heading="{{- 'customer.orders.order_date' | t -}}">
+    {{- order.created_at | date: format: 'month_day_year' -}}
+  </td>
+
+  <td data-heading="{{- 'customer.orders.payment_status' | t -}}">
+    {{- order.financial_status_label -}}
+  </td>
+
+  <td data-heading="{{- 'customer.orders.fulfillment_status' | t -}}">
+    {{- order.fulfillment_status_label -}}
+  </td>
+
+  <td data-heading="{{- 'customer.orders.total' | t -}}">
+    {%- if settings.show_currency_codes -%}
+      {{- order.total_price | money_with_currency -}}
+    {%- else -%}
+      {{- order.total_price | money -}}
+    {%- endif -%}
+  </td>
+</tr>

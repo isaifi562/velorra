@@ -1,0 +1,83 @@
+{% comment %}
+    Renders a product feed
+
+    Accepts:
+    - element?: {String} Custom element, default is 'product-carousel'
+    - type?: {String} Feed type, accepts slider/recommendations, default is slider
+    - style?: {String} Element style, default is 'default'
+    - attr?: {String} Data attributes
+    - autoplay?: {Boolean} Autoplay slider, default is false
+    - autoplay_speed?: {Number} Slider autoplay speed in seconds, default is 5
+    - resources: {Array[Objects]} Product objects array
+    - infinite_direction: {String} Infinite class direction. Default is both
+
+    Usage:
+    {%- render 'products-feed', resources: collection.products -%}
+    {%- render 'products-feed', resources: collection.products, element: 'products-carousel', type: 'slider' -%}
+
+    Requires:
+    - component-card-product.css
+    - component-badge.css
+    - swiper-bundle.min.css
+    - component-slider.css
+
+    - component-card-product.js
+    - swiper-bundle.min.js
+    - slider-component.js
+    - products-carousel.js
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'component-card-product.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-badge.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>
+  {{- 'component-card-product.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-badge.css' | asset_url | stylesheet_tag -}}
+</noscript>
+
+{%-
+  liquid
+  assign element = element | default: 'products-carousel'
+  assign type = type | default: 'slider'
+  assign style = style | default: 'default'
+  assign autoplay = autoplay | default: false
+  assign autoplay_speed = autoplay_speed | default: 5
+  assign resources = resources | default: nil
+  assign attr = attr | default: ''
+  assign class = 'products-feed products-feed--' | append: style
+  assign component_style = 'infinite-' | append: infinite_direction
+  assign products_count = products_count | default: 12
+-%}
+
+{%- capture slider_attr -%}
+data-autoplay="{{ autoplay }}"
+data-autoplay-speed="{{ autoplay_speed | times: 1000 }}"
+data-products-count="{{- products_count -}}"
+{{ attr }}
+{%- endcapture -%}
+{%- capture slider_html -%}
+{%- for resource in resources limit: products_count -%}
+  <div class="swiper-slide">
+    {%- render 'card-product', product_ref: resource -%}
+  </div>
+{%- else -%}
+  {%- if type != 'recommendations' -%}
+    {% assign products_count = 6 %}
+    {%- for i in (1..products_count) -%}
+      <div class="swiper-slide">
+        {%- render 'card-product' -%}
+      </div>
+    {%- endfor -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+
+{%-
+  render 'slider-component',
+  style: component_style,
+  content: slider_html,
+  element: element,
+  class: class,
+  attr: slider_attr,
+  paging_styles: 'left,large,spaced-top'
+-%}

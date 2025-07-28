@@ -1,0 +1,19 @@
+@media screen and (min-width: 990px) and (max-width: 1200px) {
+  .section-promo-columns .section__heading {
+    font-size: calc(var(--font-heading-scale) * 3rem);
+  }
+}
+
+.section-promo-columns .section__heading {
+  word-break: break-all;
+}
+
+.section-promo-columns .section__grid {
+  row-gap: calc(var(--spacing-step) * var(--grid-gap-mobile))
+}
+
+@media (min-width: 990px) {
+  .section-promo-columns .section__grid {
+    column-gap: calc(var(--spacing-step) * var(--grid-gap-desktop))
+  }
+}

@@ -1,0 +1,39 @@
+{%- assign context = context | default: '' -%}
+
+<form
+  action="{{- routes.search_url -}}"
+  class="form-search{% if has_no_padding %} form-search--no-padding{% endif %}"
+>
+  <input type="hidden" name="options[prefix]" value="last">
+
+  <span class="form-search__icon">
+    {%- render 'icon-search' -%}
+  </span>
+
+  <label for="FormSearch-{{- context -}}" class="visually-hidden">
+    {{- 'search.title' | t -}}
+  </label>
+
+  <input
+    type="text"
+    id="FormSearch-{{- context -}}"
+    value="{{- search.terms -}}"
+    name="q"
+    placeholder="{{- 'search.placeholder' | t -}}"
+    class="form-search__input p4"
+    {{ input_attr }}
+  />
+
+  <span class="form-search__input__outline" focusable="false"></span>
+
+  {%- if has_close_button -%}
+    <button
+      class="form-search__close"
+      type="button"
+      aria-label="{{- 'accessibility.close' | t -}}"
+      {{ close_button_attr }}
+    >
+      {%- render 'icon-close' -%}
+    </button>
+  {%- endif -%}
+</form>

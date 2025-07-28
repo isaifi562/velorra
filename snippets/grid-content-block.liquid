@@ -1,0 +1,198 @@
+{%- liquid
+  assign show_on = show_on | default: block.settings.show_on, allow_false: true
+  assign grid_columns = grid_columns | default: block.settings.grid_columns, allow_false: true
+  assign grid_rows = grid_rows | default: block.settings.grid_rows, allow_false: true
+  assign image = image | default: block.settings.image, allow_false: true
+  assign video = video | default: block.settings.video, allow_false: true
+  assign overlay_color = overlay_color | default: block.settings.overlay_color, allow_false: true
+  assign overlay_opacity = overlay_opacity | default: block.settings.overlay_opacity, allow_false: true
+  assign overlay_gradient = overlay_gradient | default: block.settings.overlay_gradient, allow_false: true
+  assign text_color = text_color | default: block.settings.text_color, allow_false: true
+  assign position = position | default: block.settings.position, allow_false: true
+  assign position_mobile = position_mobile | default: block.settings.position_mobile, allow_false: true
+  assign link = link | default: block.settings.link, allow_false: true
+  assign heading = heading | default: block.settings.heading, allow_false: true
+  assign heading_font_size = heading_font_size | default: block.settings.heading_font_size, allow_false: true
+  assign heading_font_size_mobile = heading_font_size_mobile | default: block.settings.heading_font_size_mobile, allow_false: true
+  assign subheading = subheading | default: block.settings.subheading, allow_false: true
+  assign body_text = body_text | default: block.settings.body_text, allow_false: true
+  assign button_text = button_text | default: block.settings.button_text, allow_false: true
+  assign button_style = button_style | default: block.settings.button_style, allow_false: true
+  assign button_text_color = button_text_color | default: block.settings.button_text_color, allow_false: true
+  assign button_background_color = button_background_color | default: block.settings.button_background_color, allow_false: true
+
+  assign class = class | default: ''
+
+  # Desktop vertical
+  if position contains 'top'
+    assign alignment_y_desktop = 'flex-start'
+  elsif position contains 'middle'
+    assign alignment_y_desktop = 'center'
+  elsif position contains 'bottom'
+    assign alignment_y_desktop = 'flex-end'
+  endif
+
+  # Desktop horizontal
+  if position contains 'left'
+    assign alignment_x_desktop = 'flex-start'
+    assign text_alignment_desktop = 'left'
+  elsif position contains 'center'
+    assign alignment_x_desktop = 'center'
+    assign text_alignment_desktop = 'center'
+  elsif position contains 'right'
+    assign alignment_x_desktop = 'flex-end'
+    assign text_alignment_desktop = 'right'
+  endif
+
+  # Mobile vertical
+  if position_mobile contains 'top'
+    assign alignment_y_mobile = 'flex-start'
+  elsif position_mobile contains 'middle'
+    assign alignment_y_mobile = 'center'
+  elsif position_mobile contains 'bottom'
+    assign alignment_y_mobile = 'flex-end'
+  endif
+
+  # Mobile horizontal
+  if position_mobile contains 'left'
+    assign alignment_x_mobile = 'flex-start'
+    assign text_alignment_mobile = 'left'
+  elsif position_mobile contains 'center'
+    assign alignment_x_mobile = 'center'
+    assign text_alignment_mobile = 'center'
+  elsif position_mobile contains 'right'
+    assign alignment_x_mobile = 'flex-end'
+    assign text_alignment_mobile = 'right'
+  endif
+-%}
+
+{% # Style variables %}
+{%- capture style_tag -%}
+  {%- style -%}
+    #grid-content-block-{{- section.id -}}-{{- block.id -}} {
+      --text-align: {{- text_alignment_mobile -}};
+      --justify-content: {{- alignment_x_mobile -}};
+      --align-items: {{- alignment_y_mobile -}};
+      --grid-row: {{- grid_rows -}};
+      --grid-column: {{- grid_columns -}};
+
+      {%- if text_color != blank and text_color != 'rgba(0,0,0,0)' -%}
+        --color-paragraphs: {{- text_color -}};
+        --color-headings: {{- text_color -}};
+      {%- endif -%}
+
+      {%- if button_text_color != blank and button_text_color != 'rgba(0,0,0,0)' -%}
+        --color-buttons-solid: {{- button_text_color -}};
+        --color-buttons-outline: {{- button_text_color -}};
+        --color-buttons-links: {{- button_text_color -}};
+      {%- endif -%}
+
+      {%- if button_background_color != blank and button_background_color != 'rgba(0,0,0,0)' -%}
+        --color-background-buttons-solid: {{- button_background_color -}};
+        --color-border-buttons-outline: {{- button_background_color -}};
+      {%- endif -%}
+    }
+
+    @media (min-width: 990px) {
+      #grid-content-block-{{- section.id -}}-{{- block.id -}} {
+        --text-align: {{- text_alignment_desktop -}};
+        --justify-content: {{- alignment_x_desktop -}};
+        --align-items: {{- alignment_y_desktop -}};
+      }
+    }
+  {%- endstyle -%}
+{%- endcapture -%}
+
+{%- capture overlay_html -%}
+  {%- if overlay_opacity > 0 or overlay_gradient -%}
+    <span
+      class="media__overlay"
+      {%- if overlay_gradient != blank -%}
+        style="background: {{ overlay_gradient }}; opacity: 1;"
+      {%- else -%}
+        style="background-color: {{- overlay_color -}}; opacity: {{- overlay_opacity | times: 0.01 }};"
+      {%- endif -%}
+    ></span>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture background -%}
+  {%-
+    liquid
+
+    assign block_index = forloop.index
+    if block_index > 4
+      assign block_index = '1'
+    endif
+    assign placeholder_html = 'collection-apparel-' | append: block_index | placeholder_svg_tag
+
+    if video
+      echo video | video_tag: image_size: '2048x', controls: false, autoplay: true, muted: true, class: 'color-background', loop: true
+    elsif image
+      assign viewport_units_desktop = 25 | times: grid_columns | append: 'vw'
+      assign sizes = '(min-width: 990px) ' | append: viewport_units_desktop | append: ', 100vw'
+      assign image_src = image | image_url: width: 500
+      capture image_srcset
+        render 'srcset', image: image
+      endcapture
+      assign image_alt = image.alt | escape
+      render 'image', src: image_src, srcset: image_srcset, sizes: sizes, alt: image_alt, width: image.width, height: image.height, focal_point: image.presentation.focal_point
+    elsif overlay_opacity == 0 or overlay_gradient == false
+      echo placeholder_html
+    endif
+  -%}
+
+  {{- overlay_html -}}
+{%- endcapture -%}
+
+<div class="grid-content-block {{ show_on }} {{ class }}" id="grid-content-block-{{- section.id -}}-{{- block.id -}}">
+  {{- style_tag -}}
+
+  {%- if link -%}
+    <a href="{{- link -}}" class="grid-content-block__background media media--no-hover full-unstyled-link">
+      {{- background -}}
+    </a>
+  {%- else -%}
+    <div class="grid-content-block__background media">{{- background -}}</div>
+  {%- endif -%}
+
+  {%- if heading != blank or subheading != blank -%}
+    <div class="grid-content-block__content">
+      {%- if subheading != blank -%}
+        <a {%- if link %} href="{{- link -}}"{% endif %} class="mb-0 mt-0 full-unstyled-link">
+          <span class="sh sh--2 subheading color-paragraphs">
+            {{- subheading -}}
+          </span>
+        </a>
+      {%- endif -%}
+
+      {%- if heading != blank -%}
+        <h3 class="{{ heading_font_size }} small-hide medium-hide heading mb-0 mt-0 color-headings">
+          <a {%- if link %} href="{{- link -}}"{% endif %} class="full-unstyled-link">{{- heading | newline_to_br -}}</a>
+        </h3>
+
+        <h3 class="{{ heading_font_size_mobile }} large-up-hide heading mb-0 mt-0 color-headings">
+          <a {%- if link %} href="{{- link -}}"{% endif %} class="full-unstyled-link">{{- heading | newline_to_br -}}</a>
+        </h3>
+      {%- endif -%}
+
+      {%- if body_text != blank -%}
+        <div class="p1 paragraph color-paragraphs mb-0 mt-0">
+          <a {%- if link %} href="{{- link -}}"{% endif %} class="full-unstyled-link">{{- body_text | newline_to_br -}}</a>
+        </div>
+      {%- endif -%}
+
+      {%- if button_text != blank and link != blank -%}
+        <div class="grid-content-block__actions">
+          {%- liquid
+            assign button_css = 'button'
+            if button_style == 'text'
+              assign button_css = 'link'
+            endif
+            render 'button', type: 'link', value: button_text, href: link, css: button_css, styles: button_style
+          -%}
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</div>

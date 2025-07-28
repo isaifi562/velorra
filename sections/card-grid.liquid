@@ -1,0 +1,283 @@
+{%-
+  liquid
+  assign style = ''
+  if section.settings.enable_custom_background
+    if section.settings.background_gradient != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_gradient | append: '"'
+    elsif section.settings.background_color != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_color | append: '"'
+    else
+      assign style = ''
+    endif
+  endif
+
+  capture style_classes
+    echo 'color-' | append: section.settings.style | append: ' color-background color-headings'
+    if style != ''
+      echo ' section-background'
+    endif
+  endcapture
+-%}
+
+<div class="card-grid__wrapper {{ style_classes }} {{ section.settings.outer_spacing }} {{ section.settings.inner_spacing }}" {{ style }}>
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="h3 center mt-0 mb-m">{{- section.settings.heading | replace: '</p><p>', '<br />' | replace: '<p>', '' | replace: '</p>', '' -}}</h2><!-- /.h3 -->
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="grid grid--row-gap-s">
+        {%- for block in section.blocks -%}
+          {%-
+            liquid
+            assign grid_column_space = 12 | divided_by: section.blocks.size
+            if section.blocks.size > 4
+              assign grid_column_space = 4
+            endif
+          -%}
+          <div class="card-grid__item grid__item grid__item--xs-6 grid__item--s-{{ grid_column_space }} center pb-s--large" {{ block.shopify_attributes }}>
+            {%- if block.settings.url != blank -%}
+              <a href="{{- block.settings.url -}}" class="media media--3-4 media--fit-contain">
+            {%- else -%}
+              <div class="media media--3-4 media--fit-contain">
+            {%- endif -%}
+
+            {%- if block.settings.image != blank -%}
+              {%-
+                liquid
+                assign image_src = block.settings.image | image_url: width: 640
+                render 'image' src: image_src, focal_point: block.settings.image.presentation.focal_point
+              -%}
+            {%- else -%}
+              {{- 'image' | placeholder_svg_tag -}}
+            {%- endif -%}
+
+            {%- if block.settings.url != blank -%}
+              </a>
+            {%- else -%}
+              </div>
+            {%- endif -%}
+
+            {%- if block.settings.subheading != blank -%}
+              <p class="sh sh--4 mt-s mb-xs">{{- block.settings.subheading | escape | newline_to_br -}}</p><!-- /.sh sh--4 -->
+            {%- endif -%}
+
+            {%- if block.settings.heading != blank -%}
+              <h3 class="h4 {% if block.settings.subheading == blank %}mt-s{% else %}mt-0{% endif %} mb-xs">{{- block.settings.heading | replace: '</p><p>', '<br />' | replace: '<p>', '' | replace: '</p>', '' -}}</h3><!-- /.h4 -->
+            {%- endif -%}
+
+            {%- if block.settings.paragraph != blank -%}
+              <p class="p4 mt-0 mb-0 color-paragraphs">{{- block.settings.paragraph | escape | newline_to_br -}}</p><!-- /.p4 -->
+            {%- endif -%}
+
+            {%- if block.settings.button_text != blank and block.settings.url != blank -%}
+              <div class="{% if section.settings.button_style == 'link' %}mt-xs{% else %}mt-s{% endif %}">
+                {%- liquid
+                  assign button_css = 'button'
+                  if section.settings.button_style == 'link'
+                    assign button_css = 'link'
+                  endif
+                  render 'button', type: 'link', value: block.settings.button_text, href: block.settings.url, css: button_css, styles: section.settings.button_style
+                -%}
+              </div>
+            {%- endif -%}
+          </div><!-- /.card-grid__item -->
+        {%- endfor -%}
+      </div><!-- /.grid -->
+    {%- endif -%}
+  </div><!-- /.container -->
+</div><!-- /.card-grid__wrapper -->
+
+{% schema %}
+{
+  "name": "t:sections.card-grid.name",
+  "class": "card-grid",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "select",
+      "id": "outer_spacing",
+      "label": "t:sections.global.settings.outer-spacing.label",
+      "options": [
+        {
+          "value": "mt-0 mb-0 mt-0--large mb-0--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_1"
+        },
+        {
+          "value": "mt-s mb-s mt-s--large mb-s--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_2"
+        },
+        {
+          "value": "mt-l mb-l mt-l--large mb-l--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_3"
+        }
+      ],
+      "default": "mt-0 mb-0 mt-0--large mb-0--large"
+    },
+    {
+      "type": "select",
+      "id": "inner_spacing",
+      "label": "t:sections.global.settings.inner-spacing.label",
+      "options": [
+        {
+          "value": "spacing-none",
+          "label": "t:sections.global.settings.inner-spacing.options.option_1"
+        },
+        {
+          "value": "spacing-s spacing-s--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_2"
+        },
+        {
+          "value": "spacing-m spacing-m--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_3"
+        },
+        {
+          "value": "spacing-l spacing-l--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_4"
+        }
+      ],
+      "default": "spacing-m spacing-m--large"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "t:sections.global.settings.heading.label",
+      "default": "<p>Heading <em>with accent <strong>element</strong></em></p>"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.section_colors.header",
+      "info": "t:sections.global.settings.section_colors.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_background",
+      "label": "t:sections.global.settings.section_colors.checkbox",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.global.settings.section_colors.color"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "t:sections.global.settings.section_colors.gradient"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.buttons.button.header_button.content"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:sections.global.settings.buttons.button.settings.style.label",
+      "options": [
+        {
+          "value": "solid",
+          "label": "t:sections.global.settings.buttons.button.settings.style.options.option_1"
+        },
+        {
+          "value": "outline",
+          "label": "t:sections.global.settings.buttons.button.settings.style.options.option_2"
+        },
+        {
+          "value": "link",
+          "label": "t:sections.global.settings.buttons.button.settings.style.options.option_3"
+        }
+      ],
+      "default": "link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card_item",
+      "name": "t:sections.card-grid.blocks.card-item.name",
+      "settings": [
+        {
+          "type": "url",
+          "id": "url",
+          "label": "t:sections.global.settings.url.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.global.settings.image.label"
+        },
+        {
+          "type": "textarea",
+          "id": "subheading",
+          "label": "t:sections.global.settings.subheading.label",
+          "default": "Add a tagline"
+        },
+        {
+          "type": "richtext",
+          "id": "heading",
+          "label": "t:sections.global.settings.heading.label",
+          "default": "<p>Heading</p>"
+        },
+        {
+          "type": "textarea",
+          "id": "paragraph",
+          "label": "t:sections.global.settings.paragraph.label",
+          "default": "Add a short description here."
+        },
+        {
+          "type": "header",
+          "content": "t:sections.global.settings.buttons.button.header_button.content",
+          "info": "t:sections.card-grid.header_button.info"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "t:sections.global.settings.buttons.button.settings.button_text.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.card-grid.name",
+      "blocks": [
+        {
+          "type": "card_item"
+        },
+        {
+          "type": "card_item"
+        },
+        {
+          "type": "card_item"
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "*"
+    ],
+    "groups": [
+      "aside"
+    ]
+  }
+}
+{% endschema %}

@@ -1,0 +1,63 @@
+{% comment %}
+  Renders select input form element
+  Accepts:
+  - id {String} ID of the input element
+  - label {String} Label of the input element
+  - hide_label {Boolean} Hide the label element
+  - name {String} Name of the input element
+  - class {String} Class of the input element
+  - style {String} Style of the input element
+  - options {HTML} Options to be rendered
+  - attr {HTML} Other attributes to be rendered
+  - wrapper_attr {HTML} Other attributes to be rendered on the wrapper element
+  - required {Boolean} Whether the input is required or not
+
+  Usage:
+  {%- render 'select-input',
+    id: 'select-input',
+    label: 'Select Input',
+    name: 'select-input',
+    options: options_html
+  -%}
+{% endcomment %}
+
+{%-
+  liquid
+  assign id = id | default: false
+  assign label = label | default: false
+  assign hide_label = hide_label | default: false
+  assign name = name | default: false
+  assign class = class | default: ''
+  assign options = options | default: ''
+  assign style = style | default: 'medium'
+  assign required = required | default: false
+  assign typo = 'p3'
+
+  if style == 'small'
+    assign typo = 'p4'
+  elsif style == 'large'
+    assign typo = 'p2'
+  endif
+-%}
+
+<div class="select-input select-input--{{ style }} js-field-wrapper {{ class }}" {% if wrapper_attr %}{{ wrapper_attr }}{% endif %}>
+  {%- if label and id -%}
+    <label for="{{- id -}}" class="{%- if hide_label -%}visually-hidden{%- else -%}select-input__label{%- endif -%}">
+      {{- label -}}
+    </label>
+  {%- endif -%}
+
+  <div class="select-input__wrapper">
+    <select
+      {% if name %}name="{{- name -}}"{% endif %}
+      {% if id %}id="{{- id -}}"{% endif %}
+      {% if attr %}{{ attr }}{% endif %}
+      {% if required %}required{% endif %}
+      class="select-input__el {{ typo }}"
+    >
+      {{- options -}}
+    </select>
+
+    {%- render 'icon-chevron-down' -%}
+  </div><!-- /.select-input__wrapper -->
+</div><!-- /.select-input select-input--bordered -->

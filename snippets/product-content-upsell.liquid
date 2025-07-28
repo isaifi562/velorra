@@ -1,0 +1,37 @@
+{% comment %}
+    Renders a product content upsell recommendations
+    Accepts:
+    - product: {Object} Product Liquid object
+    - block: {Object} Section block liquid object
+    Usage:
+    {%- render 'product-content-upsell', product: product, block: block -%}
+{% endcomment %}
+
+{{- 'swiper-bundle.min.css' | asset_url | stylesheet_tag -}}
+{{- 'component-slider.css' | asset_url | stylesheet_tag -}}
+{{- 'component-card-product.css' | asset_url | stylesheet_tag -}}
+{{- 'component-badge.css' | asset_url | stylesheet_tag -}}
+
+<script src="{{- 'swiper-bundle.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+<script src="{{ 'component-card-product.js' | asset_url }}" defer="defer" data-theme-script></script>
+<script src="{{ 'product-recommendations.js' | asset_url }}" defer="defer" data-theme-script></script>
+<script src="{{- 'slider-component.js' | asset_url -}}" defer="defer" data-theme-script></script>
+<script src="{{- 'products-carousel.js' | asset_url -}}" defer="defer" data-theme-script></script>
+
+<product-recommendations
+  class="block product__upsells"
+  data-url="{{- routes.product_recommendations_url -}}?section_id={{- section.id -}}&product_id={{- product.id -}}&intent=complementary"
+  data-container="related-products"
+  data-force-load
+>
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+    <div class="produst__upsell">
+      {%- if block.settings.title != blank -%}
+        <h5 class="h5 mt-0 mb-s">{{- block.settings.title | escape -}}</h5>
+      {%- endif -%}
+
+      {% capture slider_attr %} data-fixed-width="208" data-fixed-width-desktop="208" {% endcapture %}
+      {% render 'products-feed', resources: recommendations.products, attr: slider_attr, products_count: recommendations.products_count %}
+    </div><!-- /.produst__upsell -->
+  {%- endif -%}
+</product-recommendations>

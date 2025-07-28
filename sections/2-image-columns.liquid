@@ -1,0 +1,205 @@
+{%- unless section.blocks.size == 0 or section.blocks.size == 1 -%}
+  {%-
+    liquid
+    assign style = ''
+    if section.settings.enable_custom_background
+      if section.settings.background_gradient != blank
+        assign style = ' style="--section-background:' | append: section.settings.background_gradient | append: '"'
+      elsif section.settings.background_color != blank
+        assign style = ' style="--section-background:' | append: section.settings.background_color | append: '"'
+      else
+        assign style = ''
+      endif
+    endif
+    capture style_classes
+      echo 'color-' | append: section.settings.style | append: ' color-background'
+      if style != ''
+        echo ' section-background'
+      endif
+    endcapture
+  -%}
+
+  <div class="section__wrapper {{ style_classes }} {{ section.settings.outer_spacing }} {{ section.settings.inner_spacing }}" {{ style }}>
+    <div class="container {% if section.settings.enable_fullwidth %} container--no-gutter container--fullwidth {% endif %}">
+      <div class="grid grid--row-gap-0 grid--no-column-gap">
+        {% for block in section.blocks %}
+          {%-
+            liquid
+            assign grid_item_class = 'grid__item--xs-12'
+            if section.blocks.size > 1
+              assign grid_item_class = 'grid__item--2 grid__item--xs-6'
+            endif
+          -%}
+          <div class="grid__item {{ grid_item_class }}" {{ block.shopify_attributes }}>
+            <div class="media media--portrait">
+              {%-
+                liquid
+                if block.settings.image != blank
+                  assign image = block.settings.image
+                  assign image_mobile = block.settings.image_mobile | default: image
+                  assign image_src = image | image_url: width: 500
+                  assign mobile_image_src = image_mobile | image_url: width: 375
+                  capture image_srcset
+                    render 'srcset', image: image
+                  endcapture
+                  capture mobile_image_srcset
+                    render 'srcset', image: image_mobile
+                  endcapture
+                  assign image_alt = image.alt | escape
+
+                  render 'image', src: image_src, srcset: image_srcset, sizes: '25vw', alt: image_alt, width: block.settings.image.width, height: block.settings.image.height, class: 'small-hide', focal_point: image.presentation.focal_point
+
+                  render 'image', src: mobile_image_src, srcset: mobile_image_srcset, sizes: 'auto', alt: image_alt, width: block.settings.image_mobile.width, height: block.settings.image_mobile.height, class: 'medium-hide large-up-hide', focal_point: image_mobile.presentation.focal_point
+                else
+                  echo 'image' | placeholder_svg_tag: 'placeholder-svg'
+                endif
+              -%}
+            </div><!-- /.media -->
+          </div>
+        {% endfor %}
+      </div><!-- /.grid -->
+    </div><!-- /.container -->
+  </div><!-- /.section__wrapper -->
+{%- endunless -%}
+{% schema %}
+{
+  "name": "t:sections.2-image-columns.name",
+  "tag": "section",
+  "class": "section-2-image-columns",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "select",
+      "id": "outer_spacing",
+      "label": "t:sections.global.settings.outer-spacing.label",
+      "options": [
+        {
+          "value": "mt-0 mb-0 mt-0--large mb-0--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_1"
+        },
+        {
+          "value": "mt-s mb-s mt-s--large mb-s--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_2"
+        },
+        {
+          "value": "mt-l mb-l mt-l--large mb-l--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_3"
+        }
+      ],
+      "default": "mt-0 mb-0 mt-0--large mb-0--large"
+    },
+    {
+      "type": "select",
+      "id": "inner_spacing",
+      "label": "t:sections.global.settings.inner-spacing.label",
+      "options": [
+        {
+          "value": "spacing-none",
+          "label": "t:sections.global.settings.inner-spacing.options.option_1"
+        },
+        {
+          "value": "spacing-s spacing-s--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_2"
+        },
+        {
+          "value": "spacing-m spacing-m--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_3"
+        },
+        {
+          "value": "spacing-l spacing-l--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_4"
+        }
+      ],
+      "default": "spacing-m spacing-m--large"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_fullwidth",
+      "label": "t:sections.2-image-columns.settings.enable_fullwidth.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.section_colors.header",
+      "info": "t:sections.global.settings.section_colors.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_background",
+      "label": "t:sections.global.settings.section_colors.checkbox",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.global.settings.section_colors.color"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "t:sections.global.settings.section_colors.gradient"
+    }
+  ],
+  "blocks": [
+    {
+      "limit": 2,
+      "type": "image",
+      "name": "t:sections.2-image-columns.blocks.image.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.global.settings.image.label",
+          "info": "t:sections.2-image-columns.blocks.image.settings.image.info"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "t:sections.global.settings.image.label_mobile",
+          "info": "t:sections.2-image-columns.blocks.image.settings.image_mobile.info"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.2-image-columns.name",
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "*"
+    ],
+    "groups": [
+      "aside"
+    ]
+  }
+}
+{% endschema %}

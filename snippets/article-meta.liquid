@@ -1,0 +1,39 @@
+{%- comment -%}
+  Remders article meta
+
+  Accepts:
+    - show_author {Bool} Show author
+    - article_ref {Object} Article liquid object
+
+  Usage:
+   {%- render 'article-meta', article_ref: article -%}
+{%- endcomment -%}
+
+<div class="article-meta flex flex--center mb-xs">
+  {%- if show_author and article_ref.author -%}
+    {%- assign author_name = article_ref.author | escape -%}
+
+    <span class="article-meta__avatar">
+      {%- if article_ref.user.image != blank -%}
+        <img src="{{ article_ref.user.image | image_url: width: 100 }}" alt="{{ author_name }}" width="auto" height="auto" loading="lazy">
+      {%- else -%}
+        <span>
+          {{- article_ref.user.first_name | split: '' | first -}}
+          {{- article_ref.user.last_name | split: '' | first -}}
+        </span>
+      {%- endif -%}
+    </span>
+
+    <span class="p4">{{- author_name -}}</span>
+  {%- endif -%}
+
+  {%- for tag in article_ref.tags -%}
+    {%- unless tag contains 'time:' -%}
+      {%- continue -%}
+    {%- endunless -%}
+
+    {%- assign minutes = tag | split: 'time:' | last | strip -%}
+
+    <span class="article-meta__time p4">{{- 'article.time' | t: minutes: minutes -}}</span><!-- /.article__time -->
+  {%- endfor -%}
+</div><!-- /.card-article__author -->

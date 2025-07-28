@@ -1,0 +1,53 @@
+{%-
+  liquid
+  assign address = section.settings.address_query
+  if address == blank
+    assign address = shop.address.address1 | append: ',' | append: shop.address.city | append: ' ' | append: shop.address.province
+  endif
+-%}
+
+{%- if address != blank and section.settings.api_key != blank -%}
+  {{- 'section-map.css' | asset_url | stylesheet_tag -}}
+
+  <section class="map">
+    <iframe
+      width="auto"
+      height="auto"
+      style="border:0"
+      loading="lazy"
+      allowfullscreen
+      referrerpolicy="no-referrer-when-downgrade"
+      src="https://www.google.com/maps/embed/v1/place?key={{- section.settings.api_key -}}
+        &q={{- address | url_encode -}}">
+    </iframe>
+  </section><!-- /.map -->
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.map.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "api_key",
+      "label": "t:sections.map.settings.api-key.label",
+      "info": "t:sections.map.settings.api-key.info"
+    },
+    {
+      "type": "text",
+      "id": "address_query",
+      "label": "t:sections.map.settings.address.label",
+      "info": "t:sections.map.settings.address.info"
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "*"
+    ],
+    "groups": [
+      "aside",
+      "footer"
+    ]
+  }
+}
+{% endschema %}

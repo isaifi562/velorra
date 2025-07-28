@@ -1,0 +1,25 @@
+.list-logos {
+  max-width: 109rem;
+  margin-inline: auto;
+}
+
+.list-logos ul {
+  margin-inline: calc(var(--spacing-step) * 2 * -1);
+}
+
+.list-logos li {
+  flex: 0 0 50%;
+  padding-inline: var(--spacing-step);
+  margin-bottom: calc(var(--spacing-step) * 2);
+}
+
+.list-logos .list__image {
+  min-height: 6.4rem;
+  max-width: 24rem;
+}
+
+@media screen and (min-width: 990px) {
+  .list-logos li {
+    flex: 0 0 20%;
+  }
+}

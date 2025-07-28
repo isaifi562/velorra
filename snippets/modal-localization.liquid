@@ -1,0 +1,62 @@
+{%- if settings.enable_localization -%}
+  {%- assign title = 'general.localization.title' | t -%}
+  {%- capture content -%}
+    <p class="h4 center">{{- title -}}</p>
+
+    {%- form 'localization', id: 'Form-Localization' -%}
+      <div class="mt-m">
+        {%- assign label = 'general.localization.language_code_label' | t -%}
+        {%- capture options_html -%}
+          {%- for language in localization.available_languages -%}
+            <option
+              value="{{- language.iso_code -}}"
+              {%- if language == localization.language %} selected="selected"{% endif %}
+            >
+              {{- language.endonym_name -}}
+            </option>
+          {%- endfor -%}
+        {%- endcapture -%}
+        {%- render 'select-input',
+          id: 'Language-Code',
+          label: label,
+          name: 'locale_code',
+          options: options_html
+        -%}
+      </div><!-- /.mt-m -->
+
+      <div class="mt-m">
+        {%- assign label = 'general.localization.country_code_label' | t -%}
+        {%- capture options_html -%}
+          {%- for country in localization.available_countries -%}
+            <option
+              value="{{- country.iso_code -}}"
+              {%- if country == localization.country %} selected="selected"{% endif %}
+            >
+              {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+            </option>
+          {%- endfor -%}
+        {%- endcapture -%}
+        {%- render 'select-input',
+          id: 'Country-Code',
+          label: label,
+          name: 'country_code',
+          options: options_html
+        -%}
+      </div><!-- /.mt-m -->
+
+      <div class="mt-m center">
+        {%- assign value = 'general.localization.submit' | t -%}
+        {%- render 'button', type: 'submit', value: value -%}
+      </div><!-- /.mt-m -->
+    {%- endform -%}
+
+    {%- if settings.show_empty_cart_notice -%}
+      <p class="p3">
+        {{- 'general.localization.notice' | t -}}
+      </p>
+    {%- endif -%}
+  {%- endcapture -%}
+  {%- assign class = 'modal-dialog--localization color-' | append: settings.localization_modal_style -%}
+  {%- assign id = 'Modal-Localization' -%}
+  {%- render 'modal-dialog', title: title, content: content, class: class, id: id -%}
+{%- endif -%}

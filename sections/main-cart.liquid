@@ -1,0 +1,160 @@
+{{- 'section-cart.css' | asset_url | stylesheet_tag -}}
+{{- 'component-cart-items.css' | asset_url | stylesheet_tag -}}
+{{- 'component-form-elements.css' | asset_url | stylesheet_tag -}}
+
+{%- if settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+  {{- 'component-list-payment.css' | asset_url | stylesheet_tag -}}
+{%- endif -%}
+
+<script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
+
+<div class="main-cart-wrapper" id="main-cart">
+  <cart-items class="cart color-{{- settings.cart_page_style -}}" id="{{- section.id -}}">
+    <div class="container">
+      <form action="{{- routes.cart_url -}}" class="cart__contents{% if cart == empty %} cart__contents--empty{% endif %}" method="post" id="cart">
+        <div class="cart__main">
+          <div class="cart__head">
+            <h1 class="cart__title h4" data-cart-title>
+              {%- if cart != empty -%}
+                {{- 'cart.title' | t }} ({{- cart.item_count -}})
+              {%- else -%}
+                {{- 'cart.title' | t -}}
+              {%- endif -%}
+            </h1><!-- /.cart__title h4 -->
+
+            {%- if cart == empty -%}
+              <p class="cart__empty p2">
+                {{- 'cart.empty' | t -}}
+              </p><!-- /.cart__empty p2 -->
+            {%- else -%}
+              {%- assign value = 'cart.continue_shopping' | t -%}
+              {%- if settings.continue_shopping_type == 'go_back' -%}
+                {%-
+                  liquid
+                  capture button_attr
+                    echo 'onclick="history.back()"'
+                  endcapture
+                  render 'button', type: 'button', attr: button_attr, value: value, styles: 's,outline'
+                -%}
+
+                <noscript>
+                  {%- render 'button', type: 'link', href: routes.all_products_collection_url, value: value, styles: 's,outline' -%}
+                </noscript>
+              {% elsif settings.continue_shopping_link != blank %}
+                {%- render 'button', type: 'link', href: settings.continue_shopping_link, value: value, styles: 's,outline' -%}
+              {%- endif -%}
+            {%- endif -%}
+          </div><!-- /.cart__head -->
+
+          <div class="cart__body">
+            {%- if cart != empty -%}
+              <div class="cart__items" id="main-cart-items" data-id="{{- section.id -}}">
+                <div class="cart-items">
+
+                  <div class="cart-items__body">
+                    {%- for line_item in cart.items -%}
+                      {%- render 'line-item', line_item: line_item, layout: 'cart' -%}
+                    {%- endfor -%}
+                  </div><!--/.cart-items__body  -->
+                </div><!-- /.cart-items -->
+              </div><!-- /#main-cart-items.cart__items -->
+            {%- endif -%}
+          </div><!-- /.cart__body -->
+        </div><!-- /.cart__main -->
+
+        <div class="cart__aside{% if cart == empty %} hidden{% endif %}">
+          <div class="grid grid--row-gap-0">
+            <div class="grid__item grid__item--xs-5 grid__item--s-4">
+              {%- if settings.enable_message or settings.wrap_product != blank -%}
+                <div class="cart__attributes pt-m pt-0--large bd-t mt-m mt-0--large">
+                  {%- if settings.wrap_product != blank and settings.wrap_product.available -%}
+                    {%-
+                      liquid
+                      assign wrap_product_variant = settings.wrap_product.first_available_variant
+                      assign wrap_product_variant_price = wrap_product_variant.price | money
+                      if settings.show_currency_codes
+                        assign wrap_product_variant_price = wrap_product_variant.price | money_with_currency
+                      endif
+                      assign wrap_product_label = 'cart.wrap_product_label_html' | t: price: wrap_product_variant_price
+                    -%}
+
+                    <div class="cart__gift-wrap mb-m">
+                      {%-
+                        liquid
+                        capture wrap_line_item_id
+                          assign item = cart.items | where: 'variant_id', wrap_product_variant.id | first
+                          echo 'data-line-item-id="' | append: item.variant_id | append: '"'
+                        endcapture
+                        assign checked = false
+                        if item
+                          assign checked = true
+                        endif
+                      -%}
+                      {%-
+                        render 'checkbox-input',
+                        id: 'Wrap-Product',
+                        label: wrap_product_label,
+                        name: 'wrap_product',
+                        checked: checked,
+                        value: wrap_product_variant.id,
+                        attr: wrap_line_item_id
+                      -%}
+                    </div><!-- /.cart__gift-wrap -->
+                  {%- endif -%}
+
+                  {%- if settings.enable_message -%}
+                    {%-
+                      liquid
+                      assign cart_message_label = 'cart.message_label' | t
+                      assign cart_message_placeholder = 'cart.message_placeholder' | t
+                      render 'textarea-input', id: 'Cart-Note', label: cart_message_label, name: 'note', placeholder: cart_message_placeholder, body: cart.note
+                    -%}
+                  {%- endif -%}
+                </div><!-- /.cart__attributes -->
+              {%- endif -%}
+            </div>
+
+            <span class="grid__item grid__item--xs-1 grid__item--s-4  small-hide"></span>
+
+            <div class="grid__item grid__item--xs-6 grid__item--s-4 ">
+              {%- render 'cart-summary',
+                class: 'cart__summary',
+                show_checkout_button: true,
+                shipping_bar: true
+              -%}
+
+              {%- if settings.additional_checkout_buttons and additional_checkout_buttons -%}
+                <div class="cart__dynamic-checkout-buttons additional-checkout-buttons mt-s">
+                  {{- content_for_additional_checkout_buttons -}}
+                </div>
+              {%- endif -%}
+
+              {%- if settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+                <div class="cart__payments mt-m">
+                  <p class="h6 mt-0 mb-s">
+                    {{- 'cart.payments_title' | t -}}
+                  </p>
+
+                  <ul class="list-payment list-unstyled" role="list">
+                    {%- for type in shop.enabled_payment_types -%}
+                      <li class="list-payment__item">
+                        {{- type | payment_type_svg_tag -}}
+                      </li><!-- /.list-payment__item -->
+                    {%- endfor -%}
+                  </ul><!-- /.list-payment -->
+                </div><!-- /.cart__payments -->
+              {%- endif -%}
+            </div>
+          </div><!-- /.grid grid--row-gap-0 -->
+        </div><!-- /.cart__aside -->
+      </form>
+    </div><!-- /.container -->
+  </cart-items>
+</div><!-- /.main-cart-wrapper -->
+
+{% schema %}
+{
+  "name": "t:sections.main-cart.name",
+  "tag": "section"
+}
+{% endschema %}

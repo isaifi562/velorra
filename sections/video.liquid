@@ -1,0 +1,186 @@
+{%- unless section.settings.external_video == blank and section.settings.video == nil -%}
+  {%-
+    liquid
+    echo 'section-hero.css' | asset_url | stylesheet_tag
+    echo 'component-deferred-media.css' | asset_url | stylesheet_tag
+    assign style_classes = 'color-' | append: section.settings.style | append: ' '
+  -%}
+
+  {%- style -%}
+    #shopify-section-{{- section.id }} {
+      {%- if section.settings.external_video != blank -%}
+        --height-mobile: 56.25vw;
+      {%- elsif section.settings.video_mobile != blank -%}
+        --height-mobile: calc(100vw / {{ section.settings.video_mobile.aspect_ratio }});
+      {%- elsif section.settings.video != blank -%}
+        --height-mobile: calc(100vw / {{ section.settings.video.aspect_ratio }});
+      {%- endif -%}
+
+      {%- if section.settings.height == 'auto' -%}
+        {%- if section.settings.external_video != blank -%}
+          --video-aspect-ratio: 16 / 9;
+        {%- elsif section.settings.video != blank -%}
+          --video-aspect-ratio: {{ section.settings.video.aspect_ratio }};
+        {%- endif -%}
+      {%- endif -%}
+    }
+  {%- endstyle -%}
+
+  <script src="{{ 'deferred-media.js' | asset_url }}" defer data-theme-script></script>
+
+  <div class="hero__wrapper {{ style_classes }} {{ section.settings.outer_spacing }}">
+    <div class="container {% if section.settings.enable_fullwidth %} container--no-gutter container--fullwidth {% endif %}">
+      <div class="hero__inner relative">
+        {%-
+          liquid
+          render 'hero-block', height: section.settings.height, external_video: section.settings.external_video, video: section.settings.video, video_mobile: section.settings.video_mobile, video_autoplay: section.settings.video_autoplay, disable_video_autoplay_on_mobile: section.settings.disable_autoplay_on_mobile, video_description: section.settings.description, image: section.settings.image, image_mobile: section.settings.image_mobile, show_deferred_media_on_mobile: true
+        -%}
+      </div><!-- /.hero__inner -->
+    </div><!-- /.container -->
+  </div><!-- /.hero__wrapper -->
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "t:sections.video-banner.name",
+  "tag": "section",
+  "class": "hero hero--video",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "select",
+      "id": "outer_spacing",
+      "label": "t:sections.global.settings.outer-spacing.label",
+      "options": [
+        {
+          "value": "mt-0 mb-0 mt-0--large mb-0--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_1"
+        },
+        {
+          "value": "mt-s mb-s mt-s--large mb-s--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_2"
+        },
+        {
+          "value": "mt-l mb-l mt-l--large mb-l--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_3"
+        }
+      ],
+      "default": "mt-0 mb-0 mt-0--large mb-0--large"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:sections.video-banner.settings.height.label",
+      "options": [
+        {
+          "value": "medium",
+          "label": "t:sections.video-banner.settings.height.options.option_1"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.video-banner.settings.height.options.option_2"
+        },
+        {
+          "value": "auto",
+          "label": "t:sections.video-banner.settings.height.options.option_3"
+        }
+      ],
+      "default": "auto",
+      "info": "t:sections.video-banner.settings.height.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_fullwidth",
+      "label": "t:sections.video-banner.settings.enable_fullwidth.label",
+      "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.video-banner.settings.paragraph_background.content"
+    },
+    {
+      "type": "video_url",
+      "id": "external_video",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ],
+      "label": "t:sections.video-banner.settings.external_video.label",
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+      "placeholder": "Video URL"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:sections.video-banner.settings.video.label"
+    },
+    {
+      "type": "video",
+      "id": "video_mobile",
+      "label": "t:sections.video-banner.settings.video_mobile.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "t:sections.video-banner.settings.video_autoplay.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_autoplay_on_mobile",
+      "label": "t:sections.video-banner.settings.disable_video_autoplay_on_mobile.label",
+      "info": "t:sections.video-banner.settings.disable_video_autoplay_on_mobile.info",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "t:sections.video-banner.settings.description.label",
+      "info": "t:sections.video-banner.settings.description.info"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.video-banner.settings.cover_image.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "t:sections.video-banner.settings.cover_image_mobile.label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.video-banner.name"
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "*"
+    ],
+    "groups": [
+      "aside"
+    ]
+  }
+}
+{% endschema %}
+

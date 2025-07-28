@@ -1,0 +1,129 @@
+{%- if expiration_date != blank -%}
+  {%- liquid
+    assign now_date = 'now' | date: '%s'
+    assign end_date = expiration_date | date: '%s'
+    assign date_diff = end_date | minus: now_date
+  -%}
+
+  {%- if date_diff > 0 -%}
+    <countdown-timer
+      class="countdown-block"
+      data-current-time="{{ 'now' | date: '%s' | times: 1000 }}"
+      data-pdp
+    >
+      <div class="countdown-timer__head">
+        {%- if title != blank -%}
+          <h3 class="h4 countdown-block__title">{{- title -}}</h3>
+        {%- endif -%}
+
+        {%- if title != blank -%}
+          <p class="countdown-block__subtitle">{{- subtitle -}}</p>
+        {%- endif -%}
+      </div>
+
+      <time
+        datetime="{{- expiration_date | date: '%s' | times: 1000 -}}"
+        class="countdown-block__counter"
+        {% if date_diff > 0 %}data-expire-date{% endif %}
+      >
+        <div class="countdown-block__item">
+          <div
+            class="h3 color-headings countdown-block__number"
+            data-label="{{- 'date.days' | t -}}"
+            data-counter-days
+          >
+            {%-
+              liquid
+              if date_diff > 0
+                assign days = date_diff | divided_by: 60 | divided_by: 60 | divided_by: 24
+                if days < 10
+                  echo days | prepend: '0'
+                else
+                  echo days
+                endif
+              else
+                echo '00'
+              endif
+            -%}
+          </div>
+        </div>
+
+        <div class="h3">:</div>
+
+        <div class="countdown-block__item">
+          <div
+            class="h3 color-headings countdown-block__number"
+            data-label="{{- 'date.hours' | t -}}"
+            data-counter-hours
+          >
+            {%-
+              liquid
+              if date_diff > 0
+                assign days_timestamp = 60 | times: 60 | times: 24
+                assign hours_timestamp = 60 | times: 60
+                assign hours = date_diff | modulo: days_timestamp | divided_by: hours_timestamp
+                if hours < 10
+                  echo hours | prepend: '0'
+                else
+                  echo hours
+                endif
+              else
+                echo '00'
+              endif
+            -%}
+          </div>
+        </div>
+
+        <div class="h3">:</div>
+
+        <div class="countdown-block__item">
+          <div
+            class="h3 color-headings countdown-block__number"
+            data-label="{{- 'date.minutes' | t -}}"
+            data-counter-minutes
+          >
+            {%-
+              liquid
+              if date_diff > 0
+                assign minutes = date_diff | modulo: hours_timestamp | divided_by: 60
+                if minutes < 10
+                  echo minutes | prepend: '0'
+                else
+                  echo minutes
+                endif
+              else
+                echo '00'
+              endif
+            -%}
+          </div>
+        </div>
+
+        <div class="h3">:</div>
+
+        <div class="countdown-block__item">
+          <div
+            class="h3 color-headings countdown-block__number"
+            data-label="{{- 'date.seconds' | t -}}"
+            data-counter-seconds
+          >
+            {%-
+              liquid
+              if date_diff > 0
+                assign seconds = date_diff | modulo: 60
+                if seconds < 10
+                  echo seconds | prepend: '0'
+                else
+                  echo seconds
+                endif
+              else
+                echo '00'
+              endif
+            -%}
+          </div>
+        </div>
+      </time>
+    </countdown-timer>
+  {%- endif -%}
+
+{%- endif -%}
+

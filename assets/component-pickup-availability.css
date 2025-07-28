@@ -1,0 +1,56 @@
+.pickup-availability-modal__options {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.pickup-availability-modal__options li {
+  margin-right: calc(var(--spacing-step) * 2);
+}
+
+.pickup-availability-modal__list-item {
+  margin-bottom: calc(var(--page-gap) / 2);
+}
+
+.pickup-availability-modal__list-item:not(:last-child) {
+  padding-bottom: calc(var(--page-gap) / 2);
+  border-bottom: 0.1rem solid var(--color-seperators);
+}
+
+.pickup-availability-modal__status {
+  display: flex;
+  align-items: center;
+}
+
+.pickup-availability-modal__status svg {
+  margin-right: calc(var(--spacing-step) / 2);
+}
+
+.pickup-availability-modal__status.is-inactive svg {
+  color: var(--color-form-errors);
+}
+
+@media screen and (min-width: 990px) {
+  .pickup-availability-modal__list {
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+  .pickup-availability-modal__list-item {
+    width: 50%;
+    margin-bottom: var(--page-gap);
+  }
+
+  .pickup-availability-modal__list-item:not(:last-child) {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .pickup-availability-modal__list-item:nth-child(odd) {
+    border-right: 0.1rem solid var(--color-seperators);
+    padding-right: 4rem;
+  }
+
+  .pickup-availability-modal__list-item:nth-child(even) {
+    padding-left: 4rem;
+  }
+}

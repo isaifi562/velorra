@@ -1,0 +1,190 @@
+.card-collection {
+  position: relative;
+  z-index: 1;
+  border-radius: var(--border-radius-featured-cards);
+  overflow: hidden;
+}
+
+.card-collection__title,
+.card-collection__subtitle {
+  margin: 0;
+  color: var(--color-headings);
+}
+
+.card-collection__subtitle {
+  margin-bottom: var(--spacing-step);
+}
+
+.card-collection .card-collection__media {
+  border-radius: var(--border-radius-featured-cards);
+}
+
+.card-collection .card-collection__media img {
+  transform: scale(1);
+  transform-origin: center;
+  transition: transform var(--duration-extra-long)
+    cubic-bezier(0.47, 0.01, 0.13, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card-collection:hover
+    .card-collection__media:not(a:not([href]))
+    img {
+    transform: scale(1.2);
+  }
+}
+
+/* Content - outside */
+.card-collection--content-outside .card-collection__content {
+  padding: calc(var(--spacing-step) * 2) var(--spacing-step) 0;
+}
+
+/* Content - overlay */
+.card-collection--content-overlay .card-collection__content,
+.card-collection--content-overlay-center .card-collection__content {
+  padding: calc(var(--spacing-step) * 4);
+  width: calc(100% - calc(var(--spacing-step) * 6));
+  position: absolute;
+  left: 0;
+  bottom: calc(var(--spacing-step) * -1);
+  z-index: 1;
+}
+
+.card-collection--content-overlay-center .card-collection__content {
+  left: calc(var(--spacing-step) * 3);
+  bottom: calc(var(--spacing-step) * 3);
+}
+
+.card-collection--content-overlay-center h4 {
+  font-size: calc(var(--spacing-step) * 3);
+  text-align: center;
+}
+
+.card-collection--content-overlay.card-collection--size-small .card-collection__content,
+.card-collection--content-overlay-center.card-collection--size-small .card-collection__content {
+  padding: calc(var(--spacing-step) * 2);
+}
+
+.card-collection--content-overlay.card-collection--size-large .card-collection__content,
+.card-collection--content-overlay-center.card-collection--size-large .card-collection__content {
+  padding: calc(var(--spacing-step) * 5);
+}
+
+@media screen and (min-width: 990px) {
+  .card-collection--content-overlay.card-collection--size-small .card-collection__content,
+  .card-collection--content-overlay-center.card-collection--size-small .card-collection__content {
+    padding: calc(var(--spacing-step) * 3);
+  }
+
+  .card-collection--content-overlay.card-collection--size-large .card-collection__content,
+  .card-collection--content-overlay-center.card-collection--size-large .card-collection__content {
+    padding: calc(var(--spacing-step) * 6);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card-collection--content-overlay:not(.card-collection--always-visible) [data-animation-item-primary],
+  .card-collection--content-overlay:not(.card-collection--always-visible) [data-animation-item-secondary],
+  .card-collection--content-overlay-center:not(.card-collection--always-visible) [data-animation-item-primary],
+  .card-collection--content-overlay-center:not(.card-collection--always-visible) [data-animation-item-secondary] {
+    overflow: hidden;
+  }
+
+  .card-collection--content-overlay:not(.card-collection--always-visible) [data-animation-item-primary] > *,
+  .card-collection--content-overlay:not(.card-collection--always-visible) [data-animation-item-secondary] > *,
+  .card-collection--content-overlay-center:not(.card-collection--always-visible) [data-animation-item-primary] > *,
+  .card-collection--content-overlay-center:not(.card-collection--always-visible) [data-animation-item-secondary] > * {
+    display: block;
+    transform: translateY(10rem);
+    transition: transform var(--duration-default) ease-out;
+  }
+
+  .card-collection--content-overlay-center:not(.card-collection--always-visible) [data-animation-item-primary] > .button,
+  .card-collection--content-overlay-center:not(.card-collection--always-visible) [data-animation-item-secondary] > .button {
+    display: flex;
+  }
+
+  .card-collection--content-overlay:not(.card-collection--always-visible) [data-animation-item-primary] > *,
+  .card-collection--content-overlay-center:not(.card-collection--always-visible) [data-animation-item-primary] > * {
+    transition-delay: var(--duration-short);
+  }
+
+  .card-collection--content-overlay:not(.card-collection--always-visible) [data-animation-item-secondary] > *,
+  .card-collection--content-overlay-center:not(.card-collection--always-visible) [data-animation-item-secondary] > * {
+    transition-delay: var(--duration-default);
+  }
+
+  .card-collection--content-overlay:not(.card-collection--always-visible):hover [data-animation-item-primary] > *,
+  .card-collection--content-overlay:not(.card-collection--always-visible):hover [data-animation-item-secondary] > *,
+  .card-collection--content-overlay-center:not(.card-collection--always-visible):hover [data-animation-item-primary] > *,
+  .card-collection--content-overlay-center:not(.card-collection--always-visible):hover [data-animation-item-secondary] > * {
+    transform: translateY(0);
+  }
+}
+
+.card-collection--content-overlay .card-collection__content--has-overlay,
+.card-collection--content-overlay-center .card-collection__content--has-overlay {
+  background-color: var(--color-background-transparent-50);
+  left: calc(var(--spacing-step) * 2);
+  bottom: calc(var(--spacing-step) * 2);
+}
+
+.card-collection--content-overlay .card-collection__content.card-collection__content--has-overlay,
+.card-collection--content-overlay-center .card-collection__content.card-collection__content--has-overlay {
+  transition-delay: var(--duration-default);
+  width: 100%;
+  left: 0;
+  bottom: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card-collection--content-overlay:not(.card-collection--always-visible) .card-collection__content--has-overlay,
+  .card-collection--content-overlay-center:not(.card-collection--always-visible) .card-collection__content--has-overlay {
+    background-color: transparent;
+    transition: background-color var(--duration-long);
+  }
+
+  .card-collection--content-overlay:not(.card-collection--always-visible):hover .card-collection__content--has-overlay,
+  .card-collection--content-overlay-center:not(.card-collection--always-visible):hover .card-collection__content--has-overlay {
+    background-color: var(--color-background-transparent-50);
+  }
+}
+
+/* Always visible */
+.card-collection--always-visible.card-collection--content-overlay [data-animation-item-primary],
+.card-collection--always-visible.card-collection--content-overlay [data-animation-item-secondary],
+.card-collection--always-visible.card-collection--content-overlay-center [data-animation-item-primary],
+.card-collection--always-visible.card-collection--content-overlay-center [data-animation-item-secondary] {
+  overflow: hidden;
+}
+
+.card-collection--always-visible.card-collection--content-overlay [data-animation-item-primary] > *,
+.card-collection--always-visible.card-collection--content-overlay [data-animation-item-secondary] > *,
+.card-collection--always-visible.card-collection--content-overlay-center [data-animation-item-primary] > *,
+.card-collection--always-visible.card-collection--content-overlay-center [data-animation-item-secondary] > * {
+  display: block;
+  transform: translateY(10rem);
+  transition: transform var(--duration-default) ease-out;
+}
+
+.card-collection--always-visible.card-collection--content-overlay-center [data-animation-item-primary] > .button,
+.card-collection--always-visible.card-collection--content-overlay-center [data-animation-item-secondary] > .button {
+  display: flex;
+}
+
+.card-collection--always-visible.card-collection--content-overlay [data-animation-item-primary] > *,
+.card-collection--always-visible.card-collection--content-overlay-center [data-animation-item-primary] > * {
+  transition-delay: var(--duration-short);
+}
+
+.card-collection--always-visible.card-collection--content-overlay [data-animation-item-secondary] > *,
+.card-collection--always-visible.card-collection--content-overlay-center [data-animation-item-secondary] > * {
+  transition-delay: var(--duration-default);
+}
+
+.card-collection--always-visible.card-collection--content-overlay [data-animation-item-primary] > *,
+.card-collection--always-visible.card-collection--content-overlay [data-animation-item-secondary] > *,
+.card-collection--always-visible.card-collection--content-overlay-center [data-animation-item-primary] > *,
+.card-collection--always-visible.card-collection--content-overlay-center [data-animation-item-secondary] > * {
+  transform: translateY(0);
+}

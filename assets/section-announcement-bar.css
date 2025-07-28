@@ -1,0 +1,208 @@
+announcement-bar {
+  display: block;
+}
+
+.announcement-bar {
+  color: var(--color-paragraphs);
+  background-color: var(--section-background, var(--color-background));
+  padding: var(--spacing-step) 0;
+  border-top: 0.1rem solid var(--color-seperators);
+  border-bottom: 0.1rem solid var(--color-seperators);
+  position: relative;
+  z-index: var(--z-announcement-bar);
+}
+
+.announcement-bar p {
+  margin: 0;
+}
+
+.announcement-bar__arrow svg,
+.announcement-bar__close {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.announcement-bar .announcement-bar__arrows {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.announcement-bar__arrow {
+  color: var(--color-paragraphs);
+  background: none;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.announcement-bar__content--has-close {
+  width: calc(100% - 2.6rem);
+}
+
+.announcement-bar .announcement-bar__content--has-arrows {
+  position: relative;
+}
+
+.announcement-bar .swiper-wrapper {
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.announcement-bar .announcement-bar__content {
+  width: auto;
+  overflow: hidden;
+  flex: 1;
+}
+
+.announcement-bar .announcement-bar__content .swiper,
+.announcement-bar .announcement-bar__content .swiper-wrapper {
+  position: relative;
+}
+
+.announcement-bar
+  .announcement-bar__content--has-arrows
+  .announcement-bar__item {
+  padding: 0 1.6rem;
+}
+
+.announcement-bar__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.announcement-bar__close {
+  color: currentColor;
+  background: none;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.announcement-bar__utils,
+.announcement-bar__utils:empty {
+  display: flex;
+  align-items: center;
+}
+
+.announcement-bar__item-content > :first-child {
+  margin-top: 0;
+}
+
+.announcement-bar__item-content ul {
+  text-align: left;
+  display: inline-grid;
+  list-style-position: inside;
+  padding-left: 0;
+}
+
+.announcement-bar__item-content ul a {
+  color: inherit;
+}
+
+@media screen and (min-width: 990px) {
+  .announcement-bar {
+    z-index: calc(var(--z-header) + 1);
+  }
+
+  .announcement-bar__inner {
+    display: grid;
+    grid-template-columns: 30rem 1fr 30rem;
+  }
+
+  .announcement-bar__inner--left {
+    grid-template-columns: 1fr 20rem;
+  }
+
+  .announcement-bar__inner--full {
+    grid-template-columns: 2.4rem 1fr 2.4rem;
+  }
+
+  .announcement-bar__inner--no-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .announcement-bar__content--has-close {
+    flex: 1;
+  }
+
+  .announcement-bar__utils,
+  .announcement-bar__utils:empty {
+    display: flex;
+    align-items: center;
+  }
+
+  .announcement-bar__inner--left .announcement-bar__utils:empty {
+    display: none;
+  }
+
+  .announcement-bar__utils--right {
+    justify-content: flex-end;
+  }
+
+  .announcement-bar__close {
+    margin-left: 1rem;
+  }
+
+  .announcement-bar__currency button {
+    font: inherit;
+    color: currentColor;
+    background: none;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .announcement-bar__inner:not(.announcement-bar__inner--no-content) {
+    grid-template-columns: 32rem 1fr 32rem;
+  }
+
+  .announcement-bar__inner--full:not(
+      .announcement-bar__inner--no-content
+    ) {
+    grid-template-columns: 2.4rem 1fr 2.4rem;
+  }
+
+  .announcement-bar__inner--left:not(
+      .announcement-bar__inner--no-content
+    ) {
+    grid-template-columns: 1fr 20rem;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .announcement-bar__inner:not(.announcement-bar__inner--no-content) {
+    grid-template-columns: 40rem 1fr 40rem;
+  }
+
+  .announcement-bar__inner--left:not(
+      .announcement-bar__inner--no-content
+    ) {
+    grid-template-columns: 1fr 40rem;
+  }
+
+  .announcement-bar__inner--full:not(
+      .announcement-bar__inner--no-content
+    ) {
+    grid-template-columns: 2.4rem 1fr 2.4rem;
+  }
+}

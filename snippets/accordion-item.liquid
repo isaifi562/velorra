@@ -1,0 +1,57 @@
+{% comment %}
+  Accepts:
+    title: {String}
+    content: {String} - Richtext
+    icon_type?: {String} - A predefined icon
+    icon_image?: {Image} - Icon image
+    title_class?: {String} - Accordion title classes
+    content_class?: {String} - Accordion content classes
+    content_attr?: {String} - Accordion content attributes
+    classes?: {String} - Details classes
+    expanded_by_default?: {Boolean}
+
+
+
+  Requires:
+    accordion-item.css
+    accordion-item.js
+{% endcomment %}
+
+{%-
+  liquid
+  assign title_class = title_class | default: 'sh sh--3'
+  assign content_class = content_class | default: 'rte p4'
+  assign content_attr = content_attr | default: false
+  assign classes = classes | default: 'mt-0 pt-s pb-s'
+  assign expanded = expanded_by_default | default: false
+  if expanded
+    assign classes = classes | append: ' is-open'
+  endif
+-%}
+
+<accordion-item class="accordion-item" {%- if expanded %} data-expanded{%- endif -%}>
+  <details class="{{- classes -}}" {%- if expanded %} open{%- endif %}>
+    <summary class="{{ title_class }} motion-reduce">
+      {%- if icon_type == 'custom' -%}
+        {%- if icon_image != blank -%}
+          {{- icon_image | image_url: width: 48 | image_tag -}}
+        {%- endif -%}
+      {%- else -%}
+        {% render 'icon-get', icon: icon_type %}
+      {%- endif -%}
+
+      <span>{{- title | escape -}}</span>
+    </summary>
+
+    <div>
+      <div
+        class="{{ content_class }} color-paragraphs motion-reduce overflow-hidden"
+        {%- if content_attr -%}
+          {{ content_attr }}
+        {%- endif -%}
+      >
+        {{- content -}}
+      </div>
+    </div>
+  </details>
+</accordion-item>

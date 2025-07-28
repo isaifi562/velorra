@@ -1,0 +1,24 @@
+.collections-grid {
+  color: var(--color-paragraphs);
+  background-color: var(--color-background);
+}
+
+.collections-grid__paging {
+  padding: calc(var(--spacing-step) * 6) 0;
+}
+
+.container--no-gutter .collections-grid__paging {
+  padding-left: var(--page-gap);
+  padding-right: var(--page-gap);
+}
+
+@media screen and (min-width: 990px) {
+  .collections-grid__paging {
+    padding: calc(var(--spacing-step) * 7) 0;
+  }
+
+  .container--no-gutter .collections-grid__paging {
+    padding-left: var(--page-gap-desktop);
+    padding-right: var(--page-gap-desktop);
+  }
+}

@@ -1,0 +1,61 @@
+{% comment %}
+  Renders a slider component
+
+  Accepts:
+    - element?: {String} Custom element
+    - style?: {String} Element style, default is 'default'
+    - class?: {String} Slider class
+    - paging_styles?: {String} paging style, comma-separated list of styles. Ex.: 'small,left,overlayed'
+        Output: 'slider-component--paging-small, slider-component--paging-left, slider-component--paging-overlayed'
+    - attr?: {String} Data attributes
+
+  Usage:
+  {%- render 'slider-component',
+    element: 'slider-component',
+    content: content
+  -%}
+
+  Requires:
+  - swiper-bundle.min.js
+  - slider-component.js
+  - swiper-bundle.min.css
+  - component-slider.css
+{% endcomment %}
+
+{%- liquid
+  assign element = element
+  assign style = style | default: 'default'
+  assign class = 'slider-component slider-component--' | append: style | append: ' ' | append: class | default: ''
+  assign content = content
+  assign attr = attr | default: ''
+  assign classes = class | append: ' ' | append: classes
+  assign paging_styles = paging_styles | default: ''
+  if paging_styles != ''
+    assign paging_styles_array = paging_styles | split: ','
+    for style in paging_styles_array
+      assign classes = classes | append: ' ' | append: 'slider-component--paging-' | append: style
+    endfor
+  endif
+-%}
+
+<{{ element }} class="{{ classes }}" {{ attr }}>
+  <div class="slider__clip">
+    <div class="swiper" data-slider>
+      <div class="swiper-wrapper slider__track" data-track>
+        {{ content }}
+      </div><!-- /.swiper__wrapper -->
+
+      <div class="slider__arrows">
+        <button class="button-arrow motion-reduce slider__arrow slider__arrow--prev" data-arrow-prev aria-label="{{- 'accessibility.previous' | t -}}">
+          {% render 'icon-arrow-button-left' %}
+        </button>
+
+        <button class="button-arrow motion-reduce slider__arrow slider__arrow--next" data-arrow-next aria-label="{{- 'accessibility.next' | t -}}">
+          {% render 'icon-arrow-button-right' %}
+        </button>
+      </div><!-- /.slider__arrows -->
+
+      <div class="slider__pagination" data-pagination></div>
+    </div><!-- /.swiper -->
+  </div><!-- /.slider__clip -->
+</{{ element }}>

@@ -1,0 +1,17 @@
+{%- assign enable_endonym = enable_endonym | default: false, allow_false: true -%}
+
+{% if enable_endonym %}
+  {{ localization.language.endonym_name }} / {{ localization.country }}
+{% else %}
+  {{ localization.country }}
+{% endif %}
+
+{%- if settings.localization_price_indicator == 'iso_with_symbol' -%}
+  ({{ cart.currency.iso_code }} {{ cart.currency.symbol }})
+
+{%- elsif settings.localization_price_indicator == 'iso_only' -%}
+  ({{ cart.currency.iso_code }})
+
+{%- elsif settings.localization_price_indicator == 'symbol_only' -%}
+  ({{ cart.currency.symbol }})
+{%- endif -%}

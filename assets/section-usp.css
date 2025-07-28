@@ -1,0 +1,33 @@
+.usp {
+  --vertical-padding: calc(var(--spacing-step) * 4);
+  padding: var(--vertical-padding) 0;
+}
+
+.usp .grid {
+  row-gap: var(--vertical-padding);
+}
+
+.usp li {
+  display: flex;
+  align-items: flex-start;
+}
+
+.usp__icon {
+  width: 2.4rem;
+  margin-right: calc(var(--spacing-step) * 3);
+}
+
+@media screen and (min-width: 990px) {
+  .usp {
+    --vertical-padding: calc(var(--spacing-step) * 6);
+  }
+}
+
+.usp--center li {
+  display: block;
+  text-align: center;
+}
+
+.usp--center .usp__icon {
+  margin: 0 auto var(--spacing-step);
+}

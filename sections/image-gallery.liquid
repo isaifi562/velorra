@@ -1,0 +1,430 @@
+{%- unless section.blocks.size == 0 -%}
+  <link rel="stylesheet" href="{{- 'image-gallery.css' | asset_url -}}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{- 'swiper-bundle.min.css' | asset_url -}}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{- 'component-slider.css' | asset_url -}}" media="print" onload="this.media='all'">
+
+  <noscript>
+    {{- 'image-gallery.css' | asset_url | stylesheet_tag -}}
+    {{- 'swiper-bundle.min.css' | asset_url | stylesheet_tag -}}
+    {{- 'component-slider.css' | asset_url | stylesheet_tag -}}
+  </noscript>
+
+  {%- if section.settings.enable_zoom -%}
+    <link rel="stylesheet" href="{{- 'photoswipe.css' | asset_url -}}" media="print" onload="this.media='all'">
+
+    <script src="{{- 'photoswipe-lightbox.umd.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+    <script src="{{- 'photoswipe.umd.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  {%- endif -%}
+
+  <script src="{{- 'swiper-bundle.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'slider-component.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'image-gallery.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'image-gallery-slider.js' | asset_url -}}" defer="defer" data-theme-script></script>
+
+  {%-
+    liquid
+    assign style = ''
+    if section.settings.enable_custom_background
+      if section.settings.background_gradient != blank
+        assign style = ' style="--section-background:' | append: section.settings.background_gradient | append: '"'
+      elsif section.settings.background_color != blank
+        assign style = ' style="--section-background:' | append: section.settings.background_color | append: '"'
+      else
+        assign style = ''
+      endif
+    endif
+
+    capture style_classes
+      echo 'color-background color-' | append: section.settings.style | append: ' ' | append: section.settings.outer_spacing | append: ' ' | append: section.settings.inner_spacing | append: ' '
+
+      if style != ''
+        echo ' section-background'
+      endif
+    endcapture
+  -%}
+
+  <section class="image-gallery js-image-gallery{% if section.settings.side_margins %} image-gallery--side-margins{% endif %} {{ style_classes }}" {{ style }}>
+    {% comment %} Container classes {% endcomment %}
+    {%-
+      liquid
+      assign container_class = 'container'
+      if section.settings.fullwidth
+        assign container_class = container_class | append: ' container--fullwidth'
+      endif
+      unless section.settings.side_margins
+        assign container_class = container_class | append: ' container--no-gutter'
+      endunless
+    -%}
+
+    {% comment %} Layout variables {% endcomment %}
+    <style>
+      #shopify-section-{{- section.id }} {
+        --grid-column-count: {{- section.settings.item_count -}};
+        --grid-column-count-desktop: {{- section.settings.item_count_desktop -}};
+        --media-ratio: {{- section.settings.height -}};
+        {%- if section.settings.image_spacing -%}
+          --grid-gap: 1.6rem;
+        {%- else -%}
+          --grid-gap: 0;
+        {%- endif -%}
+      }
+    </style>
+
+    {% comment %} Items html {% endcomment %}
+    {%- capture items_html -%}
+      {%- for block in section.blocks -%}
+        {%- assign _block = block.settings -%}
+
+        {% comment %} Image html {% endcomment %}
+        {%-
+          liquid
+          capture image_html
+            unless _block.image == blank
+              assign image_src = _block.image | image_url: width: 500
+              capture image_srcset
+                render 'srcset', image: _block.image, widths: '1500,1980,2200,3000,1560'
+              endcapture
+              assign image_alt = _block.image.alt | escape
+              render 'image', src: image_src, srcset: image_srcset, sizes: '100vw', alt: image_alt, width: _block.image.width, height: _block.image.height, focal_point: _block.image.presentation.focal_point
+            else
+              echo 'image' | placeholder_svg_tag
+            endunless
+          endcapture
+
+          assign has_zoom = false
+          if section.settings.enable_zoom and _block.image != blank and _block.url == blank
+            assign has_zoom = true
+          endif
+        -%}
+
+        {% comment %} Item wrapper {% endcomment %}
+        {%- if _block.url != blank or has_zoom -%}
+          <a
+            href="{%- if _block.url == blank -%}#{%- else -%}{{- _block.url -}}{%- endif -%}"
+            class="image-gallery__image {%- if section.settings.enable_slider %} swiper-slide{%- endif -%}"
+            {% if has_zoom %}
+              data-pswp-image
+              data-pswp-src="{{- _block.image | image_url: width: _block.image.width -}}"
+              data-pswp-srcset="{{- image_srcset -}}"
+              data-pswp-width="{{- _block.image.width -}}"
+              data-pswp-height="{{- _block.image.height -}}"
+            {% endif %}
+          >
+            {%- if has_zoom -%}
+              <span class="image-gallery__icon motion-reduce">
+                {%- render 'icon-plus-large' -%}
+              </span>
+            {%- endif -%}
+
+            {{- image_html -}}
+          </a>
+
+        {%- else -%}
+          <div class="image-gallery__image {%- if section.settings.enable_slider %} swiper-slide{%- endif -%}">
+            {{- image_html -}}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+
+    <div class="{{- container_class -}}">
+      <image-gallery class="image-gallery__images {%- unless section.settings.enable_slider %} image-gallery__images--grid{%- endunless -%}">
+        {%- if section.settings.enable_slider -%}
+          {%- capture slider_attr -%}
+            data-slides-per-view="{{- section.settings.item_count -}}"
+            data-slides-per-view-desktop="{{- section.settings.item_count_desktop -}}"
+            {% unless section.settings.enable_slider_paging %}
+              data-no-pagination
+            {% endunless %}
+            {% unless section.settings.enable_slider_actions %}
+              data-no-arrows
+            {% endunless %}
+            {% if section.settings.image_spacing %}
+              data-slider-gap="16"
+            {% else %}
+              data-slider-gap="0"
+            {% endif %}
+          {%- endcapture -%}
+
+          {%- render 'slider-component',
+            element: 'image-gallery-slider',
+            content: items_html,
+            attr: slider_attr,
+            paging_styles: 'large'
+          -%}
+        {%- else -%}
+          {{- items_html -}}
+        {%- endif -%}
+      </image-gallery><!-- /.image-gallery__images -->
+
+      {%- if section.settings.enable_slider and section.settings.enable_slider_thumbs -%}
+        <div class="image-gallery-thumbs js-image-gallery-thumbs">
+          <div class="swiper">
+            <div class="swiper-wrapper">
+              {%- for block in section.blocks -%}
+                {%- assign _block = block.settings -%}
+
+                <div class="swiper-slide">
+                  <div class="image-gallery__image">
+                    {%-
+                      liquid
+                      unless _block.image == blank
+                        assign image_src = _block.image | image_url: width: 500
+                        capture image_srcset
+                          render 'srcset', image: _block.image, widths: '1500,1980,2200,3000,1560'
+                        endcapture
+                        assign image_alt = _block.image.alt | escape
+                        render 'image', src: image_src, srcset: image_srcset, sizes: '100vw', alt: image_alt, width: _block.image.width, height: _block.image.height, focal_point: _block.image.presentation.focal_point
+                      else
+                        echo 'image' | placeholder_svg_tag
+                      endunless
+                    -%}
+                  </div><!-- /.image-gallery__image -->
+                </div><!-- /.swiper-slide -->
+              {%- endfor -%}
+            </div><!-- /.swiper-wrapper -->
+          </div><!-- /.swiper -->
+        </div><!-- /.image-gallery-thumbs -->
+      {%- endif -%}
+    </div><!-- /.container -->
+  </section><!-- /.image-gallery -->
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "t:sections.image-gallery.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "select",
+      "id": "outer_spacing",
+      "label": "t:sections.global.settings.outer-spacing.label",
+      "options": [
+        {
+          "value": "mt-0 mb-0 mt-0--large mb-0--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_1"
+        },
+        {
+          "value": "mt-s mb-s mt-s--large mb-s--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_2"
+        },
+        {
+          "value": "mt-l mb-l mt-l--large mb-l--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_3"
+        }
+      ],
+      "default": "mt-0 mb-0 mt-0--large mb-0--large"
+    },
+    {
+      "type": "select",
+      "id": "inner_spacing",
+      "label": "t:sections.global.settings.inner-spacing.label",
+      "options": [
+        {
+          "value": "spacing-none",
+          "label": "t:sections.global.settings.inner-spacing.options.option_1"
+        },
+        {
+          "value": "spacing-s spacing-s--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_2"
+        },
+        {
+          "value": "spacing-m spacing-m--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_3"
+        },
+        {
+          "value": "spacing-l spacing-l--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_4"
+        }
+      ],
+      "default": "spacing-s spacing-s--large"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:sections.image-gallery.settings.height.label",
+      "options": [
+        {
+          "value": "16/9",
+          "label": "t:sections.image-gallery.settings.height.options.option_1"
+        },
+        {
+          "value": "4/3",
+          "label": "t:sections.image-gallery.settings.height.options.option_2"
+        },
+        {
+          "value": "1",
+          "label": "t:sections.image-gallery.settings.height.options.option_3"
+        },
+        {
+          "value": "9/16",
+          "label": "t:sections.image-gallery.settings.height.options.option_4"
+        },
+        {
+          "value": "3/4",
+          "label": "t:sections.image-gallery.settings.height.options.option_5"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "checkbox",
+      "id": "fullwidth",
+      "label": "t:sections.image-gallery.settings.fullwidth.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "side_margins",
+      "label": "t:sections.image-gallery.settings.side_margins.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "image_spacing",
+      "label": "t:sections.image-gallery.settings.image_spacing.label",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "item_count_desktop",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "x",
+      "label": "t:sections.image-gallery.settings.item_count_desktop.label",
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "item_count",
+      "label": "t:sections.image-gallery.settings.item_count.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.image-gallery.settings.header_slider.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_slider",
+      "label": "t:sections.image-gallery.settings.enable_slider.label",
+      "info": "t:sections.image-gallery.settings.enable_slider.info",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_slider_actions",
+      "label": "t:sections.image-gallery.settings.enable_slider_actions.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_slider_thumbs",
+      "label": "t:sections.image-gallery.settings.enable_slider_thumbs.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_slider_paging",
+      "label": "t:sections.image-gallery.settings.enable_slider_paging.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_zoom",
+      "label": "t:sections.image-gallery.settings.enable_zoom.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.section_colors.header"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_background",
+      "label": "t:sections.global.settings.section_colors.checkbox",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.global.settings.section_colors.color"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "t:sections.global.settings.section_colors.gradient"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "t:sections.image-gallery.blocks.item.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.image-gallery.blocks.item.settings.image.label"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "t:sections.image-gallery.blocks.item.settings.url.label",
+          "info": "t:sections.image-gallery.blocks.item.settings.url.info"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.image-gallery.name",
+      "blocks": [
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "*"
+    ],
+    "groups": [
+      "aside"
+    ]
+  }
+}
+{% endschema %}

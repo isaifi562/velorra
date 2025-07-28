@@ -1,0 +1,84 @@
+{{- 'addresses.css' | asset_url | stylesheet_tag -}}
+{{- 'component-form-elements.css' | asset_url | stylesheet_tag -}}
+
+<script src="{{- 'shopify.js' | asset_url -}}" defer></script>
+<script src="{{- 'addresses.js' | asset_url -}}" defer></script>
+<script src="{{- 'form-validation.js' | asset_url -}}" defer></script>
+
+<div class="addresses-wrapper" data-customer-addresses>
+  {%-
+    liquid
+    assign address_items = ''
+    assign address_forms = ''
+
+    paginate customer.addresses by 4
+      for address in customer.addresses
+        capture address_items
+          echo address_items
+          echo '<div class="address__item">'
+          render 'card-address', address: address, show_buttons: true
+          echo '</div><!-- /.address__item -->'
+        endcapture
+
+        capture address_forms
+          echo address_forms
+          render 'address-form', address: address
+        endcapture
+      endfor
+
+      capture pagination_html
+        render 'pagination', paginate: paginate, anchor: '#orders'
+      endcapture
+    endpaginate
+  -%}
+
+  {%- render 'address-form' -%}
+
+  {{- address_forms -}}
+
+  <div class="addresses">
+    <h1 class="h4 mt-0 mb-xl color-headings">{{- 'customer.addresses.address' | t -}}</h1><!-- /.h4 -->
+
+    <div class="grid">
+      <div class="grid__item grid__item--xs-6">
+        <div class="address__item address__item--default">
+          {%-
+            liquid
+            assign heading = 'customer.addresses.default' | t
+            render 'card-address', heading: heading, address: customer.default_address, show_buttons: true
+          -%}
+        </div><!-- /.address__item -->
+
+        {%-
+          liquid
+          assign value = 'customer.addresses.add_new' | t
+          render 'button', type: 'link', href: '#AddAddress', css: 'button', class: 'mt-s mt-l--large', value: value, styles: 's'
+        -%}
+
+        {%- render 'address-form' -%}
+      </div><!-- /.grid__item grid__item--xs-6 -->
+
+      <div class="grid__item grid__item--xs-6">
+        <h3 class="h5 mt-0 mb-s mb-m--large color-headings">
+          {{- 'customer.addresses.address' | t -}}
+        </h3><!-- /.h5 -->
+
+        {{- address_items -}}
+
+        {%- assign pagination_html_trimmed = pagination_html | strip -%}
+
+        {%- if pagination_html_trimmed.size > 0 -%}
+          <div class="account__paging">
+            {{- pagination_html_trimmed -}}
+          </div><!-- /.account__paging -->
+        {%- endif -%}
+      </div><!-- /.grid__item grid__item--xs-6 -->
+    </div><!-- /.grid -->
+  </div><!-- /.addresses -->
+
+  <script>
+    window.onload = () => {
+      typeof CustomerAddresses !== 'undefined' && new CustomerAddresses();
+    }
+  </script>
+</div><!-- /.addresses-wrapper -->

@@ -1,0 +1,280 @@
+{{- 'section-contact.css' | asset_url | stylesheet_tag -}}
+{{- 'component-form-elements.css' | asset_url | stylesheet_tag -}}
+
+<script src="{{- 'form-validation.js' | asset_url -}}" defer></script>
+
+<section class="contact color-paragraphs color-background color-{{- section.settings.style -}}">
+  <div class="container container--medium">
+    <div class="contact__form">
+      <form-validation>
+        {%- form 'contact', id: 'ContactForm', class: 'scroll-offset pt-l pb-l spacer-t-xs--large spacer-b-xs--large' -%}
+          {%- if section.settings.heading != blank -%}
+            {%- render 'text-content', inner_settings: section.settings, heading_size_tag: 'h2', heading_class: 'h4 color-headings mt-0 mb-l' -%}
+          {%- endif -%}
+
+          {%- if form.posted_successfully? -%}
+            <h3 class="p1 color-paragraphs" tabindex="-1">{{- 'contact.form.success' | t -}}</h3><!-- /.h4 -->
+          {%- elsif form.errors -%}
+            <div class="color-red">
+              {{- form.errors | default_errors -}}
+            </div><!-- /.color-red -->
+          {%- endif -%}
+
+          <div class="form-row form-row--double">
+            {%-
+              liquid
+              assign label = 'contact.form.name' | t
+              assign placeholder = 'contact.form.name' | t
+              capture attr
+                echo 'autocomplete="name"'
+              endcapture
+              if form.name
+                assign value = form.name
+              elsif customer
+                assign value = customer.name
+              else
+                assign value = ''
+              endif
+              render 'text-input', id: 'ContactForm-name', label: label, name: 'contact[Name]', placeholder: placeholder, attr: attr, value: value, hide_label: true, required: true
+            -%}
+
+            {%-
+              liquid
+              assign label = 'contact.form.email' | t | append: ' <span class="color-red" aria-hidden="true">*</span>'
+              assign placeholder = 'contact.form.email' | t
+              capture attr
+                echo 'autocomplete="email"'
+                echo 'spellcheck="false"'
+                echo 'autocapitalize="off"'
+                echo 'aria-required="true"'
+              endcapture
+              if form.email
+                assign value = form.email
+              elsif customer
+                assign value = customer.email
+              else
+                assign value = ''
+              endif
+              if form.errors contains 'email'
+                assign error = form.errors.translated_fields['email'] | capitalize | append: ' ' | append: form.errors.messages['email']
+                assign has_error = true
+              endif
+              render 'text-input', id: 'ContactForm-email', type: 'email', label: label, name: 'contact[email]', placeholder: placeholder, attr: attr, value: value, has_error: has_error, message: error, hide_label: true, required: true
+            -%}
+          </div><!-- /.form-row form-row--double -->
+
+          <div class="form-row">
+            {%-
+              liquid
+              assign label = 'contact.form.subject' | t
+              render 'text-input', id: 'ContactForm-subject', label: label, name: 'contact[request_type]', placeholder: label, attr: attr, value: '', hide_label: true
+            -%}
+          </div><!-- /.form-row -->
+
+          <div class="form-row">
+            {%-
+              liquid
+              assign label = 'contact.form.message' | t
+              assign placeholder = 'contact.form.message' | t
+              assign name = 'contact[' | append: label | append: ']'
+              render 'textarea-input', id: 'ContactForm-body', label: label, name: name, placeholder: placeholder, body: form.body, hide_label: true, required: true
+            -%}
+          </div><!-- /.form-row -->
+
+          <div class="mt-s">
+            {%- assign value = 'contact.form.submit' | t -%}
+            {%- render 'button', type: 'submit', value: value -%}
+            {%- assign value = nil -%}
+          </div><!-- /.form-row -->
+        {%- endform -%}
+      </form-validation>
+    </div><!-- /.contact__form -->
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="contact__info pt-xl pb-xl pt-xxl--large pb-xxl--large bd-t">
+        {%- for block in section.blocks -%}
+          <div class="contact__info-item">
+            {%- case block.type -%}
+              {%- when 'phone' -%}
+                {%- if block.settings.heading != blank -%}
+                  <h3 class="h6 color-headings mt-0 mb-s">{{- block.settings.heading | escape -}}</h3><!-- /.h5 mt-0 mb-xs -->
+                {%- endif -%}
+
+                {%- assign phone = block.settings.phone | default: settings.phone -%}
+
+                {%- if phone != blank -%}
+                  <div class="p3 contact-links contact-links--top flex">
+                    {%- render 'icon-phone' -%}
+
+                    <a href="tel:{{- phone | escape | remove: ' ' | remove: '(' | remove: ')' -}}" class="inline-unstyled-link">
+                      {{- phone -}}
+                    </a>
+                  </div><!-- /.p2 contact-links -->
+                {%- endif -%}
+
+                {%- if block.settings.paragraph -%}
+                  <div class="contact__paragraph p3">
+                    {{- block.settings.paragraph -}}
+                  </div>
+                {%- endif -%}
+              {%- when 'info' -%}
+                {%- if block.settings.heading != blank -%}
+                  <h3 class="h6 color-headings mt-0 mb-s">{{- block.settings.heading | escape -}}</h3><!-- /.h5 mt-0 mb-xs -->
+                {%- endif -%}
+
+                {%- assign email = block.settings.email | default: settings.email -%}
+
+                {%- if email != blank -%}
+                  {%- if block.settings.email_heading != blank -%}
+                    <h4 class="h6 color-headings mt-0 mb-s">{{- block.settings.email_heading | escape -}}</h4><!-- /.h6 -->
+                  {%- endif -%}
+
+                  <div class="p3 contact-links contact-links--top flex">
+                    {%- render 'icon-envelope' -%}
+
+                    <a href="mailto:{{- email | escape -}}" class="inline-unstyled-link">
+                      {{- email -}}
+                    </a><!-- /.link contact__link -->
+                  </div><!-- /.p2 contact-links -->
+                {%- endif -%}
+
+                {%- if block.settings.address != blank -%}
+                  {%- if block.settings.address_heading != blank -%}
+                    <h4 class="h6 color-headings mt-s mb-s">{{- block.settings.address_heading | escape -}}</h4><!-- /.h6 -->
+                  {%- endif -%}
+
+                  <div class="p3 contact-links contact-links--top flex">
+                    {%- render 'icon-pin' -%}
+
+                    <address>
+                      {{- block.settings.address | newline_to_br -}}
+                    </address>
+                  </div><!-- /.p2 -->
+                {%- endif -%}
+
+                {%- if block.settings.schedule != blank -%}
+                  {%- if block.settings.schedule_heading != blank -%}
+                    <h4 class="h6 color-headings mt-s mb-s">{{- block.settings.schedule_heading | escape -}}</h4><!-- /.h6 -->
+                  {%- endif -%}
+
+                  <div class="p3 contact-links contact-links--top flex">
+                    {%- render 'icon-clock' -%}
+
+                    <div>
+                      {{- block.settings.schedule -}}
+                    </div>
+                  </div><!-- /.p2 -->
+                {%- endif -%}
+            {%- endcase -%}
+            </div><!-- /.contact__info-item -->
+        {%- endfor -%}
+      </div><!-- /.contact__info -->
+    {%- endif -%}
+  </div><!-- /.container container--narrow container--full-left-large container--full-right-large -->
+</section><!-- /.container--narrow -->
+
+{% schema %}
+{
+  "name": "t:sections.contact.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "t:sections.global.settings.heading.label",
+      "default": "<p>Contact us</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "phone",
+      "name": "t:sections.contact.blocks.phone.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.global.settings.heading.label",
+          "default": "Phone"
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "t:sections.contact.blocks.phone.settings.phone.label",
+          "info": "t:sections.contact.blocks.phone.settings.phone.info"
+        },
+        {
+          "type": "richtext",
+          "id": "paragraph",
+          "label": "t:sections.global.settings.paragraph.label"
+        }
+      ]
+    },
+    {
+      "type": "info",
+      "name": "t:sections.contact.blocks.info.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.global.settings.heading.label",
+          "default": "Contact Info"
+        },
+        {
+          "type": "text",
+          "id": "email_heading",
+          "label": "t:sections.contact.blocks.info.settings.email_heading.label",
+          "default": "Email"
+        },
+        {
+          "type": "text",
+          "id": "email",
+          "label": "t:sections.contact.blocks.info.settings.email.label",
+          "info": "t:sections.contact.blocks.info.settings.email.info"
+        },
+        {
+          "type": "text",
+          "id": "address_heading",
+          "label": "t:sections.contact.blocks.info.settings.address_heading.label",
+          "default": "Address"
+        },
+        {
+          "type": "textarea",
+          "id": "address",
+          "label": "t:sections.contact.blocks.info.settings.address.label"
+        },
+        {
+          "type": "text",
+          "id": "schedule_heading",
+          "label": "t:sections.contact.blocks.info.settings.schedule_heading.label"
+        },
+        {
+          "type": "richtext",
+          "id": "schedule",
+          "label": "t:sections.contact.blocks.info.settings.schedule.label"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

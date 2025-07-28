@@ -1,0 +1,40 @@
+.collection__wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.collection__wrapper .collection__grid-items-wrapper {
+  flex: 1;
+}
+
+.container--no-gutter-desktop .collection__wrapper .collection__facets {
+  padding-left: var(--page-gap-desktop);
+}
+
+.collection__wrapper .collection__facets {
+  flex: 0 0 28rem;
+  padding-right: calc(var(--spacing-step) * 3);
+  max-width: 28rem;
+  position: sticky;
+  bottom: 0;
+  align-self: flex-end;
+  min-height: calc(var(--viewport-height, 100vh) - var(--header-offset));
+}
+
+@media screen and (min-width: 1200px) {
+  .collection__wrapper .collection__facets {
+    padding-right: calc(var(--spacing-step) * 5);
+    max-width: 32rem;
+    flex: 0 0 32rem;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .collection__wrapper .collection__facets {
+    padding-right: calc(var(--spacing-step) * 7);
+  }
+}
+
+.collection__wrapper .collection__pagination {
+  width: 100%;
+}

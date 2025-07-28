@@ -1,0 +1,300 @@
+{%- if section.settings.title != blank or section.blocks.size > 0 -%}
+  {{- 'section-store.css' | asset_url | stylesheet_tag -}}
+
+  <section class="store color-paragraphs color-background{% if section.settings.flip %} store--reverse{% endif %} color-{{ section.settings.style }} {{ section.settings.outer_spacing }} {{ section.settings.inner_spacing }}">
+    <div class="container container--full-left container--full-right{% if section.settings.layout == 'fullwidth' %} container--fullwidth{% endif %}">
+      <div class="store__inner">
+        <div class="store__media">
+          <div class="media media--1-1">
+            {%-
+              liquid
+              if section.settings.image != blank
+                assign image_src = section.settings.image | image_url: width: 500
+                capture image_srcset
+                  render 'srcset', image: section.settings.image
+                endcapture
+                assign image_alt = section.settings.image.alt | escape
+                render 'image', src: image_src, srcset: image_srcset, sizes: 'auto', alt: image_alt, width: section.settings.image.width, height: section.settings.image.height
+              else
+              echo 'image' | placeholder_svg_tag
+              endif
+            -%}
+          </div><!-- /.media media--1-1 -->
+        </div><!-- /.store__media -->
+
+        <div class="store__details">
+          <div class="store__wrapper">
+            {%- if section.settings.title != blank -%}
+              <h2 class="store__title color-headings h3 mt-0 mb-xl">{{- section.settings.title | escape -}}</h2><!-- /.store__title h3 -->
+            {%- endif -%}
+
+            {%- for block in section.blocks -%}
+              {%- if block.settings.title == blank or block.settings.content == blank -%}
+                {%- continue -%}
+              {%- endif -%}
+
+              <div class="store__item">
+                <h3 class="store__item-title h6 color-headings mt-0 mb-s">
+                  {{- block.settings.title | escape -}}
+                </h3><!-- /.store__item-title h6 -->
+
+                <div class="store__item-content p2 contact-links{% if block.type == 'schedule' %} contact-links--top{% endif %} flex">
+                  {%- case block.type -%}
+                    {%- when 'address' -%}
+                      {%- render 'icon-pin' -%}
+
+                      <address>
+                        {{- block.settings.content | escape -}}
+                      </address>
+                    {%- when 'schedule' -%}
+                      {%- render 'icon-clock' -%}
+
+                      <div>{{- block.settings.content -}}</div>
+                    {%- when 'phone' -%}
+                      {%- render 'icon-phone' -%}
+
+                      <a href="tel:{{- block.settings.content | escape | remove: ' ' | remove: '(' | remove: ')' -}}" class="inline-unstyled-link">
+                        {{- block.settings.content -}}
+                      </a>
+                  {%- endcase -%}
+                </div><!-- /.store__item-content p2 -->
+              </div><!-- /.store__item -->
+            {%- endfor -%}
+
+            <div class="store__actions">
+              {%- if section.settings.link_primary_text != blank and section.settings.link_primary_url != blank -%}
+                {%- render 'button', type: 'link', href: section.settings.link_primary_url, value: section.settings.link_primary_text, fullwidth: true -%}
+              {%- endif -%}
+
+              {%- if section.settings.link_secondary_text != blank and section.settings.link_secondary_url != blank -%}
+                {%- render 'button', type: 'link', href: section.settings.link_secondary_url, value: section.settings.link_secondary_text, styles: 'outline', fullwidth: true -%}
+              {%- endif -%}
+            </div><!-- /.store__actions -->
+          </div><!-- /.store__wrapper -->
+        </div><!-- /.store__details -->
+      </div><!-- /.store__inner -->
+    </div><!-- /.container -->
+  </section><!-- /.store -->
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.store.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "select",
+      "id": "outer_spacing",
+      "label": "t:sections.global.settings.outer-spacing.label",
+      "options": [
+        {
+          "value": "mt-0 mb-0 mt-0--large mb-0--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_1"
+        },
+        {
+          "value": "mt-s mb-s mt-s--large mb-s--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_2"
+        },
+        {
+          "value": "mt-l mb-l mt-l--large mb-l--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_3"
+        }
+      ],
+      "default": "mt-0 mb-0 mt-0--large mb-0--large"
+    },
+    {
+      "type": "select",
+      "id": "inner_spacing",
+      "label": "t:sections.global.settings.inner-spacing.label",
+      "options": [
+        {
+          "value": "spacing-none",
+          "label": "t:sections.global.settings.inner-spacing.options.option_1"
+        },
+        {
+          "value": "spacing-none spacing-s--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_2"
+        },
+        {
+          "value": "spacing-none spacing-m--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_3"
+        },
+        {
+          "value": "spacing-none spacing-l--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_4"
+        }
+      ],
+      "default": "spacing-none",
+      "info": "t:sections.store.settings.inner_spacing.info"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:sections.store.settings.layout.label",
+      "options": [
+        {
+          "value": "narrow",
+          "label": "t:sections.store.settings.layout.options.option_1"
+        },
+        {
+          "value": "fullwidth",
+          "label": "t:sections.store.settings.layout.options.option_2"
+        }
+      ],
+      "default": "fullwidth"
+    },
+    {
+      "type": "checkbox",
+      "id": "flip",
+      "label": "t:sections.store.settings.flip.label",
+      "info": "t:sections.store.settings.flip.info",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.store.settings.image.label"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.store.settings.title.label",
+      "default": "Store name"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.store.settings.primary_link_paragraph.content"
+    },
+    {
+      "type": "text",
+      "id": "link_primary_text",
+      "label": "t:sections.store.settings.link_primary_text.label",
+      "default": "Link - primary"
+    },
+    {
+      "type": "url",
+      "id": "link_primary_url",
+      "label": "t:sections.store.settings.link_primary_url.label",
+      "default": "/"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.store.settings.secondary_link_paragraph.content"
+    },
+    {
+      "type": "text",
+      "id": "link_secondary_text",
+      "label": "t:sections.store.settings.link_secondary_text.label",
+      "default": "Link - secondary"
+    },
+    {
+      "type": "url",
+      "id": "link_secondary_url",
+      "label": "t:sections.store.settings.link_secondary_url.label",
+      "default": "/"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "name": "t:sections.store.blocks.address.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.store.blocks.settings.title.label",
+          "default": "Address"
+        },
+        {
+          "type": "text",
+          "id": "content",
+          "label": "t:sections.store.blocks.settings.content.label",
+          "default": "Address line"
+        }
+      ]
+    },
+    {
+      "type": "schedule",
+      "name": "t:sections.store.blocks.schedule.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.store.blocks.settings.title.label",
+          "default": "Schedule"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "t:sections.store.blocks.settings.content.label",
+          "default": "<p>Schedule line</p><p>Schedule line</p><p>Schedule line</p>"
+        }
+      ]
+    },
+    {
+      "type": "phone",
+      "name": "t:sections.store.blocks.phone.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.store.blocks.settings.title.label",
+          "default": "Phone"
+        },
+        {
+          "type": "text",
+          "id": "content",
+          "label": "t:sections.store.blocks.settings.content.label",
+          "default": "Phone line"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.store.name",
+      "blocks": [
+        {
+          "type": "address"
+        },
+        {
+          "type": "schedule"
+        },
+        {
+          "type": "phone"
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "page"
+    ],
+    "groups": [
+      "aside"
+    ]
+  }
+}
+{% endschema %}

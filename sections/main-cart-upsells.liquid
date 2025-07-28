@@ -1,0 +1,234 @@
+{%-
+  liquid
+  assign element = 'div'
+  if cart.items.size > 0
+    if settings.cart_upsell_use_recommendations_api
+      assign element = 'product-recommendations'
+      assign resources = settings.cart_empty_upsell_product_list
+    elsif settings.cart_upsell_product_list != blank
+      assign resources = settings.cart_upsell_product_list | default: nil
+    endif
+  else
+    assign resources = settings.cart_empty_upsell_product_list | default: nil
+  endif
+-%}
+{%- if resources != blank or cart.items.size > 0 and settings.cart_upsell_use_recommendations_api -%}
+  <link rel="stylesheet" href="{{ 'component-text-content.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'component-card-product.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'component-badge.css' | asset_url }}" media="print" onload="this.media='all'">
+
+  <noscript>
+    {{- 'component-text-content.css' | asset_url | stylesheet_tag -}}
+    {{- 'swiper-bundle.min.css' | asset_url | stylesheet_tag -}}
+    {{- 'component-slider.css' | asset_url | stylesheet_tag -}}
+    {{- 'component-card-product.css' | asset_url | stylesheet_tag -}}
+    {{- 'component-badge.css' | asset_url | stylesheet_tag -}}
+  </noscript>
+
+  <script src="{{- 'swiper-bundle.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'slider-component.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'products-carousel.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'component-card-product.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'product-recommendations.js' | asset_url -}}" defer="defer" data-theme-script></script>
+
+  {%-
+    liquid
+    capture style_classes
+      echo 'color-' | append: section.settings.style | append: ' color-background '
+      echo 'block overflow-hidden'
+    endcapture
+  -%}
+
+  <{{ element }}
+    class="{{ style_classes }} {{ section.settings.outer_spacing }} {{ section.settings.inner_spacing }}"
+    {% if element == 'product-recommendations' %}
+      data-url="{{- routes.product_recommendations_url -}}?section_id={{- section.id -}}&product_id={{- cart.items[0].product_id -}}&limit=10"
+      data-container="recommended-products"
+    {% endif %}
+  >
+    {%-
+      liquid
+      if element == 'product-recommendations' and recommendations.performed and recommendations.products_count > 0
+        assign resources = recommendations.products
+      endif
+    -%}
+    {%- unless resources == nil and cart.empty -%}
+      <div class="container">
+        <div class="grid grid--row-gap-0 pt-0  {% if section.settings.layout == 'slider-right' %} pt-m--large {% endif %}">
+          {%-
+            liquid
+            assign show_multicolumn = false
+            assign has_text_content = false
+            assign heading_value = settings.cart_empty_upsell_title
+            if cart.items.size > 0
+              assign heading_value = settings.cart_upsell_title
+            endif
+            if heading_value != blank or section.settings.paragraph != blank or section.settings.subheading != blank
+              assign has_text_content = true
+            endif
+            if section.settings.layout == 'slider-right'
+              assign show_multicolumn = true
+            endif
+          -%}
+          {%- if has_text_content -%}
+            <div class="grid__item grid__item--xs-12 mb-s {% if show_multicolumn %}grid__item--s-3 mt-0 mt-s--large pt-0 pt-xxl--large{% else %}grid__item--s-12 mt-0--large{% endif %}">
+              {%- render 'text-content',
+                subheading_value: section.settings.subheading,
+                subheading_class: 'sh--2',
+                heading_value: heading_value,
+                heading_size_tag: 'h2',
+                heading_class: 'h4',
+                paragraph_value: section.settings.paragraph,
+                paragraph_class: 'p2' -%}
+            </div><!-- /.grid__item -->
+
+            {%- unless section.settings.layout != 'slider-right' and has_text_content -%}
+              <span class="grid__item grid__item--s-1 small-hide medium-hide"></span>
+            {%- endunless -%}
+          {%- endif -%}
+
+          <div class="grid__item grid__item--xs-12 {% if show_multicolumn and has_text_content %}grid__item--s-8 mt-0 mt-s--large mb-0 mb-xxl--large pt-0 pt-xxl--large{% else %}grid__item--s-12{% endif %}">
+            {%-
+              liquid
+              assign infinite_direction = 'both'
+              if show_multicolumn and has_text_content
+                assign infinite_direction = 'right'
+              endif
+              render 'products-feed', autoplay: section.settings.autoplay, autoplay_speed: section.settings.autoplay_speed, resources: resources, infinite_direction: infinite_direction
+            -%}
+          </div><!-- /.grid__item -->
+        </div><!-- /.grid -->
+      </div><!-- /.container -->
+    {%- endunless -%}
+  </{{ element }}><!-- /.section-featured-products -->
+{%- endif -%}
+{% schema %}
+{
+  "name": "t:sections.main-cart-upsells.name",
+  "tag": "section",
+  "class": "section-featured-products",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.main-cart-upsells.settings.paragraph_info.content"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "select",
+      "id": "outer_spacing",
+      "label": "t:sections.global.settings.outer-spacing.label",
+      "options": [
+        {
+          "value": "mt-0 mb-0 mt-0--large mb-0--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_1"
+        },
+        {
+          "value": "mt-s mb-s mt-s--large mb-s--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_2"
+        },
+        {
+          "value": "mt-l mb-l mt-l--large mb-l--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_3"
+        }
+      ],
+      "default": "mt-0 mb-0 mt-0--large mb-0--large"
+    },
+    {
+      "type": "select",
+      "id": "inner_spacing",
+      "label": "t:sections.global.settings.inner-spacing.label",
+      "options": [
+        {
+          "value": "spacing-none",
+          "label": "t:sections.global.settings.inner-spacing.options.option_1"
+        },
+        {
+          "value": "spacing-s spacing-s--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_2"
+        },
+        {
+          "value": "spacing-m spacing-m--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_3"
+        },
+        {
+          "value": "spacing-l spacing-l--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_4"
+        }
+      ],
+      "default": "spacing-l spacing-l--large"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:sections.featured-products.settings.layout.label",
+      "options": [
+        {
+          "value": "fullwidth",
+          "label": "t:sections.featured-products.settings.layout.options.option_1.label"
+        },
+        {
+          "value": "slider-right",
+          "label": "t:sections.featured-products.settings.layout.options.option_2.label"
+        }
+      ],
+      "default": "fullwidth"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.featured-products.settings.header_content.content"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.global.settings.subheading.label",
+      "default": "Subheading"
+    },
+    {
+      "type": "richtext",
+      "id": "paragraph",
+      "label": "t:sections.global.settings.paragraph.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.featured-products.settings.header_slider.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "t:sections.featured-products.settings.autoplay.label",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "t:sections.featured-products.settings.autoplay_speed.label",
+      "unit": "s",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    }
+  ]
+}
+{% endschema %}

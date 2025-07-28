@@ -1,0 +1,66 @@
+{% comment %}
+  Renders textarea input form element
+  Accepts:
+  - id {String} ID of the input element
+  - label {String} Label of the input element
+  - hide_label {Boolean} Hide the label of the textarea element
+  - name {String} Name of the input element
+  - placeholder {String} Placeholder of the input element
+  - body {String} Body of the input element
+  - attr {String} Custom attributes
+  - rows {Number} Number of rows
+
+  Usage:
+  {%- render 'textarea-input',
+    id: 'textarea-input',
+    label: 'Textarea Input',
+    name: 'textarea-input',
+    placeholder: 'Enter text here',
+    body: 'Enter text here'
+  -%}
+{% endcomment %}
+
+{%
+  liquid
+  assign typo = 'p3'
+
+  if style == 'small'
+    assign typo = 'p4'
+  elsif style == 'large'
+    assign typo = 'p2'
+  endif
+%}
+
+<div class="field field--textarea js-field-wrapper">
+  {%- if label and id -%}
+    <label for="{{- id -}}" class="{%- if hide_label -%}visually-hidden{%- else -%}field__label p3{%- endif -%}">
+      {{- label -}}
+    </label>
+  {%- endif -%}
+
+  <textarea
+    rows="{{- rows | default: 5 -}}"
+    {% if id %}id="{{- id -}}"{% endif %}
+    {% if name %}name="{{- name -}}"{% endif %}
+    {% if placeholder %}placeholder="{{- placeholder -}}"{% endif %}
+    {% if required %}required {% endif %}
+    {% if attr %} {{ attr }} {% endif %}
+    class="field__input {{ typo }}"
+  >
+    {%- if body -%}
+      {{- body -}}
+    {%- endif -%}
+  </textarea>
+
+  <small
+    class="p5 mt-xs field__message {%- unless message or error %} hidden{%- endunless -%}{%- if has_error %} has-error{%- endif -%}"
+    {% if message and has_error == false %}
+      tabindex="-1"
+      autofocus
+    {% endif %}
+  >
+    {%- render 'icon-info-circle' -%}
+
+    <span class="js-error-message">{{- message -}}</span>
+  </small>
+</div><!-- /.field field--textarea -->

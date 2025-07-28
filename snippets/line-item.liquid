@@ -1,0 +1,253 @@
+{% comment %}
+    Renders line item
+    Accepts:
+    - line_item {Object} Liquid line_item object
+    - layout: {Boolean} Use cart page state, usually needed for cart page
+    Usage:
+    {%- render 'line-item', line_item: cart.items[0] -%}
+{% endcomment %}
+
+{%- assign line_item_index = line_item.index | plus: 1 -%}
+{%- assign layout = layout | default: 'drawer' -%}
+
+{%- capture line_item_prices_html -%}
+  <div class="cart-item__details-prices p3">
+    {%- if line_item.original_line_price != line_item.final_line_price -%}
+      <div class="cart-item__discounted-prices">
+        <span class="visually-hidden">
+          {{- 'products.product.price.regular_price' | t -}}
+        </span>
+
+        <del>
+          {%- if settings.show_currency_codes -%}
+            {{- line_item.original_line_price | money_with_currency -}}
+          {%- else -%}
+            {{- line_item.original_line_price | money -}}
+          {%- endif -%}
+        </del>
+
+        <span class="visually-hidden">
+          {{- 'products.product.price.sale_price' | t -}}
+        </span>
+
+        <strong class="bold">
+          {%- if settings.show_currency_codes -%}
+            {{- line_item.final_line_price | money_with_currency -}}
+          {%- else -%}
+            {{- line_item.final_line_price | money -}}
+          {%- endif -%}
+        </strong>
+      </div>
+    {%- else -%}
+      <span>
+        {%- if settings.show_currency_codes -%}
+          {{- line_item.original_line_price | money_with_currency -}}
+        {%- else -%}
+          {{- line_item.original_line_price | money -}}
+        {%- endif -%}
+      </span>
+    {%- endif -%}
+
+    {%- if line_item.variant.available and line_item.unit_price_measurement -%}
+      <div>
+        <span class="visually-hidden">
+          {{- 'products.product.price.unit_price' | t -}}
+        </span>
+
+        {%- if settings.show_currency_codes -%}
+          {{- line_item.variant.unit_price | money_with_currency -}}
+        {%- else -%}
+          {{- line_item.variant.unit_price | money -}}
+        {%- endif -%}
+
+        <span aria-hidden="true">/</span>
+
+        {%- if line_item.variant.unit_price_measurement.reference_value != 1 -%}
+          {{- line_item.variant.unit_price_measurement.reference_value -}}
+        {%- endif -%}
+
+        {{ line_item.variant.unit_price_measurement.reference_unit }}
+      </div>
+    {%- endif -%}
+  </div><!-- /.cart-item__details-prices p3 -->
+{%- endcapture -%}
+
+{%- capture line_item_discounts_html -%}
+  {%- if line_item.discount_allocations.size > 0 -%}
+    <ul class="cart-item__discounts list-unstyled p5" role="list" aria-label="{{- 'customer.order.discount' | t -}}">
+      {%- for discount_allocation in line_item.discount_allocations -%}
+        <li>
+          {%- render 'icon-discount' -%}
+
+          <span>
+            {%- if settings.show_currency_codes -%}
+              {{ discount_allocation.discount_application.title | escape }} (-{{ discount_allocation.amount | money_with_currency }})
+            {%- else -%}
+              {{ discount_allocation.discount_application.title | escape }} (-{{ discount_allocation.amount | money }})
+            {%- endif -%}
+          </span>
+        </li>
+      {%- endfor -%}
+    </ul><!-- /.cart-item__discounts list-unstyled p5 -->
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture remove_link_html -%}
+  <cart-remove-button
+    id="Remove-{{- line_item_index -}}"
+    data-index="{{- line_item_index -}}"
+  >
+    {%- assign remove_text = 'cart.remove' | t -%}
+    {%- render 'button', type: 'link', href: line_item.url_to_remove, css: 'link', value: remove_text, styles: 's', no_icon: true -%}
+  </cart-remove-button>
+{%- endcapture -%}
+
+<div class="cart-item cart-item--layout-{{ layout }}" id="CartItem-{{- line_item_index -}}">
+  {%- if line_item.image -%}
+    <div class="cart-item__media">
+      {%- unless line_item.product == settings.wrap_product -%}
+        <a href="{{- line_item.url -}}" class="cart-item__link motion-reduce">
+      {%- endunless -%}
+
+      <span class="visually-hidden">{{- line_item.title | escape -}}</span>
+
+      <div
+        class="media media--{{- settings.card_product_media_size -}}"
+        {% if settings.card_product_media_size == 'aspect-ratio' %}
+          style="padding-top: {%- render 'aspect-ratio', aspect_ratio: line_item.image.aspect_ratio -%}%;"
+        {% endif %}
+      >
+        {%-
+          liquid
+          assign image_src = line_item.image | image_url: width: 480
+          assign image_alt = line_item.image.alt | escape
+          render 'image', src: image_src, alt: image_alt, width: line_item.image.width, height: line_item.image.height
+        -%}
+      </div><!-- /.media -->
+
+      {%- unless line_item.product == settings.wrap_product -%}
+        </a>
+      {%- endunless -%}
+    </div><!-- /.cart-item__media -->
+  {%- endif -%}
+
+  <div class="cart-item__details{% unless line_item.image %} cart-item__details--inline{% endunless %}">
+    <div class="cart-item__details-main">
+      <p class="cart-item__title h6">
+        {%- unless line_item.product == settings.wrap_product -%}
+          <a href="{{- line_item.url -}}" class="full-unstyled-link">
+            {{- line_item.product.title | escape -}}
+          </a>
+        {%- else -%}
+          {{- line_item.product.title | escape -}}
+        {%- endunless -%}
+      </p><!-- /.cart-item__title h6 -->
+
+      <div class="{%- if layout == 'cart' -%}large-up-hide{%- endif -%}">
+        {{- line_item_prices_html -}}
+        {{- line_item_discounts_html -}}
+      </div>
+
+      {%- if line_item.selling_plan_allocation != nil -%}
+        <p class="cart-item__selling-plan-name p4">
+          {{- line_item.selling_plan_allocation.selling_plan.name -}}
+        </p><!-- /.cart-item__selling-plan-name p4 -->
+      {%- endif -%}
+
+      {%- if line_item.product.has_only_default_variant == false or line_item.properties -%}
+        <dl>
+          {%- if line_item.product.has_only_default_variant == false -%}
+            {%- for option in line_item.options_with_values -%}
+              <div>
+                <dt class="p4">{{- option.name -}}: </dt>
+
+                <dd class="p4 bold">{{- option.value -}}</dd>
+              </div>
+            {%- endfor -%}
+          {%- endif -%}
+
+          {%- for property in line_item.properties -%}
+            {%-
+              liquid
+              assign prop_classes = ''
+              assign property_first_char = property.first | slice: 0
+
+              if property.last == blank or property_first_char == '_'
+                continue
+              endif
+
+              capture properties_first_placeholders
+                echo 'Recipient email'
+                echo 'Recipient name'
+                echo 'Message'
+                echo 'Send on'
+              endcapture
+
+              if properties_first_placeholders contains property.first or property.last.size > 20
+                capture prop_classes
+                  echo 'class="block mt-xs"'
+                endcapture
+              endif
+            -%}
+
+            <div {{ prop_classes -}}>
+              <dt class="p4">{{ property.first }}: </dt>
+
+              <dd class="p4 bold">
+                {%- if property.last contains '/uploads/' -%}
+                  <a href="{{- property.last -}}" target="_blank" class="full-unstyled-link">
+                    {{- property.last | split: '/' | last -}}
+                  </a>
+                {%- else -%}
+                  {{- property.last -}}
+                {%- endif -%}
+              </dd>
+            </div>
+          {%- endfor -%}
+        </dl>
+      {%- endif -%}
+    </div><!-- /.cart-item__details-main -->
+
+    <div class="cart-item__details-content">
+      <div class="cart-item__details-actions">
+        <div class="cart-item__quantity-wrapper{% if line_item.product == settings.wrap_product %} hidden{% endif %}">
+          {%- assign max = line_item.variant.inventory_quantity -%}
+          {%- if line_item.variant.inventory_policy == 'continue' or line_item.variant.inventory_management == nil -%}
+            {%- assign max = false -%}
+          {%- endif -%}
+          {%- render 'quantity-input',
+            product_ref: line_item.product,
+            value: line_item.quantity,
+            name: 'updates[]',
+            min: 0,
+            max: max
+            index: line_item_index,
+            hide_label: true,
+            style: 'small'
+          -%}
+        </div><!-- /.cart-item__quantity-wrapper -->
+
+        {%- unless line_item.product == settings.wrap_product -%}
+          <div class="{% if layout == 'cart' %}large-up-hide{% endif %}">
+            {{- remove_link_html -}}
+          </div>
+        {%- endunless -%}
+      </div><!-- /.cart-item__details-actions -->
+
+      <p class="cart-item__error p4 color-red" role="alert" data-line-item-error data-line="{{- line_item_index -}}"></p><!-- /.cart-item__error -->
+    </div><!-- /.cart-item__details-content -->
+
+    {%- if layout == 'cart' -%}
+      <div class="cart-item__details-additional small-hide medium-hide right">
+        {{- line_item_prices_html -}}
+        {{- line_item_discounts_html -}}
+      </div><!-- /.cart-item__details-additional -->
+    {%- endif -%}
+
+    {%- if layout == 'cart' -%}
+      <div class="small-hide medium-hide cart-item__remove-button">
+        {{- remove_link_html -}}
+      </div>
+    {%- endif -%}
+  </div><!-- /.cart-item__details -->
+</div><!-- /.cart-item -->

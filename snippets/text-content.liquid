@@ -1,0 +1,177 @@
+{% comment %}
+  Renders section content from settings or block
+
+  Accepts:
+    blocks: {Array(Objects)} - Section blocks of type subheading/subheading/paragraph/buttons/links
+    class: {String} - BEM class modifier.
+    show_background: {Boolean} - Show opaque background
+    subheading_value?: {String} - Subheading
+    heading_value?: {String} - Heading
+    paragraph_value?: {String} - Paragraph
+    buttons?: {String} - Button values string. Example: button_text_1:Text$button_url_1:/ etc.
+    subheading_class?: {String} - Subheading class. Default is sh--1
+    heading_class?: {String} - Heading classes (h0|h1|h2|h3|h4|h5|h6). Default is h3
+    heading_size_tag?: {String} - Heading size tag (h1|h2|h3|h4|h5|h6). Default is h3
+    subheading_class?: {String} - Subheading classes (sh--1|sh--2|sh--3|sh--4). Default is 'sh--1'
+    paragraph_class?: {String} = Paragraph classes. Default is 'p1'
+
+  Usage:
+  {% render 'text-content', blocks: section.blocks, class: 'richtext' %}
+  {% render 'text-content', blocks: section.blocks, show_background: true %}
+  {% render 'text-content', inner_settings: block.settings %}
+  {% render 'text-content', inner_settings: section.settings %}
+
+  Requires:
+    - component-text-content.css
+{% endcomment %}
+
+{%- liquid
+  assign class = class | default: 'default__'
+  assign heading_size_tag = heading_size_tag | default: 'h3'
+  assign heading_class = blocks | where: 'type', 'heading' | map: 'settings' | map: 'heading_size' | first | default: heading_class | default: 'h3'
+  assign subheading_class = subheading_class | default: 'sh--1'
+  assign paragraph_class = paragraph_class | default: 'p1'
+-%}
+
+{%- capture heading_html -%}
+  <{{ heading_size_tag }} class="{{ heading_class }} {{ class }}heading mt-xs mb-0 color-headings" $attr$>@text@</{{ heading_size_tag }}>
+{%- endcapture -%}
+
+{%- capture subheading_html -%}
+  <p class="sh {{ subheading_class }} {{ class }}subheading color-paragraphs mt-xs mb-0" $attr$>@text@</p>
+{%- endcapture -%}
+
+{%- capture paragraph_html -%}
+  <div class="{{ paragraph_class }} {{ class }}paragraph color-paragraphs mt-s mb-0" $attr$>@text@</div>
+{%- endcapture -%}
+
+{%- capture actions_holder_html -%}
+  <div class="text__actions {{ class }}actions mt-s mt-m--large" $attr$>@actions@</div>
+{%- endcapture -%}
+
+{%- liquid
+  assign block_heading = blocks | where: 'type', 'heading' | map: 'settings' | map: 'heading' | first
+  assign heading_setting = '' | default: inner_settings['heading'] | default: block_heading | default: heading_value | replace: '</p><p>', '<br />' | replace: '<p>', '' | replace: '</p>', '' | replace: '<ul>', '' | replace: '</ul>', '' | replace: '</li>', '</span>' | replace: '<li>', '<span class="block">'
+  capture heading_value
+    if heading_setting != blank
+      echo heading_html | replace: '@text@', heading_setting
+    endif
+  endcapture
+
+  assign block_subheading = blocks | where: 'type', 'subheading' | map: 'settings' | map: 'subheading' | first
+  assign subheading_setting = '' | default: inner_settings['subheading'] | default: block_subheading | default: subheading_value
+
+  capture subheading_value
+    if subheading_setting != blank
+      echo subheading_html | replace: '@text@', subheading_setting
+    endif
+  endcapture
+
+  assign block_paragraph = blocks | where: 'type', 'paragraph' | map: 'settings' | map: 'paragraph' | first
+  assign paragraph_setting = '' | default: inner_settings['paragraph'] | default: block_paragraph | default: paragraph_value
+
+  capture paragraph_value
+    if paragraph_setting != blank
+      echo paragraph_html | replace: '@text@', paragraph_setting
+    endif
+  endcapture
+
+  capture content
+    if blocks != nil and blocks.size > 0
+      for block in blocks
+        case block.type
+          when 'subheading'
+            if subheading_value != blank
+              echo subheading_value | replace: '$attr$', block.shopify_attributes
+            endif
+
+          when 'heading'
+            if heading_value != blank
+              echo heading_value | replace: '$attr$', block.shopify_attributes
+            endif
+
+          when 'paragraph'
+            if paragraph_value != blank
+              echo paragraph_value | replace: '$attr$', block.shopify_attributes
+            endif
+
+          when 'buttons'
+            capture buttons_html
+              for i in (1..2)
+                assign button_size = 'button_size_' | append: i
+                assign button_text = 'button_text_' | append: i
+                assign button_url = 'button_url_' | append: i
+                assign button_style = 'button_style_' | append: i
+                assign button_style_value = block.settings[button_style]
+                assign button_styles = block.settings[button_size]
+                assign button_css = 'link'
+                if button_style_value != 'link'
+                  assign button_css = 'button'
+                  assign button_styles = button_styles | append: ',' | append: button_style_value
+                endif
+
+                render 'button', type: 'link', value: block.settings[button_text], href: block.settings[button_url], styles: button_styles, css: button_css
+              endfor
+            endcapture
+
+            if buttons_html != blank
+              echo actions_holder_html | replace: '@actions@', buttons_html | replace: '$attr$', block.shopify_attributes
+            endif
+        endcase
+      endfor
+    else
+      if subheading_value != blank
+        echo subheading_value | replace: '$attr$', ''
+      endif
+      if heading_value != blank
+        echo heading_value | replace: '$attr$', ''
+      endif
+      if paragraph_value != blank
+        echo paragraph_value | replace: '$attr$', ''
+      endif
+
+      capture buttons_html
+        for i in (1..2)
+          assign button_size = 'button_size_' | append: i
+          assign button_text = 'button_text_' | append: i
+          assign button_url = 'button_url_' | append: i
+          assign button_style = 'button_style_' | append: i
+          assign button_css_value = 'link'
+
+          if buttons == blank
+            assign button_text_value = inner_settings[button_text]
+            assign button_url_value = inner_settings[button_url]
+            assign button_style_value = inner_settings[button_style]
+            assign button_styles_value = inner_settings[button_size]
+          else
+            if buttons contains '@@'
+              assign buttons = buttons | split: '@@'
+            endif
+            assign button_size_value = buttons[forloop.index0] | split: button_size | last | remove_first: ':' | split: '$' | first
+            assign button_text_value = buttons[forloop.index0] | split: button_text | last | remove_first: ':' | split: '$' | first
+            assign button_url_value = buttons[forloop.index0] | split: button_url | last | remove_first: ':' | split: '$' | first
+            assign button_style_value = buttons[forloop.index0] | split: button_style | last | remove_first: ':' | split: '$' | first
+            assign button_styles_value = button_size_value
+          endif
+
+          if button_style_value != 'link'
+            assign button_css_value = 'button'
+            assign button_styles_value = button_styles_value | append: ',' | append: button_style_value
+          endif
+
+          render 'button', type: 'link', value: button_text_value, href: button_url_value, styles: button_styles_value, css: button_css_value
+        endfor
+      endcapture
+
+      if buttons_html != blank
+        echo actions_holder_html | replace: '@actions@', buttons_html | replace: '$attr$', ''
+      endif
+    endif
+  endcapture
+-%}
+
+{%- if content != blank -%}
+  <div class="text-content {%- if show_background %} text-content--solid {% endif %} {%- if show_background_mobile %} text-content--solid-mobile{%- endif %} {{ class }}content" {{ attr }}>
+    {{- content -}}
+  </div><!-- /.text__content -->
+{%- endif -%}

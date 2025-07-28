@@ -1,0 +1,388 @@
+{%- unless section.blocks.size == 0 -%}
+  <link rel="stylesheet" href="{{ 'component-text-content.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'section-promo-columns.css' | asset_url }}" media="print" onload="this.media='all'">
+
+  <noscript>
+    {{ 'section-promo-columns.css' | asset_url | stylesheet_tag }}
+    {{ 'component-text-content.css' | asset_url | stylesheet_tag }}
+  </noscript>
+
+  <div
+    class="section__wrapper {{ section.settings.outer_spacing }}"
+    style="--grid-gap-desktop: {{ section.settings.blocks_spacing_desktop }}; --grid-gap-mobile: {{ section.settings.blocks_spacing_mobile }};"
+  >
+    <div class="section__grid grid grid--auto-rows">
+      {%-
+        liquid
+        assign grid_item_class = 'mt-m '
+        if section.blocks.size > 0
+          assign grid_item_class = ' grid__item--xs-12 grid__item--s-6'
+        else
+          assign grid_item_class = ' grid__item--xs-12'
+        endif
+      -%}
+      {% for block in section.blocks %}
+        {%-
+          liquid
+          assign style = ''
+          if block.settings.enable_custom_background
+            if block.settings.background_gradient != blank
+              assign style = ' style="--section-background:' | append: block.settings.background_gradient | append: '"'
+            elsif block.settings.background_color != blank
+              assign style = ' style="--section-background:' | append: block.settings.background_color | append: '"'
+            else
+              assign style = ''
+            endif
+          endif
+
+          if style != ''
+            assign grid_item_class = grid_item_class | append: ' section-background'
+          endif
+        -%}
+
+        <div class="grid__item {{ grid_item_class }} color-{{ block.settings.style }} color-background" {{ block.shopify_attributes }} {{ style }}>
+          {%-
+            liquid
+            assign inner_grid_class = ''
+            assign inner_grid_item_class = ''
+            assign inner_grid_class = 'grid--' | append: block.settings.image_position
+            assign inner_grid_item_class = ' grid__item--xs-6'
+
+            if block.settings.subheading == blank and block.settings.heading == blank and block.settings.paragraph == blank and block.settings.button_1_text and block.settings.button_1_url == blank and block.settings.button_2_text == blank and block.settings.button_2_url == blank and  block.settings.image != blank
+              break
+            endif
+          -%}
+
+          <div class="grid {{ inner_grid_class }} full-height grid--row-gap-m">
+            <div class="grid__item pt-l pt--0-large {{ inner_grid_item_class }} flex flex--direction-column flex--justify-center">
+              <div class="container container--fullwidth container--left pt-0 pb-0 pt-xl--large pb-xl--large">
+                {% render 'text-content', inner_settings: block.settings, heading_size_tag: 'h2', heading_class: block.settings.heading_size, paragraph_class: 'p2', subheading_class: 'sh--2', class: 'section__' %}
+              </div><!-- /.container -->
+            </div>
+
+            <div class="grid__item {{ inner_grid_item_class }}">
+              <div class="media media--5-4 media--3-2-large">
+                {%-
+                  liquid
+                  if block.settings.image != blank
+                    assign image_src = block.settings.image | image_url: width: 500
+                    capture image_srcset
+                      render 'srcset', image: block.settings.image
+                    endcapture
+                    assign image_alt = block.settings.image.alt | escape
+
+                    render 'image', src: image_src, srcset: image_srcset, sizes: '25vw', alt: image_alt, width: block.settings.image.width, height: block.settings.image.height, focal_point: block.settings.image.presentation.focal_point
+                  else
+                    echo 'collection-3' | placeholder_svg_tag: 'placeholder-svg'
+                  endif
+                -%}
+              </div><!-- /.media -->
+            </div>
+          </div><!-- /.grid -->
+        </div>
+      {% endfor %}
+    </div><!-- /.grid -->
+  </div><!-- /.section__wrapper -->
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "t:sections.promo-columns.name",
+  "tag": "section",
+  "class": "section-promo-columns",
+  "settings": [
+    {
+      "type": "select",
+      "id": "outer_spacing",
+      "label": "t:sections.global.settings.outer-spacing.label",
+      "options": [
+        {
+          "value": "mt-0 mb-0 mt-0--large mb-0--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_1"
+        },
+        {
+          "value": "mt-s mb-s mt-s--large mb-s--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_2"
+        },
+        {
+          "value": "mt-l mb-l mt-l--large mb-l--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_3"
+        }
+      ],
+      "default": "mt-0 mb-0 mt-0--large mb-0--large"
+    },
+    {
+      "type": "select",
+      "id": "blocks_spacing_desktop",
+      "label": "t:sections.promo-columns.settings.blocks_spacing_desktop.label",
+      "options": [
+        {
+          "value": "2",
+          "label": "t:sections.promo-columns.settings.blocks_spacing_desktop.options.default"
+        },
+        {
+          "value": "0",
+          "label": "t:sections.promo-columns.settings.blocks_spacing_desktop.options.none"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "blocks_spacing_mobile",
+      "label": "t:sections.promo-columns.settings.blocks_spacing_mobile.label",
+      "options": [
+        {
+          "value": "2",
+          "label": "t:sections.promo-columns.settings.blocks_spacing_mobile.options.default"
+        },
+        {
+          "value": "0",
+          "label": "t:sections.promo-columns.settings.blocks_spacing_mobile.options.none"
+        }
+      ],
+      "default": "2"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "t:sections.promo-columns.blocks.column.name",
+      "settings": [
+        {
+          "type": "select",
+          "id": "style",
+          "label": "t:sections.global.settings.style.label",
+          "options": [
+            {
+              "value": "style-1",
+              "label": "t:sections.global.settings.style.options.option_1"
+            },
+            {
+              "value": "style-2",
+              "label": "t:sections.global.settings.style.options.option_2"
+            },
+            {
+              "value": "style-3",
+              "label": "t:sections.global.settings.style.options.option_3"
+            }
+          ],
+          "default": "style-1"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.global.settings.section_colors.header",
+          "info": "t:sections.global.settings.section_colors.info"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_custom_background",
+          "label": "t:sections.global.settings.section_colors.checkbox",
+          "default": false
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "t:sections.global.settings.section_colors.color"
+        },
+        {
+          "type": "color_background",
+          "id": "background_gradient",
+          "label": "t:sections.global.settings.section_colors.gradient"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.promo-columns.blocks.column.settings.image.label",
+          "info": "t:sections.promo-columns.blocks.column.settings.image.info"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "t:sections.promo-columns.blocks.column.settings.image_position.label",
+          "options": [
+            {
+              "value": "reverse",
+              "label": "t:sections.promo-columns.blocks.column.settings.image_position.options.option_1"
+            },
+            {
+              "value": "default",
+              "label": "t:sections.promo-columns.blocks.column.settings.image_position.options.option_2"
+            }
+          ],
+          "default": "default"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "t:sections.global.settings.subheading.label",
+          "default": "Add a tagline"
+        },
+        {
+          "type": "richtext",
+          "id": "heading",
+          "label": "t:sections.global.settings.heading.label",
+          "default": "<p>Heading</p>"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "t:sections.global.settings.heading_size.label",
+          "options": [
+            {
+              "value": "h3",
+              "label": "t:sections.global.settings.heading_size.options.option_1"
+            },
+            {
+              "value": "h2",
+              "label": "t:sections.global.settings.heading_size.options.option_2"
+            },
+            {
+              "value": "h1",
+              "label": "t:sections.global.settings.heading_size.options.option_3"
+            }
+          ],
+          "default": "h2"
+        },
+        {
+          "type": "richtext",
+          "id": "paragraph",
+          "label": "t:sections.global.settings.paragraph.label",
+          "default": "<p>Add optional subtext</p>"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.global.settings.buttons.button.header_button_1.content"
+        },
+        {
+          "type": "select",
+          "id": "button_style_1",
+          "label": "t:sections.global.settings.buttons.button.settings.style.label",
+          "options": [
+            {
+              "value": "solid",
+              "label": "t:sections.global.settings.buttons.button.settings.style.options.option_1"
+            },
+            {
+              "value": "outline",
+              "label": "t:sections.global.settings.buttons.button.settings.style.options.option_2"
+            },
+            {
+              "value": "link",
+              "label": "t:sections.global.settings.buttons.button.settings.style.options.option_3"
+            }
+          ],
+          "default": "solid"
+        },
+        {
+          "type": "select",
+          "id": "button_size_1",
+          "label": "t:sections.global.settings.buttons.button.settings.size.label",
+          "options": [
+            {
+              "value": "s",
+              "label": "t:sections.global.settings.buttons.button.settings.size.options.option_1"
+            },
+            {
+              "value": "m",
+              "label": "t:sections.global.settings.buttons.button.settings.size.options.option_2"
+            },
+            {
+              "value": "l",
+              "label": "t:sections.global.settings.buttons.button.settings.size.options.option_3"
+            }
+          ],
+          "default": "s"
+        },
+        {
+          "type": "text",
+          "id": "button_text_1",
+          "label": "t:sections.global.settings.buttons.button.settings.button_text.label",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "button_url_1",
+          "label": "t:sections.global.settings.buttons.button.settings.button_url.label",
+          "default": "/"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.global.settings.buttons.button.header_button_2.content"
+        },
+        {
+          "type": "select",
+          "id": "button_style_2",
+          "label": "t:sections.global.settings.buttons.button.settings.style.label",
+          "options": [
+            {
+              "value": "solid",
+              "label": "t:sections.global.settings.buttons.button.settings.style.options.option_1"
+            },
+            {
+              "value": "outline",
+              "label": "t:sections.global.settings.buttons.button.settings.style.options.option_2"
+            },
+            {
+              "value": "link",
+              "label": "t:sections.global.settings.buttons.button.settings.style.options.option_3"
+            }
+          ],
+          "default": "solid"
+        },
+        {
+          "type": "select",
+          "id": "button_size_2",
+          "label": "t:sections.global.settings.buttons.button.settings.size.label",
+          "options": [
+            {
+              "value": "s",
+              "label": "t:sections.global.settings.buttons.button.settings.size.options.option_1"
+            },
+            {
+              "value": "m",
+              "label": "t:sections.global.settings.buttons.button.settings.size.options.option_2"
+            },
+            {
+              "value": "l",
+              "label": "t:sections.global.settings.buttons.button.settings.size.options.option_3"
+            }
+          ],
+          "default": "m"
+        },
+        {
+          "type": "text",
+          "id": "button_text_2",
+          "label": "t:sections.global.settings.buttons.button.settings.button_text.label"
+        },
+        {
+          "type": "url",
+          "id": "button_url_2",
+          "label": "t:sections.global.settings.buttons.button.settings.button_url.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.promo-columns.name",
+      "blocks": [
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "*"
+    ],
+    "groups": [
+      "aside"
+    ]
+  }
+}
+{% endschema %}

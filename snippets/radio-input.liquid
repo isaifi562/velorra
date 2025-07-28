@@ -1,0 +1,54 @@
+{%- comment -%}
+  Renders radio input form element
+  Accepts:
+  - name {String} Name of the input element
+  - id {String} Id of the input element
+  - value {String} Value of the input element
+  - label {String} Label of the input element
+  - checked {Boolean} Whether the input element is checked or not
+  - attr {String} Data attributes to be added to the input element
+  - class {String} Additional classe
+
+  Usage:
+  {%- render 'radio-input', name: 'my-name', id: 'my-id', label: 'My label', value: 'my-value' checked: true -%}
+{%- endcomment -%}
+
+{%-
+  liquid
+  assign name = name | default: false
+  assign id = id | default: false
+  assign value = value | default: false
+  assign label = label | default: false
+  assign checked = checked | default: false
+  assign attr = attr | default: false
+  assign class = class | default: ''
+-%}
+
+{%- if name and id and value and label -%}
+  <div class="radio {{ class }}">
+    <input
+      type="radio"
+      class="radio__input visually-hidden"
+      id="{{- id | escape -}}"
+      name="{{- name | escape -}}"
+      {% if checked %}
+        checked
+      {% endif %}
+      value="{{- value -}}"
+      {% if attr %}
+        {{- attr -}}
+      {% endif %}
+    />
+
+    <label
+      for="{{- id -}}"
+      class="radio__label p3"
+    >
+      <span class="radio__icon motion-reduce">
+        {%- render 'icon-dot' -%}
+      </span>
+
+      {{- label | escape -}}
+    </label>
+  </div><!-- /.radio -->
+{%- endif -%}

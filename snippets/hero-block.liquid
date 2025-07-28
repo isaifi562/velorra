@@ -1,0 +1,393 @@
+{% comment %}
+  Renders a hero block
+
+  Accepts:
+  block_id: {String} - Block id
+  link: {String} - Link that covers the whole block.
+  image: {Object} - Background image
+  image_mobile: {Object} - Mobile background image
+  background_overlay: {String} - CSS color value
+  background_overlay_opacity: {Number} - Background color opacity value between 0 and 100
+  content_source: {String} - Content source (section, block, blocks, manual)
+  show_fallback_svg?: {Boolean} - Show fallback placeholder svg. Default: true
+  height?: {String} - Height class (xlarge|large|medium|compact|small|custom). Default is compact
+  content?: {Object} - Section or block settings, only add if content_source is 'manual' is false
+  text_color: {String} - Text color
+  external_video?: {Object} - External video object
+  video?: {Object} - Video object
+  video_mobile?: {Object} - Video object
+  video_description?: {String} - Video description
+  video_autoplay?: {Boolean} - Autoplay video. Default is false
+  show_background?: {Boolean} - Show content background. Default is false
+  show_background_mobile?: {Boolean} - Show content background on mobile. Default is false
+  align_vertical?: {String} - Text content vertical alignment class (top|center|bottom). Default is center
+  align_horizontal?: {String} - Text content horizontal alignment class (left|center|right). Default is center
+  align_vertical_mobile?: {String} - Text content vertical alignment class (top|center|bottom). Default is center
+  align_horizontal_mobile?: {String} - Text content horizontal alignment class (left|center|right). Default is center
+  subheading?: {String} - Subheading
+  subheading_class?: {String} - Subheading class. Default is sh--1
+  heading?: {String} - Heading
+  heading_size?: {String} - Heading size (h1,h2,h3,h4,h5,h6). Default is h3
+  heading_class?: {String} - Heading class. Default is heading_size
+  paragraph_class?: {String} - Paragraph class. Default is p1
+  paragraph?: {String} - Paragraph
+  button_url_1?: {String} - Button 1 url
+  button_text_1?: {String} - Button 1 text
+  button_size_1?: {String} - Button 1 size
+  button_style_1?: {String} - Button 1 style
+  button_url_2?: {String} - Button 2 url
+  button_text_2?: {String} - Button 2 text
+  button_size_2?: {String} - Button 2 size
+  button_style_2?: {String} - Button 2 style
+  button_text_color: {String} - Button text color
+  button_background_color: {String} - Button background color
+
+  Usage:
+    {% render 'hero-block', image: section.settings.image, image_mobile: section.settings.image_mobile %}
+    {% render 'hero-block', image: section.settings.image, image_mobile: section.settings.image_mobile, video: section.settings.video %}
+    {% render 'hero-block', image: section.settings.image, image_mobile: section.settings.image_mobile, content_source: 'block', content: section.settings %}
+{% endcomment %}
+
+{%-
+  liquid
+  assign link = link | default: false
+  assign height = height | default: 'compact'
+  assign image = image | default: false
+  assign image_mobile = image_mobile | default: image
+  assign background_overlay = background_overlay | default: '#000'
+  assign background_overlay_opacity = background_overlay_opacity | default: 0
+  assign background_overlay_gradient = background_overlay_gradient | default: false
+  assign external_video = external_video | default: false
+  assign video = video | default: false
+  assign video_mobile = video_mobile | default: false
+  assign video_autoplay = video_autoplay | default: false
+  assign video_description = video_description | escape | default: ''
+  assign content = content | default: false
+  assign text_color = text_color
+  assign button_text_color = button_text_color
+  assign button_background_color = button_background_color
+  assign show_background = show_background | default: false
+  assign align_vertical = align_vertical | default: 'center'
+  assign align_horizontal = align_horizontal | default: 'center'
+  assign align_vertical_mobile = align_vertical_mobile | default: 'center'
+  assign align_horizontal_mobile = align_horizontal_mobile | default: 'center'
+  assign heading_class = heading_class | default: heading_size
+  assign paragraph_class = paragraph_class | default: 'p1'
+  assign subheading_class = subheading_class | default: 'sh--1'
+  assign image_crop = image_crop | default: 'center'
+  assign placeholder_svg = placeholder_svg | default: 'collection-apparel-4'
+  assign show_fallback_svg = show_fallback_svg
+  if show_fallback_svg == nil
+    assign show_fallback_svg = true
+  endif
+  assign show_deferred_media_on_mobile = show_deferred_media_on_mobile
+  if show_deferred_media_on_mobile == nil
+    assign show_deferred_media_on_mobile = false
+  endif
+  assign disable_video_autoplay_on_mobile = disable_video_autoplay_on_mobile
+  if disable_video_autoplay_on_mobile == nil
+    assign disable_video_autoplay_on_mobile = false
+  endif
+
+  capture align_vars
+    case align_vertical
+      when 'top'
+        echo '--align-items-desktop: flex-start;'
+      when 'bottom'
+        echo '--align-items-desktop: flex-end;'
+      else
+        echo '--align-items-desktop: center;'
+    endcase
+
+    case align_horizontal
+      when 'left' or 'far_left'
+        echo '--justify-content-desktop: flex-start;'
+        echo '--text-align-desktop: left;'
+      when 'right' or 'far_right'
+        echo '--justify-content-desktop: flex-end;'
+        echo '--text-align-desktop: right;'
+      else
+        echo '--justify-content-desktop: center;'
+        echo '--text-align-desktop: center;'
+    endcase
+
+    case align_vertical_mobile
+      when 'top'
+        echo '--align-items-mobile: flex-start;'
+      when 'bottom'
+        echo '--align-items-mobile: flex-end;'
+      else
+        echo '--align-items-mobile: center;'
+    endcase
+
+    case align_horizontal_mobile
+      when 'left'
+        echo '--justify-content-mobile: flex-start;'
+        echo '--text-align-mobile: left;'
+      when 'right'
+        echo '--justify-content-mobile: flex-end;'
+        echo '--text-align-mobile: right;'
+      else
+        echo '--justify-content-mobile: center;'
+        echo '--text-align-mobile: center;'
+    endcase
+  endcapture
+
+  capture style_classes
+    if show_fallback_svg != false or image != false
+      echo 'hero__block--has-media '
+    endif
+    echo 'hero__block--' | append: height
+  endcapture
+
+  assign media_class = 'hero__block__media media media--crop-' | append: image_crop | append: ' fill'
+  capture media_video_classes
+    if video or external_video
+      if video_autoplay and disable_video_autoplay_on_mobile == false
+        echo ' hidden no-js'
+      endif
+      if external_video and video_autoplay and disable_video_autoplay_on_mobile or video and video_autoplay and disable_video_autoplay_on_mobile
+        echo ' medium-hide large-up-hide'
+      endif
+    endif
+  endcapture
+
+  capture image_html
+    if image
+      assign image_src = image | image_url: width: 500
+      assign image_mobile_src = image_mobile | image_url: width: 375
+      capture image_srcset
+        render 'srcset', image: image
+      endcapture
+      capture image_mobile_srcset
+        render 'srcset', image: image_mobile
+      endcapture
+      assign image_alt = image.alt | escape
+
+      if preload_image
+        echo image_mobile | image_url: width: 375 | image_tag: preload: true, srcset: image_mobile_srcset, alt: image_alt, class: 'visually-hidden'
+      endif
+      render 'image', src: image_src, srcset: image_srcset, sizes: 'auto', alt: image_alt, width: image.width, height: image.height, class: 'small-hide', attr: 'data-fade-in', focal_point: image.presentation.focal_point
+      render 'image', src: image_mobile_src, srcset: image_mobile_srcset, sizes: 'auto', alt: image_alt, width: image_mobile.width, height: image_mobile.height, class: 'medium-hide large-up-hide', focal_point: image_mobile.presentation.focal_point
+    else
+      echo placeholder_svg | placeholder_svg_tag: 'placeholder-svg'
+    endif
+  endcapture
+
+  capture height_values
+    if height == 'custom'
+      assign desktop_aspect_ratio = video.aspect_ratio | default: image.aspect_ratio
+      assign mobile_aspect_ratio = video_mobile.aspect_ratio | default: image_mobile.aspect_ratio
+      if desktop_aspect_ratio
+        echo ' --height-desktop: '
+        render 'aspect-ratio', aspect_ratio: desktop_aspect_ratio
+        echo 'vw;'
+      endif
+
+      if mobile_aspect_ratio
+        echo ' --height-mobile: '
+        render 'aspect-ratio', aspect_ratio: mobile_aspect_ratio
+        echo 'vw;'
+      endif
+    endif
+  endcapture
+-%}
+
+{%- capture overlay_html -%}
+  {%- if background_overlay_opacity > 0 or background_overlay_gradient -%}
+    <span
+      class="media__overlay"
+      {%- if background_overlay_gradient -%}
+        style="background: {{ background_overlay_gradient }}; opacity: 1;"
+      {%- else -%}
+        style="background-color: {{- background_overlay -}}; opacity: {{- background_overlay_opacity | times: 0.01 }};"
+      {%- endif -%}
+    ></span>
+  {%- endif -%}
+{%- endcapture -%}
+{%- assign image_html = image_html | append: overlay_html -%}
+
+{%- if block_id != blank -%}
+  {%- style -%}
+    #hero-block-{{- section.id -}}-{{- block_id -}} {
+      {%- if text_color != blank and text_color != 'rgba(0,0,0,0)' -%}
+        --color-paragraphs: {{- text_color -}};
+        --color-headings-accent: {{- text_color -}};
+        --color-headings: {{- text_color -}};
+      {%- endif -%}
+
+      {%- if button_text_color != blank and button_text_color != 'rgba(0,0,0,0)' -%}
+        --color-buttons-solid: {{- button_text_color -}};
+        --color-buttons-outline: {{- button_text_color -}};
+        --color-buttons-links: {{- button_text_color -}};
+      {%- endif -%}
+
+      {%- if button_background_color != blank and button_background_color != 'rgba(0,0,0,0)' -%}
+        --color-background-buttons-solid: {{- button_background_color -}};
+        --color-border-buttons-outline: {{- button_background_color -}};
+      {%- endif -%}
+    }
+  {%- endstyle -%}
+{%- endif -%}
+
+<div
+  class="hero__block {{ style_classes }} flex flex--direction-column"
+  style="{{- align_vars -}}{% if height == 'custom' %} {{ height_values }}{% endif %}"
+  {% if block_id != blank -%}
+    id="hero-block-{{- section.id -}}-{{- block_id -}}"
+  {%- endif -%}
+>
+  <div class="hero__block__container container flex flex--direction-column {%- if align_horizontal contains 'far_' %} container--fullwidth{%- endif -%}">
+    <div class="hero__block__inner">
+      {%- if show_fallback_svg != false or image != false -%}
+        <div class="{{ media_class }} {{ media_video_classes }}">
+          {{- image_html -}}
+        </div><!-- /.hero__block__media -->
+
+        {%- if external_video -%}
+          <noscript>
+            <span class="deferred-media__poster-button {% if show_deferred_media == false %} hidden {% endif %}">
+              {%- render 'icon-play' -%}
+            </span>
+
+            <a href="{{ external_video }}" class="hero__block__video-link {% if show_deferred_media == false %} hidden {% endif %}" title="{{ video_description }}">
+              <span class="visually-hidden">{{ 'general.video.play_video' | t }}</span>
+            </a>
+          </noscript>
+        {%- endif -%}
+      {%- endif -%}
+
+      {% if external_video or video %}
+        {%-
+          liquid
+          assign class = 'js-' | append: external_video.type
+          assign attr = 'allowfullscreen allow="autoplay; encrypted-media"'
+        -%}
+        {%- capture deferred_media_html -%}
+          <deferred-media
+            class="deferred-media no-js-hidden {% if video_autoplay and disable_video_autoplay_on_mobile and show_deferred_media_on_mobile %}medium-hide large-up-hide{% endif %}"
+            data-media-id="{{ video.id }}"
+          >
+            <button
+              id="Deferred-Poster-Modal-{{ video.id }}"
+              class="{{ media_class }} deferred-media__poster"
+              type="button"
+              aria-label="{{- 'general.video.load_video_button' | t: description: video_description | escape -}}"
+            >
+              {{- image_html -}}
+
+              <span class="deferred-media__poster-button motion-reduce">
+                {%- render 'icon-play' -%}
+              </span>
+
+              <template>
+                {%-
+                  liquid
+                  if external_video
+                    assign params = ''
+                    unless show_deferred_media_on_mobile and disable_video_autoplay_on_mobile and autoplay_deferred_media_on_mobile
+                      assign params = 'autoplay=1'
+                    endunless
+                    render 'external-video', video: external_video, title: video_description, attr: attr, class: class, params: params
+                  else
+                    echo '<div class="deferred-media-wrapper">'
+                      if show_deferred_media_on_mobile and disable_video_autoplay_on_mobile and autoplay_deferred_media_on_mobile
+                        if video_mobile
+                          echo '<div class="medium-hide large-up-hide">'
+                            echo video_mobile | video_tag: image_size: '2048x', controls: false, autoplay: true, muted: true, loop: true, class: 'color-background'
+                          echo '</div>'
+                        endif
+
+                        if video
+                          if video_mobile
+                            echo '<div class="small-hide">'
+                          endif
+                            echo video | video_tag: image_size: '2048x', controls: false, autoplay: true, muted: true, loop: true, class: 'color-background'
+                          if video_mobile
+                            echo '</div>'
+                          endif
+                        endif
+                      else
+                        if video_mobile
+                          echo '<div class="medium-hide large-up-hide">'
+                            echo video_mobile | video_tag: image_size: '2048x', controls: true, autoplay: true, muted: false, class: 'color-background'
+                          echo '</div>'
+                        endif
+
+                        if video
+                          if video_mobile
+                            echo '<div class="small-hide">'
+                          endif
+                            echo video | video_tag: image_size: '2048x', controls: true, autoplay: true, muted: false, class: 'color-background'
+                          if video_mobile
+                            echo '</div>'
+                          endif
+                        endif
+                      endif
+                    echo '</div>'
+                  endif
+                -%}
+              </template>
+            </button>
+          </deferred-media>
+        {%- endcapture -%}
+
+        {%- if video_autoplay == false -%}
+          {{- deferred_media_html -}}
+        {%- elsif external_video or video -%}
+          <div
+            class="{{ media_class }} js-autoplay-video {% unless video and video_autoplay and show_deferred_media_on_mobile %}no-js-hidden{% endunless %}"
+            data-stop-on-mobile="{{- disable_video_autoplay_on_mobile -}}"
+          >
+            {%- liquid
+              if external_video
+                render 'external-video', video: external_video, title: video_description, attr: attr, class: class
+              else
+                if video
+                  echo video | video_tag: image_size: '2048x', autoplay: true, muted: true, loop: true
+                endif
+
+                if video_mobile
+                  echo video_mobile | video_tag: image_size: '2048x', autoplay: true, muted: true, loop: true
+                endif
+              endif
+
+              if disable_video_autoplay_on_mobile and show_deferred_media_on_mobile
+                echo deferred_media_html
+              endif
+
+              echo overlay_html
+            -%}
+          </div><!-- /.hero__block__media -->
+        {%- endif -%}
+      {% endif %}
+
+      {%-
+        liquid
+        # Content
+        assign content_attr = ''
+        unless request.design_mode
+          assign content_attr = 'data-fade-in'
+        endunless
+        if content_source == 'section' or content_source == 'block'
+          render 'text-content', inner_settings: content, heading_size_tag: heading_size, heading_class: heading_class, subheading_class: subheading_class, paragraph_class: paragraph_class, show_background: show_background, show_background_mobile: show_background_mobile, class: 'hero__block__', attr: content_attr
+        elsif content_source == 'blocks'
+          render 'text-content', blocks: content, heading_size_tag: heading_size, heading_class: heading_class, subheading_class: subheading_class, paragraph_class: paragraph_class, show_background: show_background, show_background_mobile: show_background_mobile, class: 'hero__block__', attr: content_attr
+        else
+          capture buttons
+            echo 'button_size_1:' | append: button_size_1 | append: '$' | append: 'button_style_1:' | append: button_style_1 | append: '$' | append: 'button_text_1:' | append: button_text_1 | append: '$' | append: 'button_url_1:' | append: button_url_1
+            echo '@@'
+            echo 'button_size_2:' | append: button_size_2 | append: '$' | append: 'button_style_2:' | append: button_style_2 | append: '$' | append: 'button_text_2:' | append: button_text_2 | append: '$' | append: 'button_url_2:' | append: button_url_2
+          endcapture
+          render 'text-content', subheading_value: subheading, heading_value: heading, heading_size_tag: heading_size, heading_class: heading_class, subheading_class: subheading_class, paragraph_class: paragraph_class, paragraph_value: paragraph, buttons: buttons, show_background: show_background, show_background_mobile: show_background_mobile, class: 'hero__block__', attr: content_attr
+        endif
+      -%}
+    </div><!-- /.hero__block__inner -->
+  </div><!-- /.hero__block__container -->
+
+  {%- if link -%}
+    <a href="{{- link -}}" class="hero__block-link">
+      <span class="visually-hidden">Link</span>
+    </a>
+  {%- endif -%}
+</div><!-- /.hero__block -->

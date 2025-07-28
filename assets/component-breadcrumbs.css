@@ -1,0 +1,29 @@
+.breadcrumbs {
+  color: var(--color-breadcrumbs-inactive);
+  background-color: var(--color-background);
+}
+
+.breadcrumbs__link {
+  color: currentColor;
+  transition: color var(--duration-short) ease-out;
+}
+
+.breadcrumbs__link.is-active {
+  color: var(--color-breadcrumbs-active);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a.breadcrumbs__link:hover {
+    color: var(--color-breadcrumbs-hover);
+  }
+}
+
+.breadcrumbs__items {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.breadcrumbs__item--divider {
+  margin-left: calc(var(--spacing-step) * 2);
+  margin-right: calc(var(--spacing-step) * 2);
+}

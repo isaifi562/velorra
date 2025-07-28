@@ -1,0 +1,408 @@
+{%- unless section.blocks.size == 0 -%}
+  <link rel="stylesheet" href="{{- 'swiper-bundle.min.css' | asset_url -}}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{- 'component-slider.css' | asset_url -}}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{- 'component-card-product.css' | asset_url -}}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{- 'component-badge.css' | asset_url -}}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{- 'section-shop-module.css' | asset_url -}}" media="print" onload="this.media='all'">
+
+  <noscript>
+    {{- 'swiper-bundle.min.css' | asset_url | stylesheet_tag -}}
+    {{- 'component-slider.css' | asset_url | stylesheet_tag -}}
+    {{- 'component-card-product.css' | asset_url | stylesheet_tag -}}
+    {{- 'component-badge.css' | asset_url | stylesheet_tag -}}
+    {{- 'section-shop-module.css' | asset_url | stylesheet_tag -}}
+  </noscript>
+
+  <script src="{{- 'swiper-bundle.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'slider-component.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'shop-module-carousel.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'component-card-product.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'shop-module.js' | asset_url -}}" defer="defer" data-theme-script></script>
+
+  {%-
+    liquid
+    assign style = ''
+    if section.settings.enable_custom_background
+      if section.settings.background_gradient != blank
+        assign style = ' style="--section-background:' | append: section.settings.background_gradient | append: '"'
+      elsif section.settings.background_color != blank
+        assign style = ' style="--section-background:' | append: section.settings.background_color | append: '"'
+      else
+        assign style = ''
+      endif
+    endif
+
+    capture style_classes
+      echo 'color-' | append: section.settings.style | append: ' color-background overflow-hidden'
+      if style != ''
+        echo ' section-background'
+      endif
+    endcapture
+
+    assign slider_html = ''
+    assign hotspots_html = ''
+  -%}
+
+  {% style %}
+    .shop-module--{{ section.id }} {
+      --color-hotspot: {{ section.settings.hotspot_color }};
+      --color-hotspot-transparent-50: {{ section.settings.hotspot_color | color_modify: 'alpha', 0.5 }};
+    }
+  {% endstyle %}
+
+  {%- for block in section.blocks -%}
+    {%- capture hotspots_html -%}
+      {{ hotspots_html }}
+
+      <div
+        class="shop-module__hotspot"
+        style="--x-position: {{ block.settings.x_position }}%;--y-position: {{ block.settings.y_position }}%"
+      >
+        <button
+          class="shop-module__hotspot-button button-hotspot motion-reduce {% if forloop.first %}is-active{% endif %}"
+          data-id="{{ forloop.index0 }}"
+          data-hotspot
+          aria-label="{{ 'accessibility.go_to_slide' | t: slide_number: forloop.index }}"
+        ></button>
+      </div><!-- /.shop-module__hotspot -->
+    {%- endcapture -%}
+
+    {%- capture slider_html -%}
+      {{ slider_html }}
+
+      <div class="swiper-slide shop-module__slide" data-id="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+        {%- render 'card-product', product_ref: block.settings.product -%}
+      </div><!-- /.swiper-slide -->
+    {%- endcapture -%}
+  {%- endfor -%}
+
+  <shop-module class="shop-module shop-module--{{ section.id }} {{ style_classes }} {{ section.settings.outer_spacing }} {{ section.settings.inner_spacing }}" {{ style }}>
+    <div class="container">
+      <div class="grid grid--row-gap-0 section-hotspots__grid {%- if section.settings.swap_layout %} grid--reverse section-hotspots__grid--reverse{%- endif -%}">
+        <div class="grid__item grid__item--xs-12 grid__item--s-12 mb-s mb-l--large">
+          {%- render 'text-content',
+            inner_settings: section.settings,
+            subheading_class: 'sh--2',
+            heading_size_tag: 'h2',
+            heading_class: section.settings.heading_size,
+            paragraph_class: 'p2' -%}
+        </div><!-- /.grid__item -->
+
+        <div class="grid__item grid__item--xs-12 grid__item--s-7 relative">
+          <div class="media media--1-1 fill color-paragraphs">
+            {%-
+              liquid
+              assign image = section.settings.image
+              if image
+                  assign image_src = image | image_url: width: 500
+                capture image_srcset
+                  render 'srcset', image: image
+                endcapture
+                assign image_alt = image.alt | escape
+
+                render 'image', src: image_src, srcset: image_srcset, sizes: 'auto', alt: image_alt, width: image.witdth, height: image.height, focal_point: section.settings.image.presentation.focal_point
+              else
+                echo 'collection-4' | placeholder_svg_tag: 'placeholder-svg'
+              endif
+            -%}
+          </div><!-- /.media -->
+
+          <div class="shop-module__hotspots-holder">
+            {{ hotspots_html }}
+          </div><!-- /.shop-module__hotspots-holder -->
+        </div><!-- /.grid__item -->
+
+        <span class="grid__item grid__item--s-1 small-hide medium-hide"></span>
+
+        <div class="grid__item shop-module__slider grid__item--xs-12 grid__item--s-4 relative">
+          {% render 'slider-component',
+            element: 'shop-module-carousel',
+            content: slider_html,
+            attr: 'data-slider',
+            class: 'shop-module__slider',
+            paging_styles: 'large'
+          %}
+        </div><!-- /.grid__item -->
+      </div><!-- /.grid -->
+    </div><!-- /.container -->
+  </shop-module><!-- /.section-hotspots -->
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "t:sections.shop-module.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "select",
+      "id": "outer_spacing",
+      "label": "t:sections.global.settings.outer-spacing.label",
+      "options": [
+        {
+          "value": "mt-0 mb-0 mt-0--large mb-0--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_1"
+        },
+        {
+          "value": "mt-s mb-s mt-s--large mb-s--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_2"
+        },
+        {
+          "value": "mt-l mb-l mt-l--large mb-l--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_3"
+        }
+      ],
+      "default": "mt-0 mb-0 mt-0--large mb-0--large"
+    },
+    {
+      "type": "select",
+      "id": "inner_spacing",
+      "label": "t:sections.global.settings.inner-spacing.label",
+      "options": [
+        {
+          "value": "spacing-none",
+          "label": "t:sections.global.settings.inner-spacing.options.option_1"
+        },
+        {
+          "value": "spacing-s spacing-s--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_2"
+        },
+        {
+          "value": "spacing-m spacing-m--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_3"
+        },
+        {
+          "value": "spacing-l spacing-l--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_4"
+        }
+      ],
+      "default": "spacing-m spacing-m--large"
+    },
+    {
+      "type": "color",
+      "id": "hotspot_color",
+      "label": "t:sections.shop-module.settings.hotspot_color.label",
+      "default": "#fff"
+    },
+    {
+      "type": "checkbox",
+      "id": "swap_layout",
+      "label": "t:sections.shop-module.settings.swap_image_and_content.label",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.global.settings.image.label",
+      "info": "t:sections.shop-module.settings.image.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.section_colors.header",
+      "info": "t:sections.global.settings.section_colors.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_background",
+      "label": "t:sections.global.settings.section_colors.checkbox",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.global.settings.section_colors.color"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "t:sections.global.settings.section_colors.gradient"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.shop-module.settings.header_content.content"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.global.settings.subheading.label"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "t:sections.global.settings.heading.label",
+      "default": "<p>Look Heading</p>"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "t:sections.global.settings.heading_size.label",
+      "options": [
+        {
+          "value": "h3",
+          "label": "t:sections.global.settings.heading_size.options.option_1"
+        },
+        {
+          "value": "h2",
+          "label": "t:sections.global.settings.heading_size.options.option_2"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.global.settings.heading_size.options.option_3"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "richtext",
+      "id": "paragraph",
+      "label": "t:sections.global.settings.paragraph.label",
+      "default": "<p>Showcase a look build from different products in the store.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.shop-module.settings.header_button.content"
+    },
+    {
+      "type": "select",
+      "id": "button_style_1",
+      "label": "t:sections.global.settings.buttons.button.settings.style.label",
+      "options": [
+        {
+          "value": "solid",
+          "label": "t:sections.global.settings.buttons.button.settings.style.options.option_1"
+        },
+        {
+          "value": "outline",
+          "label": "t:sections.global.settings.buttons.button.settings.style.options.option_2"
+        },
+        {
+          "value": "link",
+          "label": "t:sections.global.settings.buttons.button.settings.style.options.option_3"
+        }
+      ],
+      "default": "link"
+    },
+    {
+      "type": "select",
+      "id": "button_size_1",
+      "label": "t:sections.global.settings.buttons.button.settings.size.label",
+      "options": [
+        {
+          "value": "s",
+          "label": "t:sections.global.settings.buttons.button.settings.size.options.option_1"
+        },
+        {
+          "value": "m",
+          "label": "t:sections.global.settings.buttons.button.settings.size.options.option_2"
+        },
+        {
+          "value": "l",
+          "label": "t:sections.global.settings.buttons.button.settings.size.options.option_3"
+        }
+      ],
+      "default": "m"
+    },
+    {
+      "type": "text",
+      "id": "button_text_1",
+      "label": "t:sections.global.settings.buttons.button.settings.button_text.label"
+    },
+    {
+      "type": "url",
+      "id": "button_url_1",
+      "label": "t:sections.global.settings.buttons.button.settings.button_url.label"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "t:sections.shop-module.blocks.hotspot.name",
+      "type": "hotspot",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.shop-module.blocks.hotspot.settings.product.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.shop-module.blocks.hotspot.settings.header_hotspot.content"
+        },
+        {
+          "type": "range",
+          "id": "x_position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "t:sections.shop-module.blocks.hotspot.settings.x_position.label",
+          "default": 25
+        },
+        {
+          "type": "range",
+          "id": "y_position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "t:sections.shop-module.blocks.hotspot.settings.y_position.label",
+          "default": 25
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.shop-module.name",
+      "blocks": [
+        {
+          "type": "hotspot",
+          "settings": {
+            "x_position": 22,
+            "y_position": 41
+          }
+        },
+        {
+          "type": "hotspot",
+          "settings": {
+            "x_position": 51,
+            "y_position": 65
+          }
+        },
+        {
+          "type": "hotspot",
+          "settings": {
+            "x_position": 75,
+            "y_position": 40
+          }
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "*"
+    ],
+    "groups": [
+      "aside"
+    ]
+  }
+}
+{% endschema %}

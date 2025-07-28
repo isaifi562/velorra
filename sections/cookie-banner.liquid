@@ -1,0 +1,131 @@
+{%- unless section.settings.disable -%}
+  {{- 'section-cookie-banner.css' | asset_url | stylesheet_tag: preload: true -}}
+
+  <script src="{{- 'cookie-banner.js' | asset_url -}}" defer="defer"></script>
+
+  {%-
+    liquid
+    assign visible = false
+
+    if request.design_mode and section.settings.show_in_editor
+      assign visible = true
+    endif
+  -%}
+
+  {%- if section.settings.text != blank
+      and section.settings.accept_button_text != blank
+      and section.settings.close_button_text != blank
+  -%}
+    <cookie-banner
+      class="no-js-hidden color-background color-paragraphs color-{{- section.settings.style -}}{% if visible %} is-visible{% endif %}"
+      {% if request.design_mode and section.settings.show_in_editor %}
+        data-open-in-design-mode="true"
+      {% endif %}
+    >
+      <div class="container container--fullwidth pt-l pb-l pt-xs--large pb-xs--large">
+        <div class="cookie-banner__inner flex flex--justify flex--center">
+          <div class="cookie-banner__content">
+            {%- if section.settings.heading != blank -%}
+              <p class="h5 mt-0 mb-m mb-0--large color-headings medium-hide large-up-hide">
+                {{- section.settings.heading | escape -}}
+              </p><!-- /.h5 -->
+            {%- endif -%}
+
+            <div class="cookie-banner__text p4">
+              {{ section.settings.text }}
+            </div><!-- /.cookie-banner__text -->
+          </div><!-- /.cookie-banner__content -->
+
+          <div class="cookie-banner__actions flex flex--center">
+            {%-
+              liquid
+              render 'button', css: 'button', attr: 'data-action="close-cookies"', id: 'close-cookies', value: section.settings.close_button_text, styles: 'outline,s'
+              render 'button', type: 'button', styles: 's', class: 'cookie-banner__button', name: 'accept-cookies', id: 'accept-cookies', value: section.settings.accept_button_text, attr: 'data-action="accept-cookies"'
+            -%}
+          </div><!-- /.cookie-banner__actions -->
+
+          <button
+            class="cookie-banner__close"
+            data-action='minimize-cookies'
+            aria-label="{{- 'accessibility.close' | t -}}"
+          >
+            {%- render 'icon-close' -%}
+          </button><!-- /.cookie-banner__close -->
+        </div><!-- /.cookie-banner__inner -->
+      </div><!-- /.container -->
+    </cookie-banner>
+  {%- endif -%}
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "t:sections.cookie-banner.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.cookie-banner.settings.header_general.content"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_in_editor",
+      "label": "t:sections.cookie-banner.settings.show_in_editor.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "disable",
+      "label": "t:sections.cookie-banner.settings.disable.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.cookie-banner.settings.header_content.content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.global.settings.heading.label",
+      "info": "t:sections.global.settings.heading.info",
+      "default": "We use cookies"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:sections.cookie-banner.settings.text.label",
+      "default": "<p>We use cookies to improve user experience and analyze website traffic.</p>"
+    },
+    {
+      "type": "text",
+      "id": "accept_button_text",
+      "label": "t:sections.cookie-banner.settings.accept.label",
+      "default": "Accept"
+    },
+    {
+      "type": "text",
+      "id": "close_button_text",
+      "label": "t:sections.cookie-banner.settings.close.label",
+      "default": "Decline"
+    }
+  ]
+}
+{% endschema %}

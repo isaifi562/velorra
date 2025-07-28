@@ -1,0 +1,227 @@
+{{- 'section-article.css' | asset_url | stylesheet_tag -}}
+{{- 'component-rte.css' | asset_url | stylesheet_tag -}}
+{{- 'component-form-elements.css' | asset_url | stylesheet_tag -}}
+
+{%- if article.comments_enabled? -%}
+  <script src="{{- 'form-validation.js' | asset_url -}}" defer></script>
+{%- endif -%}
+
+<article class="article color-background color-{{- section.settings.style -}}">
+  <div class="container {%- if section.settings.width != '' %} container--no-gutter-large container--{{- section.settings.width -}}{%- endif -%}">
+    <div class="article__rte rte pb-m">{{- article.content -}}</div><!-- /.article__rte rte -->
+
+    {%- if section.settings.show_share_buttons -%}
+      {%- render 'share-icons', object: article -%}
+    {%- endif -%}
+  </div><!-- /.container container--narrow -->
+
+  {%- if article.comments_enabled? -%}
+    <footer class="article__foot color-headings">
+      <div class="container {% if section.settings.width != '' %} container--{{ section.settings.width }}{% endif %} article__foot-container">
+        <div class="article__comments pb-m pb-xl--large" id="comments">
+          <p class="h4 article__comments-title mb-0">
+            {{- 'article.comments.title' | t: count: article.comments_count -}}
+          </p><!-- /.h4 article__comments-title -->
+
+          {%- paginate article.comments by 8 -%}
+            {%- for comment in article.comments -%}
+              <div class="article__comment mt-m mt-l--large">
+                <div class="article__comment-content rte p3">
+                  {{- comment.content -}}
+                </div><!-- /.article__comment-content -->
+
+                <p class="article__comment-meta p4">
+                  <strong>{{- comment.author -}}</strong>
+
+                  <strong class="color-paragraphs">{{- comment.created_at | date: format: 'month_year' -}}</strong>
+                </p><!-- /.article__comment-meta right -->
+              </div><!-- /.article__comment -->
+            {%- endfor -%}
+
+            {%- if paginate.pages > 1 -%}
+              <div class="article__pagination pt-xxl-pb-xxl mt-xxl--large">
+                {%- render 'pagination', paginate: paginate, anchor: '' -%}
+              </div><!-- /.article__pagination -->
+            {%- endif -%}
+          {%- endpaginate -%}
+        </div><!-- /#comments .article__comments -->
+
+        <div class="article__form pb-l pb-xxl--large">
+          <form-validation>
+            {%- form 'new_comment', article -%}
+              {%-
+                liquid
+                assign post_message = 'article.comments.success' | t
+                if article.moderated? and comment.status == 'unapproved'
+                  assign post_message = 'article.comments.success_moderated' | t
+                endif
+              -%}
+
+              <p class="h4 article__form-title mt-l mb-m mt-xxl--large mb-l--large pt-s--large">
+                {{- 'article.comments.form.title' | t -}}
+              </p><!-- /.h4 article__form-title -->
+
+              <div class="form-row form-row--double">
+                {%-
+                  liquid
+                  assign label = 'article.comments.form.name.label' | t | append: ' <span aria-hidden="true" class="color-red">*</span>'
+                  assign placeholder = 'article.comments.form.name.placeholder' | t
+                  capture attr
+                    echo 'autocomplete="name"'
+                    echo 'aria-required="true"'
+                  endcapture
+                  if customer
+                    assign value = customer.name
+                  else
+                    assign value = form.author
+                  endif
+                  render 'text-input', id: 'CommentForm-author', label: label, placeholder: placeholder, value: value, attr: attr, required: true, name: 'comment[author]', hide_label: true
+                  assign label = nil
+                  assign placeholder = nil
+                  assign attr = nil
+                  assign value = nil
+                -%}
+
+                {%-
+                  liquid
+                  assign label = 'article.comments.form.email.label' | t | append: ' <span aria-hidden="true" class="color-red">*</span>'
+                  assign placeholder = 'article.comments.form.email.placeholder' | t
+                  capture attr
+                    echo 'autocomplete="email"'
+                    echo 'aria-required="true"'
+                    echo 'autocorrect="off"'
+                    echo 'autocapitalize="off"'
+                  endcapture
+                  if customer
+                    assign value = customer.email
+                  else
+                    assign value = form.email
+                  endif
+                  render 'text-input', type: 'email', id: 'CommentForm-email', label: label, placeholder: placeholder, value: value, attr: attr, required: true, name: 'comment[email]', hide_label: true
+                  assign label = nil
+                  assign placeholder = nil
+                  assign attr = nil
+                  assign value = nil
+                -%}
+              </div><!-- /.form-row form-row--double -->
+
+              <div class="form-row">
+                {%-
+                  liquid
+                  assign label = 'article.comments.form.message.label' | t | append: ' <span aria-hidden="true" class="color-red">*</span>'
+                  assign placeholder = 'article.comments.form.message.placeholder' | t
+                  assign attr = 'aria-required="true"'
+                  render 'textarea-input', id: 'CommentForm-body', label: label, placeholder: placeholder, attr: attr, required: true, name: 'comment[body]', body: form.body, hide_label: true, rows: 7, required: true
+                  assign label = nil
+                  assign placeholder = nil
+                  assign attr = nil
+                -%}
+              </div><!-- /.form-row -->
+
+              {%- if form.posted_successfully? -%}
+                <p class="p4 color-paragraphs mt-s mb-s" role="status">{{- post_message -}}</p>
+              {%- elsif article.moderated? -%}
+                <p class="p4 color-paragraphs mt-s mb-s">{{- 'article.comments.form.hint' | t -}}</p>
+              {%- endif -%}
+
+              {%- liquid
+                assign value = 'article.comments.form.submit' | t
+                render 'button', type: 'submit', css: 'button', value: value
+                assign value = nil
+              -%}
+            {%- endform -%}
+          </form-validation>
+        </div><!-- /.article__form -->
+      </div><!-- /.container container--narrow -->
+    </footer><!-- /.article__foot -->
+  {%- endif -%}
+</article><!-- /.article -->
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "articleBody": {{ article.content | strip_html | json }},
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": {{ request.origin | append: page.url | json }}
+    },
+    "headline": {{ article.title | json }},
+    {% if article.excerpt != blank %}
+      "description": {{ article.excerpt | strip_html | json }},
+    {% endif %}
+    {% if article.image %}
+      "image": [
+        {{ article | image_url: width: article.image.width | prepend: "https:" | json }}
+      ],
+    {% endif %}
+    "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "dateCreated": {{ article.created_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "author": {
+      "@type": "Person",
+      "name": {{ article.author | json }}
+    },
+    "publisher": {
+      "@type": "Organization",
+      {% if settings.share_image %}
+        "logo": {
+          "@type": "ImageObject",
+          "height": {{ settings.share_image.height | json }},
+          "url": {{ settings.share_image | image_url: width: settings.share_image.width | prepend: "https:" | json }},
+          "width": {{ settings.share_image.width | json }}
+        },
+      {% endif %}
+      "name": {{ shop.name | json }}
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.main-article.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share_buttons",
+      "label": "t:sections.main-article.settings.show_share_buttons.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:sections.global.settings.width.label",
+      "options": [
+        {
+          "value": "narrow",
+          "label": "t:sections.global.settings.width.options.option_1"
+        },
+        {
+          "value": "",
+          "label": "t:sections.global.settings.width.options.option_2"
+        }
+      ],
+      "default": "narrow"
+    }
+  ]
+}
+{% endschema %}

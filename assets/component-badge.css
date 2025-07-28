@@ -1,0 +1,22 @@
+.badge {
+  color: var(--color-badge);
+  background-color: var(--color-background-badge);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(var(--spacing-step) * 2);
+  padding: 0 calc(var(--spacing-step) / 2);
+  border-radius: var(--border-radius-badges);
+}
+
+.badge--sale {
+  color: var(--color-badge-sale);
+  background-color: var(--color-background-badge-sale);
+}
+
+@media screen and (min-width: 990px) {
+  .badge {
+    padding: 0 var(--spacing-step);
+    height: calc(var(--spacing-step) * 3);
+  }
+}

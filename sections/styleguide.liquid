@@ -1,0 +1,280 @@
+{% comment %}
+  This section only outlines the styleguide
+  elements with their classes.
+  Should not be included in any page/template, exept for the styleguide page template.
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'styleguide.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>
+  {{- 'styleguide.css' | asset_url | stylesheet_tag -}}
+</noscript>
+
+<div class="styleguide color-{{- section.settings.style -}}">
+  <div class="container">
+    <h2><u>Headings</u></h2>
+
+    <p class="styleguide__info">Helper class names:<br><br><span class="styleguide__badge">.bold .italic .uppercase .line-through .underline</span></p>
+
+    <hr>
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.h1</span></p>
+
+    <p class="h1">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.h2</span></p>
+
+    <p class="h2">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.h3</span></p>
+
+    <p class="h3">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.h4</span></p>
+
+    <p class="h4">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.h5</span></p>
+
+    <p class="h5">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.h6</span></p>
+
+    <p class="h6">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+  </div><!-- /.container -->
+
+  <div class="container">
+    <h2><u>Subheadings</u></h2>
+
+    <p class="styleguide__info">Helper class names:<br><br><span class="styleguide__badge">.bold .italic .uppercase .line-through .underline</span></p>
+
+    <hr>
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.sh .sh--1</span></p>
+
+    <p class="sh sh--1">
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+    </p><!-- /.sh sh--1 -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.sh .sh--2</span></p>
+
+    <p class="sh sh--2">
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+    </p><!-- /. sh sh--2 -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.sh .sh--3</span></p>
+
+    <p class="sh sh--3">
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+    </p><!-- /. sh sh--3 -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.sh .sh--4</span></p>
+
+    <p class="sh sh--4">
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+    </p><!-- /. sh sh--4 -->
+  </div><!-- /.container -->
+
+  <div class="container">
+    <h2><u>Paragraphs</u></h2>
+
+    <p class="styleguide__info">Helper class names:<br><br><span class="styleguide__badge">.bold .italic .uppercase .line-through .underline</span></p>
+
+    <hr>
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.p1</span></p>
+
+    <p class="p1">
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam, nihil deserunt quis, perspiciatis voluptatem quod, placeat rem id ab commodi officiis tenetur fugiat? Sed, adipisci? Optio iusto velit maiores numquam.
+    </p><!-- /.p1 -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.p2</span></p>
+
+    <p class="p2">
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam, nihil deserunt quis, perspiciatis voluptatem quod, placeat rem id ab commodi officiis tenetur fugiat? Sed, adipisci? Optio iusto velit maiores numquam.
+    </p><!-- /.p2 -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.p3</span></p>
+
+    <p class="p3">
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam, nihil deserunt quis, perspiciatis voluptatem quod, placeat rem id ab commodi officiis tenetur fugiat? Sed, adipisci? Optio iusto velit maiores numquam.
+    </p><!-- /.p3 -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.p4</span></p>
+
+    <p class="p4">
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam, nihil deserunt quis, perspiciatis voluptatem quod, placeat rem id ab commodi officiis tenetur fugiat? Sed, adipisci? Optio iusto velit maiores numquam.
+    </p><!-- /.p4 -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.p5</span></p>
+
+    <p class="p5">
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam, nihil deserunt quis, perspiciatis voluptatem quod, placeat rem id ab commodi officiis tenetur fugiat? Sed, adipisci? Optio iusto velit maiores numquam.
+    </p><!-- /.p5 -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.p6</span></p>
+
+    <p class="p6">
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam, nihil deserunt quis, perspiciatis voluptatem quod, placeat rem id ab commodi officiis tenetur fugiat? Sed, adipisci? Optio iusto velit maiores numquam.
+    </p><!-- /.p6 -->
+  </div><!-- /.container -->
+
+  <div class="container">
+    <h2><u>Button links</u></h2>
+
+    <hr>
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.link</span></p>
+
+    <div class="mt-l mb-l">
+      {%- render 'button', type: 'link', href: request.path, css: 'link', value: 'Shop Now' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.link .link--s</span></p>
+
+    <div class="mt-l mb-l">
+      {%- render 'button', type: 'link', href: request.path, css: 'link', value: 'Shop Now', styles: 's' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.link .link--l</span></p>
+
+    <div class="mt-l mb-l">
+      {%- render 'button', type: 'link', href: request.path, css: 'link', value: 'Shop Now', styles: 'l' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.button</span></p>
+
+    <div class="mt-l mb-l">
+      {%- render 'button', type: 'link', href: request.path, value: 'Shop Now' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.button .button--s</span></p>
+
+    <div class="mt-l mb-l">
+      {%- render 'button', type: 'link', href: request.path, value: 'Shop Now', styles: 's' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.button .button--l</span></p>
+
+    <div class="mt-l mb-l">
+      {%- render 'button', type: 'link', href: request.path, value: 'Shop Now', styles: 'l' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.button .button--outline</span></p>
+
+    <div class="mt-l mb-l">
+      {%- render 'button', type: 'link', href: request.path, value: 'Shop Now', styles: 'outline' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.button .button--outline .button--s</span></p>
+
+    <div class="mt-l mb-l">
+      {%- render 'button', type: 'link', href: request.path, value: 'Shop Now', styles: 'outline,s' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <p class="styleguide__info">Class name: <span class="styleguide__badge">.button .button--outline .button--l</span></p>
+
+    <div class="mt-l mb-l">
+      {%- render 'button', type: 'link', href: request.path, value: 'Shop Now', styles: 'outline,l' -%}
+    </div><!-- /.mt-l mb-l -->
+  </div><!-- /.container -->
+
+  <div class="container">
+    <h2><u>Forms</u></h2>
+
+    <hr>
+
+    <div class="mt-l mb-l">
+      {%- render 'text-input', type: 'text', placeholder: 'Placeholder', label: 'Label', id: 'text-input-2', style: 'large' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <div class="mt-l mb-l">
+      {%- render 'text-input', type: 'text', placeholder: 'Placeholder', label: 'Label', id: 'text-input-1' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <div class="mt-l mb-l">
+      {%- render 'text-input', type: 'text', placeholder: 'Placeholder', label: 'Label', id: 'text-input-3', style: 'small' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <div class="mt-l mb-l">
+      {%- capture options_html -%}
+      <option value="" disabled selected hidden>Select</option>
+
+        <option value="option-1">Option 1</option>
+
+        <option value="option-2">Option 2</option>
+
+        <option value="option-3">Option 3</option>
+      {%- endcapture -%}
+
+      {%- render 'select-input', name: 'select-input', options: options_html, required: true, style: 'large' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <div class="mt-l mb-l">
+      {%- render 'select-input', name: 'select-input', options: options_html, required: true -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <div class="mt-l mb-l">
+      {%- render 'select-input', name: 'select-input', options: options_html, required: true, style: 'small' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <div class="mt-l mb-l">
+      {%- render 'quantity-input', style: 'large' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <div class="mt-l mb-l">
+      {%- render 'quantity-input' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <div class="mt-l mb-l">
+      {%- render 'quantity-input', style: 'small' -%}
+    </div><!-- /.mt-l mb-l -->
+
+    <div class="mt-l mb-l">
+      <div class="mb-s">
+        {%- render 'checkbox-input', id: 'checkbox-1', label: 'Placeholder', name: 'checkbox-1', checked: true -%}
+      </div><!-- /.mb-s -->
+
+      <div class="mb-s">
+        {%- render 'checkbox-input', id: 'checkbox-2', label: 'Placeholder', name: 'checkbox-2' -%}
+      </div><!-- /.mb-s -->
+    </div><!-- /.mt-l mb-l -->
+
+    <div class="mt-l mb-l">
+      <div class="mb-s">
+        {%- render 'radio-input', name: 'radio-placeholder', id: 'radio-1', label: 'Placeholder', value: 'radio-value-1' checked: true -%}
+      </div><!-- /.mb-s -->
+
+      <div class="mb-s">
+        {%- render 'radio-input', name: 'radio-placeholder', id: 'radio-2', label: 'Placeholder', value: 'radio-value-2' -%}
+      </div><!-- /.mb-s -->
+    </div><!-- /.mt-l mb-l -->
+  </div><!-- /.container -->
+</div><!-- /.styleguide -->
+{% schema %}
+{
+  "name": "t:sections.styleguide.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    }
+  ]
+}
+{% endschema %}

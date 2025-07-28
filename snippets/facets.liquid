@@ -1,0 +1,212 @@
+{% comment %}
+    Renders facets (filtering and sorting)
+    Accepts:
+    - results: {Object} Collection or Search object
+    - enable_filtering: {Boolean} Show filtering when true
+    - enable_sorting: {Boolean} Show sorting when true
+    - layout: {String} Layout for the filters
+    - section_id: {String} ID of the section to render facets in
+    - class {String} Additional classes
+    - context {String} Accepts: 'bar'/'grid'
+    - container_class: {String} Container class
+    - filters_by_columns: {String} Filters to be displayed in 2 columns
+    - hide_facets: {Boolean} Hide facets
+    Usage:
+    {%- render 'facets', results: collection, enable_filtering: true, enable_sorting: true -%}
+{% endcomment %}
+
+{%- liquid
+  assign container_class = container_class | default: 'container'
+  assign filters_html = ''
+  assign sort_by = results.sort_by | default: results.default_sort_by
+  assign total_active_values = 0
+  assign filters_by_columns_arr = filters_by_columns | newline_to_br | strip_newlines | split: '<br />'
+  for filter in results.filters
+    assign total_active_values = total_active_values | plus: filter.active_values.size
+    if filter.type == 'price_range'
+      if filter.min_value.value != nil or filter.max_value.value != nil
+        assign total_active_values = total_active_values | plus: 1
+      endif
+    endif
+
+    if filters_by_columns_arr contains filter.label
+      assign is_columns = true
+    endif
+
+    assign has_border = false
+    if forloop.first and results.filters.size > 5 or forloop.index == 6 and results.filters.size > 10
+      assign has_border = true
+    endif
+    if layout == 'sidebar' and context == 'grid'
+      assign style = 'accordion'
+      assign accordion_open = true
+
+    elsif layout == 'slideout'
+      assign style = 'accordion'
+      if forloop.first
+        assign accordion_open = true
+      else
+        assign accordion_open = false
+      endif
+    endif
+    capture filters_html
+      echo filters_html
+      render 'facet', index: forloop.index, section_id: section_id, filter: filter, has_border: has_border, style: style, context: context, accordion_open: accordion_open, is_columns: is_columns
+    endcapture
+  endfor
+  if results.url
+    assign results_url = results.url
+  else
+    assign terms = results.terms | escape
+    assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+  endif
+-%}
+
+<div class="facets facets--{{ layout }} facets--{{ context }} {% if results.filters.size < 5 %} facets--compact {% endif %} {{ class }}" data-facets-container>
+  <div class="{%- unless layout == 'sidebar' and context == 'grid' -%}{{ container_class }}{%- endunless -%}">
+    <div class="facets__inner">
+      <facet-filters-form class="facets__form-wrapper" data-section-id="{{- section_id -}}">
+        <form id="FacetFiltersForm" class="facets__form">
+          {%- if results.terms -%}
+            <input type="hidden" name="q" value="{{- results.terms | escape -}}">
+            <input name="options[prefix]" type="hidden" value="last">
+          {%- endif -%}
+
+          {%- if enable_filtering and results.filters != empty -%}
+            <facet-filters>
+              {%- if layout == 'sidebar' and context == 'grid' -%}
+                <div class="facets__wrapper">
+                  {{ filters_html }}
+                </div>
+
+              {%- else -%}
+                <details class="facets__wrapper disclosure-has-popup" id="Details-facets" data-facets-details>
+                  <summary class="facets__trigger focus-offset js-filter{% if hide_facets %} hidden{% endif %}" data-index="filters-trigger">
+                    {%- render 'icon-refine' -%}
+                    {%- render 'icon-close' -%}
+
+                    <span class="facets__trigger-label p2">{{- 'collection.facets.filters_button' | t -}}</span>
+
+                    {%- if total_active_values > 0 -%}
+                      <span class="facets__trigger-counter p4 large-up-hide">{{- total_active_values -}}</span>
+                    {%- endif -%}
+                  </summary><!-- /facets__trigger .focus-offset -->
+
+                  <div class="facets__body motion-reduce" data-breakpoint="990">
+                    <div class="facets__body-container {{ container_class }} {% unless layout != 'slideout' %} container--fullwidth {% endunless %}">
+                      {% if layout == 'slideout' %}
+                        <button
+                          type="button"
+                          class="facets__body-slideout-overlay medium-hide small-hide"
+                          onclick="this.closest('details').querySelector('summary').click()"
+                        >
+                          <span class="facets__trigger-label visually-hidden p2">{{- 'collection.facets.filters_button_close' | t -}}</span>
+                        </button>
+                      {% endif %}
+
+                      <div class="facets__head{% if layout != 'slideout' %} large-up-hide {% endif %} pt-m pb-s bd-b">
+                        <h5 class="facets__head-title large-up-hide h5 mt-0 mb-0">{{- 'collection.facets.filters_button' | t -}}</h5><!-- /.facets__head-title -->
+
+                        <button
+                          type="button"
+                          class="large-up-hide"
+                          onclick="this.closest('details').querySelector('summary').click()"
+                        >
+                          {%- render 'icon-close' -%}
+                        </button>
+
+                        {% if layout == 'slideout' %}
+                          <button
+                            type="button"
+                            class="facets__body-slideout-close medium-hide small-hide"
+                            onclick="this.closest('details').querySelector('summary').click()"
+                          >
+                            {%- render 'icon-close' -%}
+                            <span class="facets__trigger-label p2">{{- 'collection.facets.filters_button' | t -}}</span>
+                          </button>
+                        {% endif %}
+                      </div><!-- /.facets__head -->
+
+                      <div class="facets__body-wrapper" data-facets-body>
+                        {{- filters_html -}}
+                      </div><!-- /.facets__body-wrapper -->
+
+                      <div class="facets__foot large-up-hide js-filter" data-index="facets-foot">
+                        {%- if total_active_values > 0 -%}
+                          {%- assign facets_clear_text = 'collection.facets.clear' | t -%}
+                          <facet-remove>
+                            {%- render 'button', type: 'link', href: results_url, value: facets_clear_text, styles: 'outline' -%}
+                          </facet-remove>
+                        {%- endif -%}
+                        {%- assign facets_apply_text = 'collection.facets.apply' | t -%}
+                        {%- assign facets_apply_attr = 'onclick="this.closest(`details`).querySelector(`summary`).click()"' -%}
+                        {%- render 'button', value: facets_apply_text, attr: facets_apply_attr, class: 'no-js-hidden' -%}
+                        {%- render 'button', type: 'submit', value: facets_apply_text, class: 'no-js' -%}
+                      </div><!-- /.facets__foot -->
+                    </div><!-- /.facets__body-container container -->
+
+                    <div class="facets__body-actions no-js center pt-m pb-m mt-m bd-t">
+                      <div class="container">
+                        {%- render 'button', type: 'submit', value: facets_apply_text, class: 'no-js-inline' -%}
+                      </div><!-- /.container -->
+                    </div><!-- /.facets__body-actions -->
+                  </div><!-- /.facets__body -->
+                </details><!-- /#Details-facets.facets__wrapper -->
+              {%- endif -%}
+            </facet-filters>
+          {%- endif -%}
+
+          {%- if results.current_vendor or results.current_type -%}
+            <input type="hidden" name="q" value="{{- results.current_vendor -}}{{- results.current_type -}}">
+          {%- endif -%}
+
+          {%- render 'facets-active', filters: results.filters, results_url: results_url, total_active_values: total_active_values -%}
+
+          {%- if enable_sorting -%}
+            <dropdown-input class="facets__sort js-filter" data-index="sort-by">
+              <select name="sort_by" aria-describedby="a11y-refresh-page-message" class="hidden p4">
+                {%- for option in results.sort_options -%}
+                  <option
+                    value="{{- option.value | escape -}}"
+                    {% if option.value == sort_by %} selected="selected"{% endif %}
+                  >{{- option.name | escape -}}</option>
+                {%- endfor -%}
+              </select>
+
+              <details class="dropdown disclosure-has-popup no-js-hidden" id="Details-sort">
+                <summary class="dropdown__button p4">
+                  {%- for sort_option in results.sort_options -%}
+                    {%- if sort_option.first != sort_by -%}
+                      {%- continue -%}
+                    {%- endif -%}
+
+                    <span data-label>{{- sort_option.name -}}</span>
+                  {%- endfor -%}
+
+                  <span class="dropdown__icon motion-reduce">
+                    {%- render 'icon-chevron-down' -%}
+                  </span>
+                </summary>
+
+                <div class="dropdown__list motion-reduce">
+                  <ul class="dropdown__items list-unstyled">
+                    {%- for option in results.sort_options -%}
+                      <li class="dropdown__item motion-reduce{% if option.value == sort_by %} is-active{% endif %}" data-value="{{- option.value -}}">
+                        <button
+                          class="dropdown__link" data-value="{{- option.value -}}"
+                          {% if option.value == sort_by %} disabled{% endif %}
+                        >
+                          {{- option.name | escape -}}
+                        </button>
+                      </li><!-- /.dropdown__item -->
+                    {%- endfor -%}
+                  </ul><!-- /.dropdown__items list-unstyled -->
+                </div><!-- /.dropdown__list -->
+              </details><!-- /#Details-sort.dropdown -->
+            </dropdown-input><!-- /.facets__sort -->
+          {%- endif -%}
+        </form><!-- /#FacetFiltersForm.facets__form.flex.flex--justify.flex--center -->
+      </facet-filters-form><!-- /.facets__form-wrapper -->
+    </div><!-- /.facets__inner -->
+  </div><!-- /.container -->
+</div><!-- /.facets -->

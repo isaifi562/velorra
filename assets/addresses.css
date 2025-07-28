@@ -1,0 +1,49 @@
+.address__item--default {
+  border-bottom: 0.1rem solid var(--color-seperators);
+}
+
+.address__item + .address__item {
+  padding-top: calc(var(--spacing-step) * 2);
+  border-top: 0.1rem solid var(--color-seperators);
+}
+
+.address__item p {
+  margin-block: 0;
+}
+
+.address-form__actions {
+  text-align: center;
+}
+
+.address-form [type="checkbox"] {
+  margin-right: 1rem;
+}
+
+.address-form label {
+  line-height: 1.5;
+  margin-bottom: var(--spacing-step);
+}
+
+:target ~ .addresses {
+  display: none;
+}
+
+:target {
+  display: block !important;
+  padding-top: 10rem;
+  margin-top: -10rem;
+}
+
+.address__button {
+  margin-right: calc(var(--spacing-step) * 2);
+}
+
+@media screen and (min-width: 990px) {
+  .address__item + .address__item {
+    padding-top: calc(var(--spacing-step) * 3);
+  }
+
+  .address-form__actions {
+    text-align: left;
+  }
+}

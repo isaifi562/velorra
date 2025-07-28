@@ -1,0 +1,281 @@
+<link rel="stylesheet" href="{{- 'component-badge.css' | asset_url -}}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{- 'component-form-elements.css' | asset_url -}}" media="print" onload="this.media='all'">
+{{- 'collection.css' | asset_url | stylesheet_tag -}}
+{{- 'component-card-product.css' | asset_url | stylesheet_tag -}}
+
+<noscript>
+  {{- 'component-badge.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-form-elements.css' | asset_url | stylesheet_tag -}}
+</noscript>
+
+{%- if section.settings.enable_filters or section.settings.enable_sorting -%}
+  {{- 'component-facets.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-dropdown.css' | asset_url | stylesheet_tag -}}
+
+  <script src="{{- 'dropdown-disclosure.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'facets.js' | asset_url -}}" defer="defer"></script>
+  {%- if section.settings.enable_sorting -%}
+    <script src="{{- 'dropdown-input.js' | asset_url -}}" defer="defer"></script>
+  {%- endif -%}
+{%- endif -%}
+
+<script src="{{- 'component-card-product.js' | asset_url -}}" defer="defer" data-theme-script></script>
+
+{%- assign active_swatch_filter = collection.filters | where: 'label', settings.swatches_option | first -%}
+{%- assign active_swatch_filter_active_values = active_swatch_filter.active_values | map: 'label' -%}
+
+{%-
+  liquid
+  assign container_class = 'container'
+  if section.settings.grid_fullwidth
+    assign container_class = container_class | append: ' container--fullwidth'
+  endif
+  if section.settings.grid_side_margins == false
+    assign container_class = container_class | append: ' container--no-gutter-desktop'
+  endif
+  if section.settings.grid_side_margins_mobile == false
+    assign container_class = container_class | append: ' container--no-gutter-mobile'
+  endif
+-%}
+
+<div class="collection color-{{ section.settings.style }}">
+  {%-
+    liquid
+    if section.settings.enable_breadcrumbs
+      assign breadcrumbs_class = 'color-' | append: section.settings.style | append: ' collection__breadcrumbs bd-t'
+      render 'breadcrumbs' with breadcrumbs_class as class
+    endif
+
+    assign facets_container_class = container_class | replace: 'container--no-gutter-mobile', '' | replace: 'container--no-gutter-desktop', ''
+
+    if section.settings.enable_filters or section.settings.enable_sorting
+      render 'facets', results: collection, enable_filtering: section.settings.enable_filters, enable_sorting: section.settings.enable_sorting, section_id: section.id, class: 'collection__facets pt-s pb-s pt-m--large pb-m--large bd-b', layout: section.settings.filters_layout, context: 'bar', container_class: facets_container_class, filters_by_columns: section.settings.filters_by_columns
+    endif
+  -%}
+
+  {%- paginate collection.products by section.settings.products_per_page -%}
+    <div class="collection__grid pt-s pt-m--large pb-s pb-xxl--large color-background" id="ProductGridContainer">
+      <div class="{{ container_class }}">
+        <div class="collection__wrapper">
+          {%- if section.settings.enable_filters and section.settings.filters_layout == 'sidebar' -%}
+            <div
+              class="collection__facets collection__facets--row-{{ section.settings.products_per_row_desktop }} small-hide medium-hide"
+            >
+              {%- render 'facets',
+                results: collection,
+                enable_filtering: section.settings.enable_filters,
+                enable_sorting: section.settings.enable_sorting,
+                section_id: section.id,
+                class: 'pt-s pb-s pt-m--large pb-m--large',
+                layout: section.settings.filters_layout,
+                context: 'grid',
+                filters_by_columns: section.settings.filters_by_columns
+              -%}
+            </div>
+          {%- endif -%}
+
+          <div class="collection__grid-items-wrapper">
+            {%- if collection.products_count == 0 -%}
+              <div class="collection__grid-items center">
+                <h2 class="h3 regular">
+                  {{- 'collection.empty' | t -}}
+                </h2><!-- /.h3 regular -->
+
+                <p class="p3">{{- 'collection.use_fewer_filters_html' | t: url: collection.url -}}</p>
+              </div>
+
+            {%- else -%}
+              <div class="collection__grid-items list-unstyled grid grid--row-gap-s" id="product-grid" data-id="{{- section.id -}}">
+                {%-
+                  liquid
+                  for product_ref in collection.products
+                    assign current_variant = nil
+                    assign swatches_option_position = product_ref.options_by_name[settings.swatches_option].position
+                    assign swatches_option_position_key = 'option' | append: swatches_option_position
+                    for active_value in active_swatch_filter_active_values
+                      assign current_variant = product_ref.variants | where: swatches_option_position_key, active_value | first
+                      if current_variant
+                        break
+                      endif
+                    endfor
+                    assign grid_item_class = 'grid__item grid__item--xs-6'
+                    if section.settings.products_per_row_mobile == '2'
+                      assign grid_item_class = grid_item_class | append: ' grid__item--2'
+                    endif
+                    if section.settings.products_per_row_desktop == '3'
+                      assign grid_item_class = grid_item_class | append: ' grid__item--s-4'
+                    elsif section.settings.products_per_row_desktop == '4'
+                    assign grid_item_class = grid_item_class | append: ' grid__item--s-4 grid__item--m-3'
+                    endif
+                    render 'card-product', product_ref: product_ref, class: grid_item_class, collection_ref: collection, current_variant: current_variant
+                  endfor
+                -%}
+              </div><!-- /#product-grid.collection__grid-items list-unstyled grid grid--row-gap-s -->
+            {%- endif -%}
+          </div>
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <div class="collection__pagination pt-xxl pb-xxl mt-xxl--large">
+            {%- render 'pagination', paginate: paginate, anchor: '' -%}
+          </div><!-- /.collection__pagination -->
+        {%- endif -%}
+      </div><!-- /.container -->
+    </div><!-- /#ProductGridContainer.collection__grid -->
+  {%- endpaginate -%}
+</div><!-- /.collection -->
+
+{% schema %}
+{
+  "name": "t:sections.main-collection.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.main-collection.settings.header.general.content"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_breadcrumbs",
+      "label": "t:sections.main-collection.settings.enable_breadcrumbs.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-collection.settings.header.filters_and_sorting.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.main-collection.settings.paragraph_filtering_and_sorting.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "label": "t:sections.main-collection.settings.enable_sorting.label",
+      "default": true,
+      "info": "t:sections.main-collection.settings.enable_sorting.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filters",
+      "label": "t:sections.main-collection.settings.enable_filters.label",
+      "default": true,
+      "info": "t:sections.main-collection.settings.enable_filters.info"
+    },
+    {
+      "type": "select",
+      "id": "filters_layout",
+      "label": "t:sections.main-collection.settings.filters_type.label",
+      "options": [
+        {
+          "value": "horizontal",
+          "label": "t:sections.main-collection.settings.filters_type.options.option_1"
+        },
+        {
+          "value": "slideout",
+          "label": "t:sections.main-collection.settings.filters_type.options.option_2"
+        },
+        {
+          "value": "sidebar",
+          "label": "t:sections.main-collection.settings.filters_type.options.option_3"
+        }
+      ],
+      "default": "horizontal",
+      "info": "t:sections.main-collection.settings.filters_type.info"
+    },
+    {
+      "type": "textarea",
+      "id": "filters_by_columns",
+      "label": "t:sections.main-collection.settings.filters_by_columns.label",
+      "info": "t:sections.main-collection.settings.filters_by_columns.info",
+      "default": "Size"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-collection.settings.header.products_grid.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "grid_fullwidth",
+      "label": "t:sections.main-collection.settings.grid_fullwidth.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "grid_side_margins",
+      "label": "t:sections.main-collection.settings.grid_side_margins.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "grid_side_margins_mobile",
+      "label": "t:sections.main-collection.settings.grid_side_margins_mobile.label",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "products_per_row_mobile",
+      "label": "t:sections.main-collection.settings.products_per_row_mobile.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:sections.main-collection.settings.products_per_row_mobile.options.option_1"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.main-collection.settings.products_per_row_mobile.options.option_2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "products_per_row_desktop",
+      "label": "t:sections.main-collection.settings.products_per_row_desktop.label",
+      "options": [
+        {
+          "value": "2",
+          "label": "t:sections.main-collection.settings.products_per_row_desktop.options.option_1"
+        },
+        {
+          "value": "3",
+          "label": "t:sections.main-collection.settings.products_per_row_desktop.options.option_2"
+        },
+        {
+          "value": "4",
+          "label": "t:sections.main-collection.settings.products_per_row_desktop.options.option_3"
+        }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 6,
+      "max": 36,
+      "step": 1,
+      "label": "t:sections.main-collection.settings.products_per_page.label",
+      "default": 15
+    }
+  ]
+}
+{% endschema %}

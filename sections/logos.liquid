@@ -1,0 +1,307 @@
+<link rel="stylesheet" href="{{ 'component-list-logos.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-text-content.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>
+  {{ 'component-list-logos.css' | asset_url | stylesheet_tag }}
+  {{ 'component-text-content.css' | asset_url | stylesheet_tag }}
+</noscript>
+
+{%-
+  liquid
+  capture style_classes
+    echo 'color-' | append: section.settings.style | append: ' color-background '
+    echo section.settings.text_align | append: ' '
+  endcapture
+-%}
+
+<div class="section__wrapper {{ style_classes }} {{ section.settings.outer_spacing }} {{ section.settings.inner_spacing }}">
+  <div class="container overflow-hidden">
+    {%- render 'text-content',
+      heading_class: 'h3',
+      heading_size_tag: 'h3',
+      paragraph_class: 'p3',
+      inner_settings: section.settings
+    -%}
+
+
+    {%- assign logo_blocks = section.blocks | where: 'type', 'logo' -%}
+    {%- if logo_blocks.size > 0 -%}
+      <div class="list-logos">
+        <ul class="list-unstyled flex flex--justify-center flex--center mt-l mt-xxl--large">
+          {%- for block in logo_blocks -%}
+            <li class="flex flex--justify-center flex--center" {{ block.shopify_attributes }}>
+              {%- assign image = block.settings.image -%}
+              <div
+                class="image list__image flex flex--direction-column flex--justify-center"
+                style="{% if image != blank %}width: {{ image.width | times: 0.1 }}rem; {% else %}width: 100%;{% endif %}"
+              >
+                <a class="media" {% if block.settings.link_url != blank %}href="{{ block.settings.link_url }}"{% endif %} style="padding-bottom:{% if image != blank %} {% render 'aspect-ratio': aspect_ratio: image.aspect_ratio %}{% else %}100{% endif %}%;">
+                  {%-
+                    liquid
+                    if image != blank
+                      assign image_src = image | image_url: width: 150
+                      render 'image', src: image_src, alt: image.alt, width: image.width, height: image.height, focal_point: image.presentation.focal_point
+                    else
+                      echo 'image' | placeholder_svg_tag: 'placeholder-svg'
+                    endif
+                  -%}
+                  </a><!-- /.media -->
+              </div><!-- /.image -->
+            </li><!-- /.grid__item -->
+          {%- endfor -%}
+        </ul><!-- /.grid -->
+      </div><!-- /.list-logos -->
+    {%- endif -%}
+  </div><!-- /.container -->
+</div><!-- /.section__wrapper -->
+
+{% schema %}
+{
+  "name": "t:sections.logos.name",
+  "tag": "section",
+  "class": "section-logos",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "select",
+      "id": "outer_spacing",
+      "label": "t:sections.global.settings.outer-spacing.label",
+      "options": [
+        {
+          "value": "mt-0 mb-0 mt-0--large mb-0--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_1"
+        },
+        {
+          "value": "mt-s mb-s mt-s--large mb-s--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_2"
+        },
+        {
+          "value": "mt-l mb-l mt-l--large mb-l--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_3"
+        }
+      ],
+      "default": "mt-0 mb-0 mt-0--large mb-0--large"
+    },
+    {
+      "type": "select",
+      "id": "inner_spacing",
+      "label": "t:sections.global.settings.inner-spacing.label",
+      "options": [
+        {
+          "value": "spacing-none",
+          "label": "t:sections.global.settings.inner-spacing.options.option_1"
+        },
+        {
+          "value": "spacing-s spacing-s--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_2"
+        },
+        {
+          "value": "spacing-m spacing-m--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_3"
+        },
+        {
+          "value": "spacing-l spacing-l--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_4"
+        }
+      ],
+      "default": "spacing-s spacing-s--large"
+    },
+    {
+      "type": "text_alignment",
+      "id": "text_align",
+      "label": "t:sections.richtext.settings.text_align.label",
+      "default": "center"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.global.settings.subheading.label",
+      "default": "Add a tagline"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "t:sections.global.settings.heading.label",
+      "default": "<p>List your partners or clients</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "paragraph",
+      "label": "t:sections.global.settings.paragraph.label",
+      "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.buttons.button.header_button_1.content"
+    },
+    {
+      "type": "select",
+      "id": "button_style_1",
+      "label": "t:sections.global.settings.buttons.button.settings.style.label",
+      "options": [
+        {
+          "value": "solid",
+          "label": "t:sections.global.settings.buttons.button.settings.style.options.option_1"
+        },
+        {
+          "value": "outline",
+          "label": "t:sections.global.settings.buttons.button.settings.style.options.option_2"
+        },
+        {
+          "value": "link",
+          "label": "t:sections.global.settings.buttons.button.settings.style.options.option_3"
+        }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "select",
+      "id": "button_size_1",
+      "label": "t:sections.global.settings.buttons.button.settings.size.label",
+      "options": [
+        {
+          "value": "s",
+          "label": "t:sections.global.settings.buttons.button.settings.size.options.option_1"
+        },
+        {
+          "value": "m",
+          "label": "t:sections.global.settings.buttons.button.settings.size.options.option_2"
+        },
+        {
+          "value": "l",
+          "label": "t:sections.global.settings.buttons.button.settings.size.options.option_3"
+        }
+      ],
+      "default": "m"
+    },
+    {
+      "type": "text",
+      "id": "button_text_1",
+      "label": "t:sections.global.settings.buttons.button.settings.button_text.label"
+    },
+    {
+      "type": "url",
+      "id": "button_url_1",
+      "label": "t:sections.global.settings.buttons.button.settings.button_url.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.buttons.button.header_button_2.content"
+    },
+    {
+      "type": "select",
+      "id": "button_style_2",
+      "label": "t:sections.global.settings.buttons.button.settings.style.label",
+      "options": [
+        {
+          "value": "solid",
+          "label": "t:sections.global.settings.buttons.button.settings.style.options.option_1"
+        },
+        {
+          "value": "outline",
+          "label": "t:sections.global.settings.buttons.button.settings.style.options.option_2"
+        },
+        {
+          "value": "link",
+          "label": "t:sections.global.settings.buttons.button.settings.style.options.option_3"
+        }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "select",
+      "id": "button_size_2",
+      "label": "t:sections.global.settings.buttons.button.settings.size.label",
+      "options": [
+        {
+          "value": "s",
+          "label": "t:sections.global.settings.buttons.button.settings.size.options.option_1"
+        },
+        {
+          "value": "m",
+          "label": "t:sections.global.settings.buttons.button.settings.size.options.option_2"
+        },
+        {
+          "value": "l",
+          "label": "t:sections.global.settings.buttons.button.settings.size.options.option_3"
+        }
+      ],
+      "default": "m"
+    },
+    {
+      "type": "text",
+      "id": "button_text_2",
+      "label": "t:sections.global.settings.buttons.button.settings.button_text.label"
+    },
+    {
+      "type": "url",
+      "id": "button_url_2",
+      "label": "t:sections.global.settings.buttons.button.settings.button_url.label"
+    }
+  ],
+  "blocks": [
+    {
+      "limit": 6,
+      "name": "t:sections.logos.blocks.logo.name",
+      "type": "logo",
+      "settings": [
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "t:sections.logos.blocks.logo.settings.link_url.label",
+          "default": "/"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.logos.blocks.logo.settings.link_url.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.logos.name",
+      "blocks": [
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "*"
+    ],
+    "groups": [
+      "aside",
+      "footer"
+    ]
+  }
+}
+{% endschema %}

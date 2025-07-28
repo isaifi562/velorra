@@ -1,0 +1,210 @@
+{%-
+  liquid
+  assign form_address_object = customer.new_address
+  assign address_form_id = 'AddAddress'
+  if address
+    assign form_address_object = address
+    assign address_form_id = 'EditAddress_' | append: address.id
+  endif
+-%}
+
+<div id="{{- address_form_id -}}" class="address-form hidden" data-address>
+  <h2 class="h4 mt-0 mb-l color-headings">
+    {%-
+      liquid
+      if address
+        echo 'customer.addresses.edit_address_title' | t
+      else
+        echo 'customer.addresses.add_address_title' | t
+      endif
+    -%}
+  </h2><!-- /.h4 -->
+
+  {%-
+    liquid
+    assign value = 'customer.addresses.back_to_addresses' | t
+    render 'button', type: 'link', href: '#', css: 'link', class: 'mb-l', styles: 'left', icon_name: 'icon-chevron-left', value: value
+  -%}
+
+  <form-validation>
+    {%- form 'customer_address', form_address_object -%}
+      <div class="form-row form-row--double">
+        <div class="form-row form-row--double">
+          {%-
+            liquid
+            assign label = 'customer.addresses.first_name' | t
+            assign placeholder = 'customer.addresses.first_name_placeholder' | t
+            assign id = 'AddressFirstName_' | append: form.id
+            render 'text-input', label: label, placeholder: placeholder, id: id, attr: 'autocomplete="given-name"', name: 'address[first_name]', value: form.first_name, style: 'small', required: true
+            assign label = nil
+            assign placeholder = nil
+          -%}
+
+          {%-
+            liquid
+            assign label = 'customer.addresses.last_name' | t
+            assign placeholder = 'customer.addresses.last_name_placeholder' | t
+            assign id = 'AddressLastName_' | append: form.id
+            render 'text-input', label: label, placeholder: placeholder, id: id, attr: 'autocomplete="family-name"', name: 'address[last_name]', value: form.last_name, style: 'small', required: true
+            assign label = nil
+            assign placeholder = nil
+          -%}
+        </div><!-- /.form-row form-row--double -->
+
+        <div>
+          {%-
+            liquid
+            assign label = 'customer.addresses.company' | t
+            assign placeholder = 'customer.addresses.company_placeholder' | t
+            assign id = 'AddressCompany_' | append: form.id
+            assign attr = 'autocomplete="organization" data-no-validate'
+            render 'text-input', label: label, placeholder: placeholder, id: id, attr: attr, name: 'address[company]', value: form.company, style: 'small'
+            assign label = nil
+            assign placeholder = nil
+          -%}
+        </div>
+      </div><!-- /.form-row form-row--double -->
+
+      <div class="form-row form-row--double">
+        <div>
+          {%-
+            liquid
+            assign label = 'customer.addresses.address_line_1' | t
+            assign placeholder = 'customer.addresses.address_line_1_placeholder' | t
+            assign id = 'AddressLine1_' | append: form.id
+            render 'text-input', label: label, placeholder: placeholder, id: id, attr: 'autocomplete="address-line1"', name: 'address[address1]', value: form.address1, style: 'small', required: true
+            assign label = nil
+            assign placeholder = nil
+          -%}
+        </div>
+
+        <div>
+          {%-
+            liquid
+            assign label = 'customer.addresses.address_line_2' | t
+            assign placeholder = 'customer.addresses.address_line_2_placeholder' | t
+            assign id = 'AddressLine2_' | append: form.id
+            assign attr = 'autocomplete="address-line2" data-no-validate'
+            render 'text-input', label: label, placeholder: placeholder, id: id, attr: attr, name: 'address[address2]', value: form.address2, style: 'small'
+            assign label = nil
+            assign placeholder = nil
+          -%}
+        </div>
+      </div><!-- /.form-row form-row--double -->
+
+      <div class="form-row form-row--double">
+        <div>
+          {%-
+            liquid
+            assign label = 'customer.addresses.city' | t
+            assign placeholder = 'customer.addresses.city_placeholder' | t
+            assign id = 'AddressCity_' | append: form.id
+            render 'text-input', label: label, placeholder: placeholder, id: id, attr: 'autocomplete="address-level2"', name: 'address[city]', value: form.city, style: 'small', required: true
+            assign label = nil
+            assign placeholder = nil
+          -%}
+        </div>
+
+        <div>
+          <div class="form-row">
+            {%-
+              liquid
+              assign label = 'customer.addresses.country' | t
+              assign id = 'AddressCountry_' | append: form.id
+              capture attr
+                echo 'data-default="' | append: form.country | append: '"'
+                echo 'autocomplete="country"'
+                if address
+                  echo 'data-form-id="' | append: form.id | append: '"'
+                  echo 'data-address-country-select'
+                endif
+              endcapture
+              assign country_tags = all_country_option_tags | replace: 'value="---"', 'value="" selected disabled'
+              render 'select-input', id: id, label: label, name: 'address[country]', options: country_tags, attr: attr, style: 'small', required: true
+              assign label = nil
+              assign id = nil
+              assign attr = nil
+            -%}
+          </div><!-- /.form-row -->
+
+          <div class="form-row">
+            <div class="address__province-container" id="AddressProvinceContainer_{{- form.id -}}">
+              {%-
+                liquid
+                assign label = 'customer.addresses.province' | t
+                assign id = 'AddressProvince_' | append: form.id
+                capture attr
+                  echo 'data-default="' | append: form.province | append: '"'
+                  echo 'autocomplete="address-level1"'
+                endcapture
+                render 'select-input', id: id, label: label, name: 'address[province]', attr: attr, style: 'small'
+                assign label = nil
+                assign id = nil
+                assign attr = nil
+              -%}
+            </div>
+          </div><!-- /.form-row -->
+        </div>
+      </div><!-- /.form-row form-row--double -->
+
+      <div class="form-row form-row--double">
+        <div>
+          {%-
+            liquid
+            assign label = 'customer.addresses.zip' | t
+            assign placeholder = 'customer.addresses.zip_placeholder' | t
+            assign id = 'AddressZip_' | append: form.id
+            capture attr
+              echo 'autocapitalize="characters"'
+              echo 'autocomplete="postal-code"'
+            endcapture
+            render 'text-input', label: label, placeholder: placeholder, id: id, attr: attr, name: 'address[zip]', value: form.zip, style: 'small', required: true
+            assign label = nil
+            assign placeholder = nil
+            assign attr = nil
+          -%}
+        </div>
+
+        <div>
+          {%-
+            liquid
+            assign label = 'customer.addresses.phone' | t
+            assign placeholder = 'customer.addresses.phone_placeholder' | t
+            assign id = 'AddressPhone_' | append: form.id
+            assign attr = 'autocomplete="tel" pattern="[0-9()\-+\s]+"'
+            render 'text-input', label: label, placeholder: placeholder, id: id, attr: attr, name: 'address[phone]', value: form.phone, type: 'tel', style: 'small'
+            assign label = nil
+            assign placeholder = nil
+          -%}
+        </div>
+      </div><!-- /.form-row form-row--double -->
+
+      {%- unless address == customer.default_address -%}
+        <div class="form-row">
+          {%-
+            liquid
+            assign id = 'address_default_address_' | append: address.id
+            assign label = 'customer.addresses.set_default' | t
+            render 'checkbox-input', id: id, label: label, name: 'address[default]'
+          -%}
+        </div><!-- /.form-row -->
+      {%- endunless -%}
+
+      <div class="form-row address-form__actions mt-l">
+        <div>
+          {%-
+            liquid
+            assign value = 'customer.addresses.add' | t
+            if address
+              assign value = 'customer.addresses.update_address' | t
+            endif
+            render 'button', value: value, type: 'submit', class: 'mb-xs mb-0--large'
+            assign value = 'customer.addresses.cancel' | t
+            assign attr = 'data-form-id="' | append: address_form_id | append: '"'
+            render 'button', type: 'link', href: '#', css: 'button', value: value, styles: 'outline', attr: attr
+          -%}
+        </div>
+      </div><!-- /.form-row address-form__actions -->
+    {%- endform -%}
+  </form-validation>
+</div><!-- /.address-form -->

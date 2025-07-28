@@ -1,0 +1,20 @@
+.list-socials {
+  margin-bottom: calc(calc(var(--spacing-step) * 2) * -1);
+}
+
+.list-socials li {
+  margin-right: calc(var(--spacing-step) * 3.5);
+}
+
+.list-socials a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(var(--spacing-step) * 5.5);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .list-socials a:hover {
+    opacity: 0.7;
+  }
+}

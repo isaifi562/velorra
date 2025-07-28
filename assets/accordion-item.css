@@ -1,0 +1,106 @@
+.accordion-item {
+  display: block;
+  border-bottom: 0.1rem solid var(--color-seperators);
+}
+
+.accordion-item summary {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-step);
+}
+
+.accordion-item summary img {
+  flex: 0 0 2.2rem;
+  width: 2.4rem;
+  height: auto;
+  max-height: 2.4rem;
+  object-fit: contain;
+}
+
+.accordion-item summary svg {
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  stroke-width: 1px;
+}
+
+.accordion-item summary span {
+  line-height: 2rem;
+}
+
+.accordion-item summary:before,
+.accordion-item summary:after {
+  content: '';
+  background-color: currentColor;
+  width: 1rem;
+  height: 0.1rem;
+  position: absolute;
+  top: 50%;
+  right: 0.3rem;
+  transform: translate3d(0, -50%, 0);
+  transform: translate3d(0, -50%, 0);
+}
+
+.accordion-item summary:after {
+  transform: translate3d(0, -50%, 0) rotate(90deg);
+  transition: transform var(--duration-default) ease-in-out;
+}
+
+.accordion-item details.is-open summary:after {
+  transform: translate3d(0, -50%, 0) rotate(360deg);
+}
+
+.accordion-item summary + * {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s ease-in-out, padding 0.5s ease-in-out;
+}
+
+.no-js .accordion-item summary + * {
+  display: block;
+}
+
+.accordion-item details.is-open summary + * {
+  grid-template-rows: 1fr;
+  padding-top: calc(var(--spacing-step) * 2);
+}
+
+/* ------------------------------------------------------------ *\
+  accordion-item--product
+\* ------------------------------------------------------------ */
+
+.accordion-item .accordion-item--product {
+  padding-bottom: var(--gap);
+}
+
+.accordion-item .accordion-item--product.is-open summary + * {
+  padding-top: var(--gap);
+}
+
+/* ------------------------------------------------------------ *\
+  accordion-item--facet
+\* ------------------------------------------------------------ */
+.accordion-item .accordion-item--facet summary {
+  padding-right: calc(var(--spacing-step) * 2);
+}
+
+.accordion-item .accordion-item--facet summary:before {
+  content: none;
+}
+
+.accordion-item .accordion-item--facet summary:after {
+  width: 1rem;
+  height: 1rem;
+  background-color: transparent;
+  border-bottom: 0.1rem solid currentColor;
+  border-right: 0.1rem solid currentColor;
+  transform: translate3d(0, -40%, 0) rotate(45deg);
+}
+
+.accordion-item .accordion-item--facet.is-open summary:after {
+  transform: translate3d(0, -14%, 0) rotate(225deg);
+}
+
+.accordion-item:has(.accordion-item--facet) {
+  margin-bottom: calc(var(--spacing-step) * 3);
+}

@@ -1,0 +1,326 @@
+<link rel="stylesheet" href="{{- 'component-badge.css' | asset_url -}}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{- 'component-form-elements.css' | asset_url -}}" media="print" onload="this.media='all'">
+{{- 'component-card-product.css' | asset_url | stylesheet_tag -}}
+
+<noscript>
+  {{- 'component-badge.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-form-elements.css' | asset_url | stylesheet_tag -}}
+</noscript>
+
+<script src="{{- 'component-card-product.js' | asset_url -}}" defer="defer"></script>
+
+{%-
+  liquid
+  assign collection_ref = collections[section.settings.collection]
+  assign container_class = 'container'
+  if section.settings.grid_fullwidth
+    assign container_class = container_class | append: ' container--fullwidth'
+  endif
+  if section.settings.grid_side_margins == false
+    assign container_class = container_class | append: ' container--no-gutter-desktop'
+  endif
+  if section.settings.grid_side_margins_mobile == false
+    assign container_class = container_class | append: ' container--no-gutter-mobile'
+  endif
+
+  assign style = ''
+  if section.settings.enable_custom_background
+    if section.settings.background_gradient != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_gradient | append: '"'
+    elsif section.settings.background_color != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_color | append: '"'
+    else
+      assign style = ''
+    endif
+  endif
+
+  capture style_classes
+    echo 'color-' | append: section.settings.style | append: ' color-background overflow-hidden '
+    echo section.settings.text_align | append: ' '
+    if style != ''
+      echo ' section-background'
+    endif
+  endcapture
+-%}
+
+<section class="collection products-grid {{ style_classes }} {{ section.settings.outer_spacing }} {{ section.settings.inner_spacing }}" {{ style }}>
+  {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+    <div class="collection__header center">
+      <div class="{{ container_class }}">
+        {%- render 'text-content',
+          inner_settings: section.settings,
+          heading_size_tag: 'h2',
+          heading_class: 'h2',
+          subheading_class: 'sh--2',
+          paragraph_class: 'p3',
+          class: 'products-grid__'
+        -%}
+      </div><!-- /.constainer -->
+    </div><!-- /.collection__header -->
+  {%- endif -%}
+
+  <div class="collection__grid pt-s pt-m--large pb-s pb-xxl--large" id="ProductGridContainer">
+    <div class="{{ container_class }}">
+      {%- if collection_ref == blank -%}
+        <div class="collection__grid-items list-unstyled grid grid--row-gap-s" id="product-grid" data-id="{{- section.id -}}">
+          {%-
+            liquid
+            for index in (1..3)
+              assign grid_item_class = 'grid__item grid__item--xs-6'
+              if section.settings.products_per_row_mobile == '2'
+                assign grid_item_class = grid_item_class | append: ' grid__item--2'
+              endif
+              if section.settings.products_per_row_desktop == '3'
+                assign grid_item_class = grid_item_class | append: ' grid__item--s-4'
+              elsif section.settings.products_per_row_desktop == '4'
+              assign grid_item_class = grid_item_class | append: ' grid__item--s-4 grid__item--m-3'
+              endif
+              render 'card-product', class: grid_item_class
+            endfor
+          -%}
+        </div><!-- /#product-grid.collection__grid-items list-unstyled grid grid--row-gap-s -->
+
+      {%- elsif collection_ref.products_count == 0 -%}
+        <div class="center">
+          <h2 class="h3 regular">
+            {{- 'collection.empty' | t -}}
+          </h2><!-- /.h3 regular -->
+
+          <p class="p3">{{- 'collection.use_fewer_filters_html' | t: url: collection_ref.url -}}</p>
+        </div>
+
+      {%- else -%}
+        <div class="collection__grid-items list-unstyled grid grid--row-gap-s" id="product-grid" data-id="{{- section.id -}}">
+          {%-
+            liquid
+            for product_ref in collection_ref.products limit: section.settings.products_per_page
+              assign current_variant = nil
+              assign grid_item_class = 'grid__item grid__item--xs-6'
+              if section.settings.products_per_row_mobile == '2'
+                assign grid_item_class = grid_item_class | append: ' grid__item--2'
+              endif
+              if section.settings.products_per_row_desktop == '3'
+                assign grid_item_class = grid_item_class | append: ' grid__item--s-4'
+              elsif section.settings.products_per_row_desktop == '4'
+              assign grid_item_class = grid_item_class | append: ' grid__item--s-4 grid__item--m-3'
+              endif
+              render 'card-product', product_ref: product_ref, class: grid_item_class, collection_ref: collection_ref, current_variant: current_variant
+            endfor
+          -%}
+        </div><!-- /#product-grid.collection__grid-items list-unstyled grid grid--row-gap-s -->
+      {%- endif -%}
+    </div><!-- /.container -->
+  </div><!-- /#ProductGridContainer.collection__grid -->
+
+  {%- if section.settings.cta_text != blank and section.settings.cta_url != blank -%}
+    <div class="collection__actions center">
+      <div class="{{ container_class }}">
+        {%- render 'button', type: 'link', value: section.settings.cta_text, href: section.settings.cta_url -%}
+      </div><!-- /.container -->
+    </div><!-- /.collection__actions -->
+  {%- endif -%}
+</section><!-- /.collection -->
+
+  {%- if section.settings.cta_text != blank and section.settings.cta_url != blank -%}
+    <div class="collection__actions center">
+      <div class="{{ container_class }}">
+        {%- render 'button', type: 'link', value: section.settings.cta_text, href: section.settings.cta_url -%}
+      </div><!-- /.container -->
+    </div><!-- /.collection__actions -->
+  {%- endif -%}
+</section><!-- /.collection -->
+
+{% schema %}
+{
+  "name": "t:sections.collection-products-grid.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "select",
+      "id": "outer_spacing",
+      "label": "t:sections.global.settings.outer-spacing.label",
+      "options": [
+        {
+          "value": "mt-0 mb-0 mt-0--large mb-0--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_1"
+        },
+        {
+          "value": "mt-s mb-s mt-s--large mb-s--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_2"
+        },
+        {
+          "value": "mt-l mb-l mt-l--large mb-l--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_3"
+        }
+      ],
+      "default": "mt-0 mb-0 mt-0--large mb-0--large"
+    },
+    {
+      "type": "select",
+      "id": "inner_spacing",
+      "label": "t:sections.global.settings.inner-spacing.label",
+      "options": [
+        {
+          "value": "spacing-none",
+          "label": "t:sections.global.settings.inner-spacing.options.option_1"
+        },
+        {
+          "value": "spacing-s spacing-s--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_2"
+        },
+        {
+          "value": "spacing-m spacing-m--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_3"
+        },
+        {
+          "value": "spacing-l spacing-l--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_4"
+        }
+      ],
+      "default": "spacing-s spacing-s--large"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.global.settings.subheading.label"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "t:sections.global.settings.heading.label",
+      "default": "<p></p>"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-collection.settings.header.products_grid.content"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:sections.collection-products-grid.settings.collection.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "grid_fullwidth",
+      "label": "t:sections.main-collection.settings.grid_fullwidth.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "grid_side_margins",
+      "label": "t:sections.main-collection.settings.grid_side_margins.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "grid_side_margins_mobile",
+      "label": "t:sections.main-collection.settings.grid_side_margins_mobile.label",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "products_per_row_mobile",
+      "label": "t:sections.main-collection.settings.products_per_row_mobile.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:sections.main-collection.settings.products_per_row_mobile.options.option_1"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.main-collection.settings.products_per_row_mobile.options.option_2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "products_per_row_desktop",
+      "label": "t:sections.main-collection.settings.products_per_row_desktop.label",
+      "options": [
+        {
+          "value": "2",
+          "label": "t:sections.main-collection.settings.products_per_row_desktop.options.option_1"
+        },
+        {
+          "value": "3",
+          "label": "t:sections.main-collection.settings.products_per_row_desktop.options.option_2"
+        },
+        {
+          "value": "4",
+          "label": "t:sections.main-collection.settings.products_per_row_desktop.options.option_3"
+        }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 3,
+      "max": 18,
+      "step": 1,
+      "label": "t:sections.collection-products-grid.settings.max_products.label",
+      "default": 9
+    },
+    {
+      "type": "header",
+      "content": "t:sections.collection-products-grid.settings.button.label"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "t:sections.collection-products-grid.settings.button.text"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "t:sections.collection-products-grid.settings.button.url"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.section_colors.header",
+      "info": "t:sections.global.settings.section_colors.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_background",
+      "label": "t:sections.global.settings.section_colors.checkbox",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.global.settings.section_colors.color"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "t:sections.global.settings.section_colors.gradient"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.collection-products-grid.name"
+    }
+  ]
+}
+{% endschema %}

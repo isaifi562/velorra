@@ -1,0 +1,310 @@
+{%-
+  liquid
+  capture recent_products
+    render 'get-parameter', param: 'handles'
+  endcapture
+  capture limit
+    render 'get-parameter', param: 'limit'
+  endcapture
+  assign recent_products = recent_products | split: ','
+  assign limit = limit | times: 1
+
+  assign style = ''
+  if section.settings.enable_custom_background
+    if section.settings.background_gradient != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_gradient | append: '"'
+    elsif section.settings.background_color != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_color | append: '"'
+    else
+      assign style = ''
+    endif
+  endif
+
+  capture style_classes
+    echo 'color-background overflow-hidden color-' | append: section.settings.style | append: ' ' | append: section.settings.outer_spacing | append: ' ' | append: section.settings.inner_spacing | append: ' '
+
+    if style != ''
+      echo ' section-background'
+    endif
+  endcapture
+-%}
+
+<link rel="stylesheet" href="{{ 'component-text-content.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-card-product.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-badge.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>
+  {{- 'component-text-content.css' | asset_url | stylesheet_tag -}}
+  {{- 'swiper-bundle.min.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-slider.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-card-product.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-badge.css' | asset_url | stylesheet_tag -}}
+</noscript>
+
+<script src="{{- 'swiper-bundle.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+<script src="{{- 'slider-component.js' | asset_url -}}" defer="defer" data-theme-script></script>
+<script src="{{- 'products-carousel.js' | asset_url -}}" defer="defer" data-theme-script></script>
+<script src="{{- 'component-card-product.js' | asset_url -}}" defer="defer" data-theme-script></script>
+<script src="{{- 'recently-viewed.js' | asset_url -}}" defer="defer" data-theme-script></script>
+
+<recently-viewed
+  class="section-featured-products block {{ style_classes }}"
+  data-container="recently-viewed"
+  data-section-id="{{- section.id -}}"
+  data-limit="{{- section.settings.products_count -}}"
+  {%- if request.page_type == 'product' -%}
+    data-product-handle="{{- product.handle -}}"
+  {%- endif -%}
+  {{ style }}
+>
+  <div class="container">
+    <div class="grid grid--row-gap-0">
+      {%-
+        liquid
+        assign show_multicolumn = false
+        assign has_text_content = false
+        if section.settings.layout == 'slider-right'
+          assign show_multicolumn = true
+        endif
+      -%}
+      {%- if section.settings.subheading != blank
+          or section.settings.heading != blank
+          or section.settings.paragraph != blank
+      -%}
+        {%- assign has_text_content = true -%}
+        <div class="grid__item grid__item--xs-12 pb-m {% if show_multicolumn %}grid__item--s-3 pt-0 pt-xl--large pb-0--large {% else %}grid__item--s-12 {% endif %}">
+          {%- render 'text-content',
+            inner_settings: section.settings,
+            heading_size_tag: 'h2',
+            heading_class: 'h4',
+            subheading_class: 'sh--2',
+            paragraph_class: 'p2' -%}
+        </div><!-- /.grid__item -->
+
+        {%- unless section.settings.layout != 'slider-right' and has_text_content -%}
+          <span class="grid__item grid__item--s-1 small-hide medium-hide"></span>
+        {%- endunless -%}
+      {%- endif -%}
+
+      <div class="grid__item grid__item--xs-12 {% if show_multicolumn and has_text_content %}grid__item--s-8{% else %}grid__item--s-12{% endif %}">
+        {%-
+          liquid
+          assign infinite_direction = 'both'
+          if show_multicolumn and has_text_content
+            assign infinite_direction = 'right'
+          endif
+
+          assign element = 'products-carousel'
+          assign style = 'default'
+          assign autoplay = section.settings.autoplay
+          assign autoplay_speed = section.settings.autoplay_speed
+          assign resources = resources | default: nil
+          assign class = 'products-feed products-feed--' | append: style
+          assign component_style = 'infinite-' | append: infinite_direction
+        -%}
+
+        {%- capture slider_attr -%}
+          data-autoplay="{{ autoplay }}"
+          data-autoplay-speed="{{ autoplay_speed | times: 1000 }}"
+        {%- endcapture -%}
+
+        {%- capture slider_html -%}
+          {%- for handle in recent_products limit: limit -%}
+            {%- assign _product = all_products[handle] -%}
+            <div class="swiper-slide">
+              {%- render 'card-product', product_ref: _product -%}
+            </div>
+          {%- endfor -%}
+        {%- endcapture -%}
+
+        {%-
+          render 'slider-component',
+          style: component_style,
+          content: slider_html,
+          element: element,
+          class: class,
+          attr: slider_attr,
+          paging_styles: 'left,large,spaced-top'
+        -%}
+      </div><!-- /.grid__item -->
+    </div><!-- /.grid -->
+  </div><!-- /.container -->
+</recently-viewed><!-- /.section-featured-products -->
+
+{% schema %}
+{
+  "name": "t:sections.recently-viewed.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.recently-viewed.settings.header.content",
+      "info": "t:sections.recently-viewed.settings.header.info"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "select",
+      "id": "outer_spacing",
+      "label": "t:sections.global.settings.outer-spacing.label",
+      "options": [
+        {
+          "value": "mt-0 mb-0 mt-0--large mb-0--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_1"
+        },
+        {
+          "value": "mt-s mb-s mt-s--large mb-s--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_2"
+        },
+        {
+          "value": "mt-l mb-l mt-l--large mb-l--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_3"
+        }
+      ],
+      "default": "mt-0 mb-0 mt-0--large mb-0--large"
+    },
+    {
+      "type": "select",
+      "id": "inner_spacing",
+      "label": "t:sections.global.settings.inner-spacing.label",
+      "options": [
+        {
+          "value": "spacing-none",
+          "label": "t:sections.global.settings.inner-spacing.options.option_1"
+        },
+        {
+          "value": "spacing-s spacing-s--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_2"
+        },
+        {
+          "value": "spacing-m spacing-m--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_3"
+        },
+        {
+          "value": "spacing-l spacing-l--large",
+          "label": "t:sections.global.settings.inner-spacing.options.option_4"
+        }
+      ],
+      "default": "spacing-s spacing-s--large"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:sections.featured-products.settings.layout.label",
+      "options": [
+        {
+          "value": "fullwidth",
+          "label": "t:sections.featured-products.settings.layout.options.option_1.label"
+        },
+        {
+          "value": "slider-right",
+          "label": "t:sections.featured-products.settings.layout.options.option_2.label"
+        }
+      ],
+      "default": "slider-right"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.featured-products.settings.header_content.content"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.global.settings.subheading.label"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "t:sections.global.settings.heading.label",
+      "default": "<p>Recently viewed</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "paragraph",
+      "label": "t:sections.global.settings.paragraph.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.featured-products.settings.header_slider.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "t:sections.featured-products.settings.autoplay.label",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "t:sections.featured-products.settings.autoplay_speed.label",
+      "unit": "s",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "products_count",
+      "min": 6,
+      "max": 10,
+      "step": 1,
+      "unit": "x",
+      "label": "t:sections.featured-products.settings.products_count.label",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.section_colors.header"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_background",
+      "label": "t:sections.global.settings.section_colors.checkbox",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.global.settings.section_colors.color"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "t:sections.global.settings.section_colors.gradient"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.recently-viewed.name"
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "*"
+    ],
+    "groups": [
+      "aside"
+    ]
+  }
+}
+{% endschema %}

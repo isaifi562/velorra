@@ -1,0 +1,21 @@
+{%-
+  liquid
+  # theme-check-disable ContentForHeaderModification
+  capture contentForQuerystring
+    echo content_for_header
+  endcapture
+  # theme-check-enable ContentForHeaderModification
+  assign param = param | default: ''
+  assign page_url = contentForQuerystring | split: '"pageurl":"' | last | split: '"' | first | split: '.myshopify.com' | last | replace: '\/', '/' | replace: '%20', ' ' | replace: '\u0026', '&'
+  assign keys = page_url | split: '?' | last | split: '&'
+  for key in keys
+    assign key_name = key | split: '=' | first
+    assign key_value = key | split: '=' | last
+    if key_name != param
+      continue
+    endif
+    echo key_value
+    break
+  endfor
+-%}
+

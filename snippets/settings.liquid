@@ -1,0 +1,253 @@
+{%- style -%}
+  {%- liquid
+    assign body_font_medium = settings.type_body_font | font_modify: 'weight', '+200'
+    assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
+    assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic'
+    assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+    assign colors_codes = settings.swatches_hex_codes | newline_to_br | strip_newlines | split: '<br />'
+  %}
+
+  {{ settings.type_body_font | font_face: font_display: 'swap' }}
+  {{ body_font_medium | font_face: font_display: 'swap' }}
+  {{ body_font_bold | font_face: font_display: 'swap' }}
+  {{ body_font_italic | font_face: font_display: 'swap' }}
+  {{ body_font_bold_italic | font_face: font_display: 'swap' }}
+  {{ settings.type_header_font | font_face: font_display: 'swap' }}
+
+  :root {
+    --font-body-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    --font-body-style: {{ settings.type_body_font.style }};
+    --font-body-weight: {{ settings.type_body_font.weight }};
+
+    --font-heading-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+    --font-heading-style: {{ settings.type_header_font.style }};
+    --font-heading-weight: {{ settings.type_header_font.weight }};
+
+    --font-heading-scale: {{ settings.heading_scale | times: 0.01 }};
+    --font-body-scale: {{ settings.body_scale | times: 0.01 }};
+
+    --color-base-primary: {{ settings.style_1_paragraphs_color }};
+    --color-base-primary-transparent-0: {{ settings.style_1_paragraphs_color | color_modify: 'alpha', 0 }};
+    --color-red: {{ settings.style_1_errors_color }};
+
+    --color-headings: {{ settings.style_1_headings_color }};
+    --color-headings-accent: {{ settings.style_1_headings_accent_color }};
+    --color-paragraphs: {{ settings.style_1_paragraphs_color }};
+    --color-shadows: {{ settings.style_1_paragraphs_color | color_modify: 'alpha', 0.2 }};
+
+    --color-background: {{ settings.style_1_background_color }};
+    --color-background-transparent-75: {{ settings.style_1_background_color | color_modify: 'alpha', 0.75 }};
+    --color-background-transparent-50: {{ settings.style_1_background_color | color_modify: 'alpha', 0.5 }};
+    --color-background-transparent-15: {{ settings.style_1_background_color | color_modify: 'alpha', 0.15 }};
+    --color-foreground-transparent-50: {{ settings.style_1_foreground_color | color_modify: 'alpha', 0.5 }};
+    --color-foreground-transparent-15: {{ settings.style_1_foreground_color | color_modify: 'alpha', 0.15 }};
+
+    --color-buttons-solid: {{ settings.style_1_buttons_solid_color }};
+    --color-background-buttons-solid: {{ settings.style_1_buttons_solid_background_color }};
+    --color-buttons-outline: {{ settings.style_1_buttons_outline_color }};
+    --color-border-buttons-outline: {{ settings.style_1_buttons_outline_border_color }};
+    --color-buttons-links: {{ settings.style_1_buttons_links_color }};
+
+    --color-slider-paging: {{ settings.style_1_sliders_paging_color }};
+    --color-slider-actions: {{ settings.style_1_sliders_actions_color }};
+    --color-background-slider-actions: {{ settings.style_1_sliders_actions_background_color }};
+
+    --color-seperators: {{ settings.style_1_seperators_color }};
+
+    --color-badge: {{ settings.style_1_badge_color }};
+    --color-background-badge: {{ settings.style_1_badge_background_color }};
+    --color-badge-sale: {{ settings.style_1_badge_sale_color }};
+    --color-background-badge-sale: {{ settings.style_1_badge_sale_background_color }};
+
+    --color-form-label: {{ settings.style_1_input_label_color }};
+    --color-form-input-placeholder: {{ settings.style_1_input_placeholder_color }};
+    --color-form-input-background: {{ settings.style_1_input_background_color }};
+    --color-form-errors: {{ settings.style_1_errors_color }};
+    --color-swatches: {{ settings.style_1_swatches_color }};
+    --color-swatches-unavailable: {{ settings.style_1_swatches_color | color_modify: 'alpha', 0.15 }};
+
+    --color-breadcrumbs-active: {{ settings.style_1_breadcrumbs_active_color }};
+    --color-breadcrumbs-inactive: {{ settings.style_1_breadcrumbs_inactive_color }};
+    --color-breadcrumbs-hover: {{ settings.style_1_breadcrumbs_hover_color }};
+
+    --color-progress-bar: {{ settings.style_1_progress_bar_color }};
+
+    {%- unless settings.swatches_use_image_assets -%}
+      {%- for color_code in colors_codes -%}
+        --color-swatch-{{ color_code | split: '=' | first | handleize }}: {{ color_code | split: '=' | last | strip }};
+      {%- endfor -%}
+    {%- endunless -%}
+
+    {%- if settings.pdp_swatches_size_mobile < 30 -%}
+      --swatch-padding: 2px;
+    {%- else -%}
+      --swatch-padding: 3px;
+    {%- endif -%}
+
+    {%- if settings.card_swatches_size_mobile < 30 -%}
+      --card-swatch-padding: 2px;
+    {%- else -%}
+      --card-swatch-padding: 3px;
+    {%- endif -%}
+
+    {%- if settings.filters_swatches_size_mobile < 30 -%}
+      --filters-swatch-padding: 2px;
+    {%- else -%}
+      --filters-swatch-padding: 3px;
+    {%- endif -%}
+
+    --page-width: 144rem;
+    --page-gap: 3.2rem;
+    --page-gap-desktop: 5.6rem;
+    --spacing-step: 0.8rem;
+    --header-without-announcements-offset: 7.3rem;
+    --header-offset: 11.5rem;
+
+    --duration-short: 200ms;
+    --duration-default: 300ms;
+    --duration-long: 500ms;
+    --duration-extra-long: 700ms;
+    --duration-slow: 1000ms;
+    --transition-cubic-bezier: cubic-bezier(0.51, 0, 0.34, 1.01);
+    --transition-cubic-bezier-v2: cubic-bezier(0.56, 0, 0, 1.01);
+
+    --border-radius-buttons: {{ settings.buttons_border_radius | times: 0.1 }}rem;
+
+    --border-radius-card-product: {% if settings.card_product_round_corners %}var(--spacing-step){% else %}0{% endif %};
+    --border-radius-badges: {{ settings.badges_border_radius | times: 0.1 }}rem;
+
+    --border-radius-form-inputs: {% if settings.boxed_items_round_corners %}calc(var(--spacing-step) * 5){% else %}0{% endif %};
+    --border-radius-pagination-link: {% if settings.boxed_items_round_corners %}calc(var(--spacing-step) / 2){% else %}0{% endif %};
+    --border-radius-variant-buttons: {% if settings.boxed_items_round_corners %}calc(var(--spacing-step) / 2){% else %}0{% endif %};
+    --border-radius-progress-bar: {% if settings.boxed_items_round_corners %}calc(var(--spacing-step) * 3){% else %}0{% endif %};
+
+    --border-radius-featured-cards: {% if settings.featured_cards_round_corners %}var(--spacing-step){% else %}0{% endif %};
+
+    --z-header: 400;
+    --z-announcement-bar: 10;
+    --z-modals: 800;
+  }
+
+  .color-style-2 {
+    --color-red: {{ settings.style_2_errors_color }};
+
+    --color-headings: {{ settings.style_2_headings_color }};
+    --color-headings-accent: {{ settings.style_2_headings_accent_color }};
+    --color-paragraphs: {{ settings.style_2_paragraphs_color }};
+    --color-shadows: {{ settings.style_2_paragraphs_color | color_modify: 'alpha', 0.2 }};
+
+    --color-background: {{ settings.style_2_background_color }};
+    --color-background-transparent-75: {{ settings.style_2_background_color | color_modify: 'alpha', 0.75 }};
+    --color-background-transparent-50: {{ settings.style_2_background_color | color_modify: 'alpha', 0.5 }};
+    --color-background-transparent-15: {{ settings.style_2_background_color | color_modify: 'alpha', 0.15 }};
+    --color-foreground-transparent-50: {{ settings.style_2_foreground_color | color_modify: 'alpha', 0.5 }};
+    --color-foreground-transparent-15: {{ settings.style_2_foreground_color | color_modify: 'alpha', 0.15 }};
+
+    --color-buttons-solid: {{ settings.style_2_buttons_solid_color }};
+    --color-background-buttons-solid: {{ settings.style_2_buttons_solid_background_color }};
+    --color-buttons-outline: {{ settings.style_2_buttons_outline_color }};
+    --color-border-buttons-outline: {{ settings.style_2_buttons_outline_border_color }};
+    --color-buttons-links: {{ settings.style_2_buttons_links_color }};
+
+    --color-slider-paging: {{ settings.style_2_sliders_paging_color }};
+    --color-slider-actions: {{ settings.style_2_sliders_actions_color }};
+    --color-background-slider-actions: {{ settings.style_2_sliders_actions_background_color }};
+
+    --color-seperators: {{ settings.style_2_seperators_color }};
+
+    --color-badge: {{ settings.style_2_badge_color }};
+    --color-background-badge: {{ settings.style_2_badge_background_color }};
+    --color-badge-sale: {{ settings.style_2_badge_sale_color }};
+    --color-background-badge-sale: {{ settings.style_2_badge_sale_background_color }};
+
+    --color-form-label: {{ settings.style_2_input_label_color }};
+    --color-form-input-placeholder: {{ settings.style_2_input_placeholder_color }};
+    --color-form-input-background: {{ settings.style_2_input_background_color }};
+    --color-form-errors: {{ settings.style_2_errors_color }};
+    --color-swatches: {{ settings.style_2_swatches_color }};
+    --color-swatches-unavailable: {{ settings.style_2_swatches_color | color_modify: 'alpha', 0.15 }};
+
+    --color-breadcrumbs-active: {{ settings.style_2_breadcrumbs_active_color }};
+    --color-breadcrumbs-inactive: {{ settings.style_2_breadcrumbs_inactive_color }};
+    --color-breadcrumbs-hover: {{ settings.style_2_breadcrumbs_hover_color }};
+
+    --color-progress-bar: {{ settings.style_2_progress_bar_color }};
+  }
+
+  .color-style-3 {
+    --color-red: {{ settings.style_3_errors_color }};
+
+    --color-headings: {{ settings.style_3_headings_color }};
+    --color-headings-accent: {{ settings.style_3_headings_accent_color }};
+    --color-paragraphs: {{ settings.style_3_paragraphs_color }};
+    --color-shadows: {{ settings.style_3_paragraphs_color | color_modify: 'alpha', 0.2 }};
+
+    --color-background: {{ settings.style_3_background_color }};
+    --color-background-transparent-75: {{ settings.style_3_background_color | color_modify: 'alpha', 0.75 }};
+    --color-background-transparent-50: {{ settings.style_3_background_color | color_modify: 'alpha', 0.5 }};
+    --color-background-transparent-15: {{ settings.style_3_background_color | color_modify: 'alpha', 0.15 }};
+    --color-foreground-transparent-50: {{ settings.style_3_foreground_color | color_modify: 'alpha', 0.5 }};
+    --color-foreground-transparent-15: {{ settings.style_3_foreground_color | color_modify: 'alpha', 0.15 }};
+
+    --color-buttons-solid: {{ settings.style_3_buttons_solid_color }};
+    --color-background-buttons-solid: {{ settings.style_3_buttons_solid_background_color }};
+    --color-buttons-outline: {{ settings.style_3_buttons_outline_color }};
+    --color-border-buttons-outline: {{ settings.style_3_buttons_outline_border_color }};
+    --color-buttons-links: {{ settings.style_3_buttons_links_color }};
+
+    --color-slider-paging: {{ settings.style_3_sliders_paging_color }};
+    --color-slider-actions: {{ settings.style_3_sliders_actions_color }};
+    --color-background-slider-actions: {{ settings.style_3_sliders_actions_background_color }};
+
+    --color-seperators: {{ settings.style_3_seperators_color }};
+
+    --color-badge: {{ settings.style_3_badge_color }};
+    --color-background-badge: {{ settings.style_3_badge_background_color }};
+    --color-badge-sale: {{ settings.style_3_badge_sale_color }};
+    --color-background-badge-sale: {{ settings.style_3_badge_sale_background_color }};
+
+    --color-form-label: {{ settings.style_3_input_label_color }};
+    --color-form-input-placeholder: {{ settings.style_3_input_placeholder_color }};
+    --color-form-input-background: {{ settings.style_3_input_background_color }};
+    --color-form-errors: {{ settings.style_3_errors_color }};
+    --color-swatches: {{ settings.style_3_swatches_color }};
+    --color-swatches-unavailable: {{ settings.style_3_swatches_color | color_modify: 'alpha', 0.15 }};
+
+    --color-breadcrumbs-active: {{ settings.style_3_breadcrumbs_active_color }};
+    --color-breadcrumbs-inactive: {{ settings.style_3_breadcrumbs_inactive_color }};
+    --color-breadcrumbs-hover: {{ settings.style_3_breadcrumbs_hover_color }};
+
+    --color-progress-bar: {{ settings.style_3_progress_bar_color }};
+  }
+
+  @media screen and (min-width: 990px) {
+    :root {
+      {%- if settings.pdp_swatches_size < 30 -%}
+        --swatch-padding: 2px;
+      {%- else -%}
+        --swatch-padding: 3px;
+      {%- endif -%}
+
+      {%- if settings.card_swatches_size < 30 -%}
+        --card-swatch-padding: 2px;
+      {%- else -%}
+        --card-swatch-padding: 3px;
+      {%- endif -%}
+
+      {%- if settings.filters_swatches_size < 30 -%}
+        --filters-swatch-padding: 2px;
+      {%- else -%}
+        --filters-swatch-padding: 3px;
+      {%- endif -%}
+    }
+  }
+
+  {%- unless settings.swatches_use_image_assets -%}
+    {%- for color_code in colors_codes -%}
+      {%- assign swatch_name = color_code | split: '=' | first | handleize -%}
+      .swatch--{{ swatch_name }} {
+        color: var(--color-swatch-{{ swatch_name }});
+      }
+    {%- endfor -%}
+  {%- endunless -%}
+{%- endstyle -%}

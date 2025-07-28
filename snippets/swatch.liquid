@@ -1,0 +1,187 @@
+{%- comment -%}
+  Info:
+  Renders a swatch input
+
+  Accepts:
+  - image {Object} filter value ImageDrop object - overwrites settings swatches
+  - swatch {Object} SwatchDrop object - overwrites settings swatches
+  - swatch_id {String} An ID for the input/label
+  - swatch_value {String} Swatch value
+  - type {String} Input type
+  - name {String} Input name
+  - context {String} Context
+  - input_attr {String} HTML attributes for the input
+  - checked {Boolean} Input checked
+  - disabled {Boolean} Input disabled
+  - class {String} Swatch class
+  - swatch_type {String} Swatch type. Accepts: 'color', 'button'. Defaults to: 'color'
+  - size {String} The size of the swatch, when type is 'color'. Accepts: 'large'
+  - placement_context {String} The location of the swatch. Accepts: 'product', 'card', 'filter'
+  - variants_for_image {Variants Array} For displaying the swatch image
+  - option_idx { Number } Option position for finding swatch image
+
+  Usage:
+{%- endcomment -%}
+
+{%-
+  liquid
+  assign swatch_id = swatch_id | default: ''
+  assign swatch_value = swatch_value | default: false
+  assign context = context | default: ''
+  assign input_attr = input_attr | default: false
+  assign type = type | default: 'radio'
+  assign swatch_type = swatch_type | default: 'color'
+  assign option_name = option_name | default: 'color'
+  assign default_name = 'Product-Swatch-' | append: swatch_id | append: '--Context-' | append: context | append: '--' | append: option_name
+  assign name = name | default: default_name
+  assign checked = checked | default: false
+
+  comment
+    Swatch values from settings.
+  endcomment
+  assign swatch_value_downcased = swatch_value | handleize
+  assign color_codes_array = settings.swatches_hex_codes | newline_to_br | strip_newlines | split: '<br />'
+  assign colors_keys = ''
+  for color in color_codes_array
+    assign color_name = color | split: '=' | first | strip
+    assign colors_keys = colors_keys | append: color_name
+    unless forloop.last
+      assign colors_keys = colors_keys | append: ','
+    else
+      assign colors_keys = colors_keys | split: ','
+    endunless
+  endfor
+  assign class = class | default: 'swatch'
+  assign placement_context = placement_context | default: 'product'
+
+  case placement_context
+    when 'product'
+      assign style_type = settings.pdp_swatches_type
+      assign size = settings.pdp_swatches_size
+      assign mobile_size = settings.pdp_swatches_size_mobile
+      assign shape = settings.pdp_swatches_shape
+
+    when 'card'
+      assign style_type = settings.card_swatches_type
+      assign size = settings.card_swatches_size
+      assign mobile_size = settings.card_swatches_size_mobile
+      assign shape = settings.card_swatches_shape
+
+    else
+      assign style_type = settings.filters_swatches_type
+      assign size = settings.filters_swatches_size
+      assign mobile_size = settings.filters_swatches_size_mobile
+      assign shape = settings.filters_swatches_shape
+
+      if image != blank
+        assign style_type = settings.filters_icon_swatches_type
+        assign size = settings.filters_swatches_icon_size
+        assign mobile_size = settings.filters_swatches_icon_size_mobile
+        assign shape = settings.filters_icon_swatches_shape
+      endif
+  endcase
+
+
+  assign swatch_image_size = size | times: 2
+  assign variant_image = nil
+
+  comment
+    Find variant image.
+  endcomment
+  if option_idx and variants_for_image
+    assign option_setting = 'option' | append: option_idx
+    for variant in variants_for_image
+      if variant[option_setting] == swatch_value and variant.image != blank
+        assign variant_image = variant.image
+        break
+      endif
+    endfor
+  endif
+-%}
+
+{% comment %}
+  Style attributes.
+{% endcomment %}
+{%- capture style_attributes -%}
+  {% # Assume image only comes from a filter object %}
+  {%- if image != blank -%}
+    {%- assign img_url = image | image_url: width: swatch_image_size -%}
+
+    background-image: url({{ img_url }});
+    background-size: contain;
+
+  {%- elsif style_type == 'variant_images' and variant_image != blank -%}
+    {%- assign img_url = variant_image | image_url: width: swatch_image_size -%}
+
+    background-image: url({{ img_url }});
+
+  {%- elsif colors_keys contains swatch_value -%}
+    {%- liquid
+      assign color_codes = settings.swatches_hex_codes | newline_to_br | strip_newlines | split: '<br />'
+
+      for color_code in color_codes
+        unless color_code contains swatch_value
+          continue
+        endunless
+
+        assign color_codes_swatch_value = color_code | split: swatch_value | last | remove_first: '=' | strip
+
+        if color_codes_swatch_value contains '.'
+          assign img_url = color_codes_swatch_value | file_img_url: width: swatch_image_size
+        endif
+
+        break
+      endfor
+    -%}
+
+    {%- if img_url -%}
+      background-image: url({{ img_url }});
+    {%- endif -%}
+
+  {%- elsif swatch != blank -%}
+    {%- assign img_url = swatch.image | image_url: width: swatch_image_size -%}
+
+    background-image: url({{ img_url }});
+    background-color: {{ swatch.color }};
+
+  {%- else -%}
+    background-color: {{ swatch_value_downcased | replace: '-', '' }};
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- if swatch_value -%}
+  <div
+    class="{{- class -}}__holder shape-{{ shape }}"
+    {%- if swatch_type == 'color' -%}
+      style="--swatch-size: {{ size }}px; --swatch-size-mobile: {{ mobile_size }}px"
+    {%- endif -%}
+  >
+    <input
+      type="{{ type }}"
+      name="{{ name }}"
+      id="Product-Swatch-{{- swatch_id -}}--Context-{{- context -}}-Value--{{- swatch_value | handle -}}"
+      value="{{- swatch_value | escape -}}"
+      class="visually-hidden"
+      {% if input_attr %}{{ input_attr }}{% endif %}
+      {% if checked %}checked{% endif %}
+      {% if disabled %}disabled{% endif %}
+      {% if swatch_type == 'color' %}data-type="color"{% endif %}
+    >
+
+    <label
+      for="Product-Swatch-{{- swatch_id -}}--Context-{{- context -}}-Value--{{- swatch_value | handle -}}"
+      class="{{ class }} {{ class }}--{{ swatch_value_downcased }} {{ class }}--{{ size }} motion-reduce"
+      aria-label="{{- swatch_value -}}"
+      focusable="false"
+    >
+      {%- if swatch_type == 'color' -%}
+        <span
+          class="{{ class }}__indicator"
+          style="{{ style_attributes }}"
+        >{{- swatch_value -}}</span>
+      {%- else -%}
+        <span class="p3">{{- swatch_value -}}</span>
+      {%- endif -%}
+    </label>
+  </div>
+{%- endif -%}

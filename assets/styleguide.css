@@ -1,0 +1,14 @@
+.styleguide {
+  background-color: var(--color-background);
+}
+
+.styleguide__badge {
+  background-color: #eee;
+  padding: 0.4rem 1rem;
+  border: 0.1rem solid #ccc;
+  border-radius: 0.4rem;
+}
+
+.styleguide h2 {
+  color: blue;
+}

@@ -1,0 +1,228 @@
+{%-
+  liquid
+  assign style = ''
+  if section.settings.enable_custom_background
+    if section.settings.background_gradient != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_gradient | append: '"'
+    elsif section.settings.background_color != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_color | append: '"'
+    else
+      assign style = ''
+    endif
+  endif
+
+  assign shape_style = section.settings.shape_style
+  if shape_style == 'custom' and section.settings.image == blank
+    assign shape_style = 'angular-lines'
+  endif
+  capture separator_icon
+    render 'icon-patterns' with shape_style as icon
+  endcapture
+  assign text_color = section.settings.shape_color
+  assign separator_icon = separator_icon | replace: '{textColor}', text_color | url_param_escape
+  capture style_classes
+    echo 'color-' | append: section.settings.style | append: ' '
+    echo 'color-background '
+    if shape_style == 'custom' and section.settings.image != blank
+      echo 'separator--has-image pt-m pb-m '
+    endif
+    echo 'separator--offset-' | append: section.settings.overlay_sections | append: ' '
+    if style != ''
+      echo ' section-background'
+    endif
+  endcapture
+-%}
+
+<link rel="stylesheet" href="{{ 'section-separator.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>
+  {{- 'section-separator.css' | asset_url | stylesheet_tag -}}
+</noscript>
+
+{% style %}
+  .separator-{{- section.id }} {
+    {% case shape_style %}
+      {% when 'angular-lines' %}
+        --image-height: 9.2rem;
+        --image-height-mobile: 6.7rem;
+      {% when 'triangles' %}
+        --image-height: 7rem;
+        --image-height-mobile: 2.2rem;
+      {% when 'arrows' %}
+        --image-height: 11.5rem;
+        --image-height-mobile: 4.8rem;
+      {% when 'wave' %}
+        --image-height: 7rem;
+        --image-height-mobile: 3.7rem;
+      {% else %}
+        --image-height: {{- section.settings.height | times: 0.1 -}}rem;
+        --image-height-mobile: {{- section.settings.height_mobile | times: 0.1 -}}rem;
+    {% endcase %}
+  }
+  .separator-{{- section.id }} .separator__image {
+    {% if shape_style == 'custom' and section.settings.image != blank %}
+      background-image: url({{- section.settings.image | image_url: width: section.settings.image.width, height: section.settings.image.height -}});
+    {% else %}
+      background-image: url('data:image/svg+xml;utf-8,{{- separator_icon -}}');
+    {% endif %}
+  }
+{% endstyle %}
+
+<div class="separator separator-{{- section.id }} {{ style_classes -}}" {{ style }}>
+  <div class="separator__wrapper overflow-hidden">
+    <span class="block separator__image"></span><!-- /.separator__image -->
+  </div><!-- /.separator__wrapper -->
+</div><!-- /.separator -->
+
+{% schema %}
+{
+  "name": "t:sections.separator.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.separator.settings.header_size.content",
+      "info": "t:sections.separator.settings.header_size.info"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "min": 20,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "t:sections.separator.settings.height.label",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 50,
+      "label": "t:sections.separator.settings.height_mobile.label",
+      "info": "t:sections.separator.settings.height_mobile.info"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.separator.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1",
+      "info": "t:sections.separator.settings.style.info"
+    },
+    {
+      "type": "select",
+      "id": "shape_style",
+      "label": "t:sections.separator.settings.shape_style.label",
+      "options": [
+        {
+          "value": "angular-lines",
+          "label": "t:sections.separator.settings.shape_style.options.option_1.label"
+        },
+        {
+          "value": "triangles",
+          "label": "t:sections.separator.settings.shape_style.options.option_2.label"
+        },
+        {
+          "value": "arrows",
+          "label": "t:sections.separator.settings.shape_style.options.option_3.label"
+        },
+        {
+          "value": "wave",
+          "label": "t:sections.separator.settings.shape_style.options.option_4.label"
+        },
+        {
+          "value": "custom",
+          "label": "t:sections.separator.settings.shape_style.options.option_5.label"
+        },
+        {
+          "value": "none",
+          "label": "t:sections.separator.settings.shape_style.options.option_6.label"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "color",
+      "id": "shape_color",
+      "label": "t:sections.separator.settings.shape_color.label",
+      "default": "#000"
+    },
+    {
+      "type": "select",
+      "id": "overlay_sections",
+      "label": "t:sections.separator.settings.overlay_sections.label",
+      "options": [
+        {
+          "value": "top-and-bottom",
+          "label": "t:sections.separator.settings.overlay_sections.options.option_1.label"
+        },
+        {
+          "value": "none",
+          "label": "t:sections.separator.settings.overlay_sections.options.option_2.label"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.section_colors.header",
+      "info": "t:sections.separator.settings.section_colors.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_background",
+      "label": "t:sections.global.settings.section_colors.checkbox",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.global.settings.section_colors.color"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "t:sections.global.settings.section_colors.gradient"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.separator.settings.header_custom_separator.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.global.settings.image.label",
+      "info": "t:sections.separator.settings.image.info"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.separator.name"
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "*"
+    ],
+    "groups": [
+      "aside"
+    ]
+  }
+}
+{% endschema %}

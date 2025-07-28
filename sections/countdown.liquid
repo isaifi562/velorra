@@ -1,0 +1,487 @@
+{%-
+  liquid
+  assign resources = section.settings.collection_list | default: section.settings.product_list
+  if resources.count > 1
+    echo 'swiper-bundle.min.css' | asset_url | stylesheet_tag: preload: true
+    echo 'component-slider.css' | asset_url | stylesheet_tag: preload: true
+  endif
+-%}
+
+<script src="{{- 'countdown-timer.js' | asset_url -}}" defer="defer" data-theme-script></script>
+{%- unless resources != blank -%}
+  <script src="{{- 'swiper-bundle.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'slider-component.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'products-carousel.js' | asset_url -}}" defer="defer" data-theme-script></script>
+{%- endunless -%}
+
+{%- if section.settings.collection_list != blank -%}
+  <link rel="stylesheet" href="{{- 'component-card-collection.css' | asset_url -}}" media="print" onload="this.media='all'">
+
+  <noscript>
+    {{- 'component-card-collection.css' | asset_url | stylesheet_tag -}}
+  </noscript>
+{%- elsif section.settings.product_list != blank -%}
+  <link rel="stylesheet" href="{{- 'component-badge.css' | asset_url -}}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{- 'component-card-product.css' | asset_url -}}" media="print" onload="this.media='all'">
+
+  <noscript>
+    {{- 'component-card-product.css' | asset_url | stylesheet_tag -}}
+    {{- 'component-badge.css' | asset_url | stylesheet_tag -}}
+  </noscript>
+
+  <script src="{{- 'component-card-product.js' | asset_url -}}" defer="defer" data-theme-script></script>
+{%- endif -%}
+
+<link rel="stylesheet" href="{{- 'section-countdown.css' | asset_url -}}" media="print" onload="this.media='all'">
+
+<noscript>
+  {{- 'section-countdown.css' | asset_url | stylesheet_tag -}}
+</noscript>
+
+{%-
+  liquid
+  assign style_classes = 'countdown--content-' | append: section.settings.layout | append: ' color-' | append: section.settings.style | append: ' ' | append: section.settings.outer_spacing | append: ' color-background color-paragraphs'
+  if section.settings.show_background
+    assign style_classes = style_classes | append: ' countdown--content-has-background'
+  endif
+  if resources == blank
+    assign style_classes = style_classes | append: ' countdown--no-resources'
+  endif
+-%}
+
+<countdown-timer class="countdown {{ style_classes }}" data-current-time="{{ 'now' | date: '%s' | times: 1000 }}">
+  <div class="grid grid--row-gap-s">
+    {%- if section.settings.title != blank and section.settings.expiration_date != blank -%}
+      {%-
+        liquid
+        assign banner_grid_class = ''
+        if resources != blank
+          if resources.count == 1
+            assign banner_grid_class = 'grid__item--xs-8 grid__item--s-8 grid__item--m-8 grid__item--lg-8'
+          else
+            assign banner_grid_class = 'grid__item--xs-6 grid__item--s-6 grid__item--m-4 grid__item--lg-4'
+          endif
+        else
+          assign banner_grid_class = 'grid__item--xs-12 grid__item--s-12 grid__item--m-12 grid__item--lg-12'
+        endif
+        assign now_date = 'now' | date: '%s'
+        assign end_date = section.settings.expiration_date | date: '%s'
+        assign date_diff = end_date | minus: now_date
+      -%}
+
+      <div class="grid__item {{ banner_grid_class }}">
+        <div class="countdown__banner">
+          <div class="countdown__media media">
+            {%-
+              liquid
+              if section.settings.image != blank
+                assign image_mobile = section.settings.image_mobile | default: section.settings.image
+                assign image_src = section.settings.image | image_url: width: 500
+                capture image_srcset
+                  render 'srcset', image: section.settings.image
+                endcapture
+                assign image_alt = section.settings.image.alt | escape
+                render 'image', src: image_src, srcset: image_srcset, sizes: '100vw', alt: image_alt, width: section.settings.image.width, height: section.settings.image.height, class: 'small-hide', focal_point: section.settings.image.presentation.focal_point
+
+                assign image_mobile_src = image_mobile | image_url: width: 500
+                capture image_mobile_srcset
+                  render 'srcset', image: image_mobile
+                endcapture
+                assign image_mobile_alt = image_mobile.alt | escape
+                render 'image', src: image_mobile_src, srcset: image_mobile_srcset, sizes: '100vw', alt: image_mobile_alt, width: image_mobile.width, height: image_mobile.height, class: 'medium-hide large-up-hide', focal_point: section.settings.image_mobile.presentation.focal_point
+              else
+                echo 'image' | placeholder_svg_tag
+              endif
+            -%}
+          </div><!-- /.countdown__media media -->
+
+          <div class="countdown__content__wrapper">
+            <div class="container">
+              <div class="countdown__content">
+                {%- if section.settings.subheading != blank -%}
+                  <p class="countdown__pretitle sh sh--3 mt-0 mb-xs color-headings{% if date_diff <= 0 %} hidden{% endif %}" data-subheading>
+                    {{- section.settings.subheading | escape -}}
+                  </p><!-- /.countdown__pretitle sh sh--3 -->
+                {%- endif -%}
+
+                <h2 class="countdown__title mb-0 mt-0 color-headings {{ section.settings.heading_size }}">
+                  {{- section.settings.title
+                    | replace: '<p>', ''
+                    | replace: '</p>', ''
+                    | replace: '<ul>', ''
+                    | replace: '</ul>', ''
+                    | replace: '<li>', '<br>'
+                    | replace: '</li>', '' -}}
+                </h2><!-- /.countdown__title h2 -->
+
+                {%- if section.settings.expire_text != blank -%}
+                  <p class="countdown__subtitle p2 mt-xs mb-0{% if date_diff > 0 %} hidden{% endif %}" data-expire-text>
+                    {{- section.settings.expire_text | escape -}}
+                  </p><!-- /.countdown__subtitle p2 -->
+                {%- endif -%}
+
+                <time
+                  datetime="{{- section.settings.expiration_date | date: '%s' | times: 1000 -}}"
+                  class="countdown__counter mt-s mt-m--large"
+                  {% if date_diff > 0 %}data-expire-date{% endif %}
+                >
+                  <span class="countdown__counter-item">
+                    <span class="countdown__counter-value h2 color-headings" data-counter-days>
+                      {%-
+                        liquid
+                        if date_diff > 0
+                          assign days = date_diff | divided_by: 60 | divided_by: 60 | divided_by: 24
+                          if days < 10
+                            echo days | prepend: '0'
+                          else
+                            echo days
+                          endif
+                        else
+                          echo '00'
+                        endif
+                      -%}
+                    </span>
+
+                    <span class="countdown__counter-unit p4">
+                      {{- 'date.days' | t -}}
+                    </span>
+                  </span>
+
+                  <span class="countdown__counter-seperator h2">:</span>
+
+                  <span class="countdown__counter-item">
+                    <span class="countdown__counter-value h2 color-headings" data-counter-hours>
+                      {%-
+                        liquid
+                        if date_diff > 0
+                          assign days_timestamp = 60 | times: 60 | times: 24
+                          assign hours_timestamp = 60 | times: 60
+                          assign hours = date_diff | modulo: days_timestamp | divided_by: hours_timestamp
+                          if hours < 10
+                            echo hours | prepend: '0'
+                          else
+                            echo hours
+                          endif
+                        else
+                          echo '00'
+                        endif
+                      -%}
+                    </span>
+
+                    <span class="countdown__counter-unit p4">
+                      {{- 'date.hours' | t -}}
+                    </span>
+                  </span>
+
+                  <span class="countdown__counter-seperator h2">:</span>
+
+                  <span class="countdown__counter-item">
+                    <span class="countdown__counter-value h2 color-headings" data-counter-minutes>
+                      {%-
+                        liquid
+                        if date_diff > 0
+                          assign minutes = date_diff | modulo: hours_timestamp | divided_by: 60
+                          if minutes < 10
+                            echo minutes | prepend: '0'
+                          else
+                            echo minutes
+                          endif
+                        else
+                          echo '00'
+                        endif
+                      -%}
+                    </span>
+
+                    <span class="countdown__counter-unit p4">
+                      {{- 'date.minutes' | t -}}
+                    </span>
+                  </span>
+
+                  <span class="countdown__counter-seperator h2">:</span>
+
+                  <span class="countdown__counter-item">
+                    <span class="countdown__counter-value h2 color-headings" data-counter-seconds>
+                      {%-
+                        liquid
+                        if date_diff > 0
+                          assign seconds = date_diff | modulo: 60
+                          if seconds < 10
+                            echo seconds | prepend: '0'
+                          else
+                            echo seconds
+                          endif
+                        else
+                          echo '00'
+                        endif
+                      -%}
+                    </span>
+
+                    <span class="countdown__counter-unit p4">
+                      {{- 'date.seconds' | t -}}
+                    </span>
+                  </span>
+                </time>
+
+                {%- if section.settings.offer_link_text != blank and section.settings.offer_link_url != blank -%}
+                  <div class="countdown__actions mt-s mt-m--large{% if date_diff <= 0 %} hidden{% endif %}" data-offer-link>
+                    {%- render 'button', type: 'link', href: section.settings.offer_link_url, value: section.settings.offer_link_text -%}
+                  </div><!-- /.countdown__actions -->
+                {%- endif -%}
+
+                {%- if section.settings.expired_link_text != blank and section.settings.expired_link_url != blank -%}
+                  <div class="countdown__actions mt-s mt-m--large{% if date_diff > 0 %} hidden{% endif %}" data-expired-link>
+                    {%- render 'button', type: 'link', href: section.settings.expired_link_url, value: section.settings.expired_link_text -%}
+                  </div><!-- /.countdown__actions -->
+                {%- endif -%}
+              </div><!-- /.countdown__content -->
+            </div><!-- /.container -->
+          </div><!-- /.countdown__content__wrapper -->
+        </div><!-- /.countdown__banner -->
+      </div><!-- /.grid__item -->
+    {%- endif -%}
+
+    {%- if resources != blank -%}
+      {%-
+        liquid
+        assign resources_grid_class = ''
+        if resources.count == 1
+          assign resources_grid_class = 'grid__item--xs-4 grid__item--s-4 grid__item--m-4 grid__item--lg-4'
+        else
+          assign resources_grid_class = 'grid__item--xs-6 grid__item--s-6 grid__item--m-8 grid__item--lg-8'
+        endif
+        assign resources_html = ''
+        assign resources_type_class = 'countdown__resources'
+        if section.settings.collection_list != blank
+          assign resources_type_class = resources_type_class | append: ' countdown__resources--collections'
+        else
+          assign resources_type_class = resources_type_class | append: ' countdown__resources--products'
+        endif
+        for resource in resources
+          if resources.count > 1
+            assign resource_class = 'swiper-slide'
+          endif
+          capture resources_html
+            echo resources_html
+            if resources == section.settings.collection_list
+              render 'card-collection', image: resource.featured_image, title: resource.title, url: resource.url, card_content_layout: 'overlay', class: resource_class, show_title: true
+              continue
+            endif
+
+            render 'card-product', product_ref: resource, class: resource_class
+          endcapture
+        endfor
+      -%}
+      <div class="grid__item {{ resources_grid_class }}">
+        {%-
+          liquid
+          if resources.count > 1
+            assign slider_attr = 'data-slides-per-view-desktop="2"'
+            if section.settings.collection_list != blank
+              assign slider_attr = slider_attr | prepend: 'data-slides-per-view="1"'
+            endif
+            render 'slider-component', element: 'products-carousel', content: resources_html, class: resources_type_class, paging_styles: 'large', attr: slider_attr
+          else
+            echo '<div class="' | append: resources_type_class | append: '">'
+            echo resources_html
+            echo '</div>'
+          endif
+        -%}
+      </div><!-- /.grid__item -->
+    {%- endif -%}
+  </div><!-- /.grid -->
+</countdown-timer><!-- /.countdown -->
+
+{% schema %}
+{
+  "name": "t:sections.countdown.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "select",
+      "id": "outer_spacing",
+      "label": "t:sections.global.settings.outer-spacing.label",
+      "options": [
+        {
+          "value": "mt-0 mb-0 mt-0--large mb-0--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_1"
+        },
+        {
+          "value": "mt-s mb-s mt-s--large mb-s--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_2"
+        },
+        {
+          "value": "mt-l mb-l mt-l--large mb-l--large",
+          "label": "t:sections.global.settings.outer-spacing.options.option_3"
+        }
+      ],
+      "default": "mt-0 mb-0 mt-0--large mb-0--large"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.countdown.settings.header_banner_countdown.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.countdown.settings.image.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "t:sections.countdown.settings.image_mobile.label"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:sections.countdown.settings.layout.label",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:sections.countdown.settings.layout.options.option_1"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.countdown.settings.layout.options.option_2"
+        },
+        {
+          "value": "bottom",
+          "label": "t:sections.countdown.settings.layout.options.option_3"
+        }
+      ],
+      "default": "bottom"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_background",
+      "label": "t:sections.countdown.settings.show_background.label",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "t:sections.countdown.settings.subheading.label",
+      "default": "Offer subheading"
+    },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "t:sections.countdown.settings.heading.label",
+      "default": "<p>Offer heading</p>"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "t:sections.global.settings.heading_size.label",
+      "options": [
+        {
+          "value": "h3",
+          "label": "t:sections.global.settings.heading_size.options.option_1"
+        },
+        {
+          "value": "h2",
+          "label": "t:sections.global.settings.heading_size.options.option_2"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.global.settings.heading_size.options.option_3"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "textarea",
+      "id": "expire_text",
+      "label": "t:sections.countdown.settings.expire_text.label",
+      "default": "Expire text callout"
+    },
+    {
+      "type": "text",
+      "id": "expiration_date",
+      "label": "t:sections.countdown.settings.expiration_date.label",
+      "default": "1970-01-01",
+      "info": "t:sections.countdown.settings.expiration_date.info"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.countdown.settings.paragraph_offer_link.content"
+    },
+    {
+      "type": "text",
+      "id": "offer_link_text",
+      "label": "t:sections.countdown.settings.offer_link_text.label",
+      "default": "Offer link text"
+    },
+    {
+      "type": "url",
+      "id": "offer_link_url",
+      "label": "t:sections.countdown.settings.offer_link_url.label",
+      "default": "/collections/all"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.countdown.settings.paragraph_expired_link.content"
+    },
+    {
+      "type": "text",
+      "id": "expired_link_text",
+      "label": "t:sections.countdown.settings.expired_link_text.label",
+      "default": "Expired link text"
+    },
+    {
+      "type": "url",
+      "id": "expired_link_url",
+      "label": "t:sections.countdown.settings.expired_link_url.label",
+      "default": "/collections/all"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.countdown.settings.header_resources.content"
+    },
+    {
+      "type": "product_list",
+      "id": "product_list",
+      "label": "t:sections.countdown.settings.product_list.label",
+      "limit": 8
+    },
+    {
+      "type": "collection_list",
+      "id": "collection_list",
+      "label": "t:sections.countdown.settings.collection_list.label",
+      "limit": 8,
+      "info": "t:sections.countdown.settings.collection_list.info"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.countdown.name"
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "*"
+    ],
+    "groups": [
+      "aside"
+    ]
+  }
+}
+{% endschema %}

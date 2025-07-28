@@ -1,0 +1,135 @@
+{%- comment -%}
+  Info:
+  Renders collection card element.
+
+  Accepts:
+  - image {Object} Liquid image object
+  - title {String} Title text
+  - subtitle {String} Subtitle text
+  - url {String} The url of the card
+  - callout_text {String} Text to show a callout button
+  - media_type: {String} Media type. Accepts: 'portrait', 'landscape'. Defaults to 'portrait'
+  - card_size: {String} Card size. Accepts: 'small', 'medium', 'large'. Defaults to 'medium'
+  - card_content_layout: {String} Card content layout type. Accepts: 'outside', 'overlay'. Defaults to 'outside'
+  - class: {String} Additional card classes
+  - background_overlay: {Boolean} Show/hide content background overlay
+  - visibility: {String} hover/always
+  - show_title: {Boolean} show/hide title
+
+  Usage:
+  {%- render 'card-collection',
+    image: collection.featured_image,
+    subtitle: 'Subheading',
+    title: collection.title,
+    url: collection.url,
+    callout_text: callout_text,
+    media_type: section.settings.media_type,
+    card_size: section.settings.card_size,
+    card_content_layout: section.settings.card_content_layout
+  -%}
+
+  Requires:
+  - component-card-collection.css
+{%- endcomment -%}
+
+{%-
+  liquid
+  assign card_size = card_size | default: 'medium'
+  assign media_type = media_type | default: 'portrait'
+  assign image = image | default: false
+  if media_type == 'aspect-ratio' and image == false
+    assign media_type = false
+  endif
+  assign title = title | default: false
+  assign subtitle = subtitle | default: false
+  assign url = url | default: false
+  assign callout_text = callout_text | default: false
+  assign card_content_layout = card_content_layout | default: 'outside'
+  assign background_overlay = background_overlay | default: false
+
+  assign title_class = 'h5'
+  assign subtitle_class = 'sh sh--4'
+  assign callout_style = 'm'
+  assign callout_css = 'link'
+
+  assign visibility = visibility | default: 'hover'
+
+  if visibility == 'always'
+    assign class = class | append: ' card-collection--always-visible'
+  endif
+
+  if card_size == 'small'
+    assign title_class = 'h6'
+    assign callout_style = 's'
+  endif
+  if card_size == 'large'
+    assign subtitle_class = 'sh sh--3'
+  endif
+
+  if card_content_layout == 'overlay-center'
+    assign callout_css = 'button'
+    assign callout_style = 'm'
+    if button_style == 'outline'
+      assign callout_style = callout_style | append: ',outline'
+    endif
+  endif
+-%}
+
+<div class="card-collection card-collection--content-{{ card_content_layout }} card-collection--size-{{ card_size }} {{ class }}">
+  <a
+    {% if url %} href="{{- url -}}" {% endif %}
+    class="card-collection__media {% if media_type != false -%}
+      media media--no-hover media--{{ media_type }}
+    {%- endif -%}"
+    {% if media_type == 'aspect-ratio' %}
+      style="padding-top: {%- render 'aspect-ratio', aspect_ratio: image.aspect_ratio -%}%;"
+    {% endif %}
+  >
+    <span class="visually-hidden">{{- title | escape -}}</span>
+
+    {%-
+      liquid
+      if image
+        assign image_src = image | image_url: width: 500
+        assign mobile_image_src = image | image_url: width: 375
+        capture image_srcset
+          render 'srcset', image: image, widths: '1500,1980,2200,3000,1560'
+        endcapture
+        capture mobile_image_srcset
+          render 'srcset', image: image, widths: '750,1200'
+        endcapture
+        assign image_alt = image.alt | escape
+        render 'image', src: image_src, srcset: image_srcset, sizes: '100vw', alt: image_alt, width: image.width, height: image.height, class: 'small-hide medium-hide', focal_point: image.presentation.focal_point
+        render 'image', src: mobile_image_src, srcset: mobile_image_srcset, sizes: '100vw', alt: image_alt, width: image.width, height: image.height, class: 'large-up-hide', focal_point: image.presentation.focal_point
+      else
+        echo 'collection-6' | placeholder_svg_tag
+      endif
+    -%}
+  </a>
+
+  <div class="card-collection__content{% if background_overlay %} card-collection__content--has-overlay{% endif %} motion-reduce {%- if card_content_layout == 'overlay-center' %} pb-xl{%- endif -%}">
+    {%- if subtitle -%}
+      <p class="card-collection__subtitle {{ subtitle_class }}" data-animation-item-secondary>
+        <span class="motion-reduce">{{- subtitle | escape | truncate: 100 -}}</span>
+      </p><!-- /.card-collection__subtitle {{ subtitle_class }} -->
+    {%- endif -%}
+
+    {%- if show_title and title -%}
+      <h4 class="card-collection__title {{ title_class }}" data-animation-item-primary>
+        <a {% if url %} href="{{- url -}}" {% endif %} class="full-unstyled-link motion-reduce">{{- title | escape -}}</a>
+      </h4><!-- /.card-collection__title {{ title_class }} -->
+    {%- endif -%}
+
+    {%- if callout_text and url -%}
+      <div class="card-collection__actions {%- if card_content_layout == 'overlay-center' %} mt-s{%- endif -%}" data-animation-item-secondary>
+        {%- render 'button',
+          type: 'link',
+          href: url,
+          css: callout_css,
+          value: callout_text,
+          styles: callout_style
+        -%}
+      </div><!-- /.card-collection__actions -->
+    {%- endif -%}
+  </div><!-- /.card-collection__content -->
+</div><!-- /.card-collection -->

@@ -1,0 +1,430 @@
+<link rel="stylesheet" href="{{ 'component-list-socials.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'section-footer.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'accordion-item.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>
+  {{- 'component-list-socials.css' | asset_url | stylesheet_tag -}}
+  {{- 'section-footer.css' | asset_url | stylesheet_tag -}}
+  {{- 'accordion-item.css' | asset_url | stylesheet_tag -}}
+</noscript>
+
+<script src="{{- 'dropdown-disclosure.js' | asset_url -}}" defer data-theme-script></script>
+<script src="{{- 'accordion-item.js' | asset_url -}}" defer data-theme-script></script>
+
+{%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+  <link rel="stylesheet" href="{{ 'component-list-payment.css' | asset_url }}" media="print" onload="this.media='all'">
+  <noscript>
+    {{- 'component-list-payment.css' | asset_url | stylesheet_tag -}}
+  </noscript>
+{%- endif -%}
+
+<footer class="footer bd-t color-{{ section.settings.style }}">
+  <div class="container{% if section.settings.fullwidth %} container--fullwidth{% endif %}">
+    <div class="footer__inner">
+      <div class="footer__grid">
+        <div class="footer__grid-item footer__grid-item--main">
+          <a href="{{- routes.root_url -}}" class="footer__logo inline-unstyled-link" style="--footer-logo-width: {{ section.settings.logo_width | times: 0.1 }}rem; --footer-logo-width-mobile: {{ section.settings.logo_width_mobile | times: 0.1 }}rem;">
+            {%- if section.settings.logo_svg_code != blank -%}
+              {{- section.settings.logo_svg_code -}}
+            {%- elsif section.settings.logo != blank -%}
+              {%- assign logo_image_size_2x = section.settings.logo.width | times: 2 | at_most: 5760 -%}
+
+              <img
+                srcset="{{ section.settings.logo | image_url: width: section.settings.logo.width }} 1x, {{ section.settings.logo | image_url: width: logo_image_size_2x }} 2x"
+                src="{{- section.settings.logo | image_url: width: section.settings.logo.width -}}"
+                loading="lazy"
+                width="{{- section.settings.logo.width -}}"
+                height="{{- section.settings.logo.height -}}"
+                alt="{{- section.settings.logo.alt | default: shop.name | escape -}}"
+                style="object-position: {{ section.settings.logo.presentation.focal_point }}"
+              >
+            {%- endif -%}
+
+            <span
+              class="{% if section.settings.logo == blank and section.settings.logo_svg_code == blank %}h4{% else %}visually-hidden{% endif %}"
+            >{{- shop.name | escape -}}</span>
+          </a>
+
+          {%- if section.settings.below_logo_text != blank -%}
+            <div class="footer__entry p3--fixed mt-s mt-m--large mb-xl mb-xxl--large">
+              <p class="mt-0 mb-0">{{- section.settings.below_logo_text | escape -}}</p><!-- /.mt-0 mb-0 -->
+            </div><!-- /.footer__entry p3 mt-s mt-m--large mb-xl mb-xxl--large -->
+          {%- endif -%}
+
+          {%- render 'socials', class: 'footer__socials' -%}
+
+          {%- if shop.features.follow_on_shop? and section.settings.enable_follow_on_shop -%}
+            <div class="footer__follow-on-shop mt-s">
+              {% comment %} TODO: enable theme-check once `login_button` is accepted as valid filter {% endcomment %}
+              {% # theme-check-disable %}
+              {{ shop | login_button: action: 'follow' }}
+              {% # theme-check-enable %}
+            </div>
+          {%- endif -%}
+        </div><!-- /.grid__item -->
+
+        {%-
+          liquid
+          assign enable_mobile_accordions = section.settings.enable_mobile_accordions
+          assign empty_title_blocks = section.blocks | map: 'settings' | where: 'title', ''
+          if empty_title_blocks.size > 0
+            assign enable_mobile_accordions = false
+          endif
+        -%}
+
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'menu' -%}
+              <div class="footer__grid-item footer__grid-item--nav {% if enable_mobile_accordions %} footer__grid-item--accordion {% endif %}" {{ block.shopify_attributes }}>
+                {%- capture block_content -%}
+                  <ul class="list-unstyled">
+                    {%-
+                      liquid
+
+                      for link in linklists[block.settings.menu].links
+                        assign offset_top = false
+
+                        if forloop.index0 == 0 and block.settings.title != blank
+                          assign offset_top = true
+                        endif
+
+                        render 'list-link', link: link, index0: forloop.index0, offset_top: offset_top
+
+                        for child_link in link.links
+                          render 'list-link', link: child_link
+
+                          for grandchild_link in child_link.links
+                            render 'list-link', link: grandchild_link
+                          endfor
+                        endfor
+                      endfor
+                      -%}
+                  </ul><!-- /.list-unstyled -->
+                {%- endcapture -%}
+
+                {%- if enable_mobile_accordions and block.settings.title != blank -%}
+                  <div class="medium-hide large-up-hide">
+                    {%- render 'accordion-item',
+                        title: block.settings.title,
+                        content: block_content,
+                        title_class: 'p3',
+                        content_class: ' '
+                    -%}
+                  </div><!-- /.medium-hide -->
+                {%- endif -%}
+
+                <nav class="footer__nav p3--fixed {% if enable_mobile_accordions %} small-hide {% endif %}">
+                  {%- if block.settings.title != blank -%}
+                    <h6 class="footer__heading p3--fixed mt-0 mb-m">
+                      {%- if block.settings.url != blank -%}
+                        <a href="{{- block.settings.url -}}" class="inline-unstyled-link">
+                      {%- endif -%}
+
+                      {{- block.settings.title | escape -}}
+
+                      {%- if block.settings.url != blank -%}
+                        </a>
+                      {%- endif -%}
+                    </h6><!-- /.footer__heading h6 mt-0 mb-m -->
+                  {%- endif -%}
+
+                  {{- block_content -}}
+                </nav><!-- /.footer__nav p3--fixed -->
+              </div><!-- /.footer__grid-item footer__grid-item--nav -->
+
+            {%- when 'textual' -%}
+              {%- if block.settings.title == blank and block.settings.text == blank -%}
+                {%- continue -%}
+              {%- endif -%}
+
+              {%- capture block_content -%}
+                {%- if block.settings.text != blank -%}
+                  <div class="p3--fixed">
+                    {{- block.settings.text
+                      | replace: '<p', '<p class="mt-xs mt-s--large mb-0" '
+                      | replace: '<a href="tel:', '<a class="inline-unstyled-link link-underline" href="tel:'
+                      | replace: '<a href="mailto:', '<a class="word-break link-underline" href="mailto:'
+                    -}}
+                  </div><!-- /.p3 -->
+                {%- endif -%}
+              {%- endcapture -%}
+
+              <div class="footer__grid-item footer__grid-item--textual {% if enable_mobile_accordions %} footer__grid-item--accordion {% endif %}" {{ block.shopify_attributes }}>
+                {%- if enable_mobile_accordions -%}
+                  <div class="medium-hide large-up-hide">
+                    {%- render 'accordion-item',
+                        title: block.settings.title,
+                        content: block_content,
+                        title_class: 'p3',
+                        content_class: 'p3 footer__accordion-content'
+                    -%}
+                  </div><!-- /.medium-hide -->
+                {%- endif -%}
+
+                {%- if block.settings.title != blank -%}
+                  <h6 class="footer__heading p3--fixed mt-0 mb-m {% if enable_mobile_accordions and block.settings.text != blank %} small-hide {% endif %}">
+                    {{- block.settings.title | escape -}}
+                  </h6><!-- /.footer__heading h6 mt-0 mb-m -->
+                {%- endif -%}
+
+                <div class="{% if enable_mobile_accordions %} small-hide {% endif %}">
+                  {{ block_content }}
+                </div>
+              </div><!-- /.grid__item -->
+            {%- when 'newsletter' -%}
+              <div class="footer__grid-item footer__grid-item--newsletter {% if enable_mobile_accordions %} footer__grid-item--accordion {% endif %}" {{ block.shopify_attributes }}>
+                {%- capture block_content -%}
+                    {%- if block.settings.text != blank -%}
+                    <div class="p3--fixed mb-s">
+                      <p>{{- block.settings.text | escape -}}</p>
+                    </div><!-- /.p3--fixed mb-s -->
+                  {%- endif -%}
+
+                  {%- render 'newsletter-form', show_terms: block.settings.show_privacy_note, button_type: 'button' -%}
+                {%- endcapture -%}
+
+                {%- if block.settings.title != blank -%}
+                  <h6 class="footer__heading p3--fixed mt-0 mb-0 {% if enable_mobile_accordions %} small-hide {% endif %}">{{- block.settings.title | escape -}}</h6><!-- /.footer__heading h6 mt-0 mb-0 -->
+                {%- endif -%}
+
+                {%- if enable_mobile_accordions -%}
+                  <div class="medium-hide large-up-hide">
+                    {%- render 'accordion-item',
+                        title: block.settings.title,
+                        content: block_content,
+                        title_class: 'p3--fixed',
+                        content_class: 'p3--fixed footer__accordion-content'
+                    -%}
+                  </div><!-- /.medium-hide -->
+                {%- endif -%}
+
+                <div class="{% if enable_mobile_accordions %} small-hide{% endif %}">
+                  {{ block_content }}
+                </div>
+
+                {%- if block.settings.enable_country or block.settings.enable_language -%}
+                  <div class="p4 mt-m mt-xl--large">
+                    {% render 'localization-dropdowns',
+                      placement: 'footer',
+                      enable_country: block.settings.enable_country,
+                      enable_country_name: block.settings.enable_country_name,
+                      enable_country_flag: block.settings.enable_country_flag,
+                      enable_language: block.settings.enable_language
+                    %}
+                  </div>
+                {%- endif -%}
+              </div><!-- /.grid__item -->
+          {%- endcase -%}
+        {%- endfor -%}
+      </div><!-- /.footer__grid grid -->
+    </div><!-- /.footer__inner -->
+  </div><!-- /.container container--fullwidth -->
+</footer><!-- /.footer -->
+
+<div class="footer-bar bd-t pb-m pt-m pt-l--large pb-l--large color-{{ section.settings.style }}">
+  <div class="container{% if section.settings.fullwidth %} container--fullwidth{% endif %}">
+    <div class="footer-bar__inner">
+      <p class="footer-bar__copyright p4 mt-0 mb-0">
+        {%- assign powered_by_link_text = powered_by_link | strip_html | strip -%}
+        &copy; {{ 'now' | date: '%Y' }} <a href="{{- routes.root_url -}}" class="inline-unstyled-link">{{- shop.name | escape -}}</a>
+      </p><!-- /footer-bar__copyright .p4 mt-0 mb-0 -->
+
+      {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+        <ul class="list-payment list-unstyled">
+          {%- for type in shop.enabled_payment_types -%}
+            <li class="list-payment__item">
+              {{- type | payment_type_svg_tag -}}
+            </li><!-- /.list-payment__item -->
+          {%- endfor -%}
+        </ul><!-- /.list-payment -->
+      {%- endif -%}
+    </div><!-- /.footer-bar__inner -->
+  </div>
+</div><!-- /.footer-bar bd-t pb-m pt-m pt-l--large pb-l--large -->
+
+{% schema %}
+{
+  "name": "t:sections.footer.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.global.settings.style.label",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "t:sections.global.settings.style.options.option_1"
+        },
+        {
+          "value": "style-2",
+          "label": "t:sections.global.settings.style.options.option_2"
+        },
+        {
+          "value": "style-3",
+          "label": "t:sections.global.settings.style.options.option_3"
+        }
+      ],
+      "default": "style-2"
+    },
+    {
+      "type": "checkbox",
+      "id": "fullwidth",
+      "label": "t:sections.footer.settings.fullwidth.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "t:sections.footer.settings.show_payment_icons.label",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "t:sections.footer.settings.logo.label"
+    },
+    {
+      "type": "html",
+      "id": "logo_svg_code",
+      "label": "t:sections.footer.settings.logo_svg_code.label",
+      "info": "t:sections.footer.settings.logo_svg_code.info"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "t:sections.footer.settings.logo_width.label",
+      "default": 175
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "max": 200,
+      "min": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "t:sections.footer.settings.logo_width_mobile.label",
+      "default": 175
+    },
+    {
+      "type": "textarea",
+      "id": "below_logo_text",
+      "label": "t:sections.footer.settings.below_logo_text.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_mobile_accordions",
+      "label": "t:sections.footer.settings.enable_mobile_accordions.label",
+      "info": "t:sections.footer.settings.enable_mobile_accordions.info",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_follow_on_shop",
+      "default": true,
+      "label": "t:sections.footer.settings.enable_follow_on_shop.label"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "t:sections.footer.blocks.menu.name",
+      "type": "menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.footer.blocks.menu.settings.heading.label"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "t:sections.global.settings.url.label"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "default": "footer",
+          "label": "t:sections.footer.blocks.menu.settings.menu.label"
+        }
+      ]
+    },
+    {
+      "name": "t:sections.footer.blocks.textual.name",
+      "type": "textual",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.footer.blocks.textual.settings.heading.label"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:sections.footer.blocks.textual.settings.text.label"
+        }
+      ]
+    },
+    {
+      "name": "t:sections.footer.blocks.newsletter.name",
+      "type": "newsletter",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.footer.blocks.newsletter.settings.heading.label"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "t:sections.footer.blocks.newsletter.settings.text.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_privacy_note",
+          "label": "t:sections.footer.blocks.newsletter.settings.show_privacy_note.label",
+          "default": true,
+          "info": "t:sections.footer.blocks.newsletter.settings.show_privacy_note.info"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.global.settings.localization.header_country.content",
+          "info": "t:sections.global.settings.localization.header_country.info"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_country",
+          "label": "t:sections.global.settings.localization.enable_country.label",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_country_name",
+          "label": "t:sections.global.settings.localization.enable_country_name.label",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_country_flag",
+          "label": "t:sections.global.settings.localization.enable_country_flag.label",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "t:sections.global.settings.localization.header_language.content",
+          "info": "t:sections.global.settings.localization.header_language.info"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_language",
+          "label": "t:sections.global.settings.localization.enable_language.label",
+          "default": true
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

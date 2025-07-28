@@ -1,0 +1,612 @@
+{%- comment -%}
+  Info:
+  Renders main product section
+
+  Accepts:
+  - product_ref {Object} Liquid product object. Defaults to `product`.
+  - section {Object} Liquid section object
+  - show_seo {Boolean} Show SEO schema
+  - class {String} Additional classes
+  - selling_plan_required_hide_actions: {Boolean} Hide actions if product requires selling plan
+
+  Usage:
+  {%- render 'main-product', section: section -%}
+{%- endcomment -%}
+
+{%-
+  liquid
+  assign product_ref = section.settings.product_ref | default: product
+  assign section = section
+  assign show_seo = show_seo | default: false
+  assign class = class | default: ''
+  assign selling_plan_required_hide_actions = selling_plan_required_hide_actions | default: false
+  assign container_class = ''
+  if section.settings.enable_fullwidth
+    assign container_class = container_class | append: ' container--fullwidth'
+  endif
+  assign first_3d_model = product_ref.media | where: 'media_type', 'model'
+  assign current_variant = product_ref.selected_or_first_available_variant
+  if settings.enable_images_filtering
+  assign color_filter_option = settings.swatches_option | split: ',' | first
+  assign color_option_position = product_ref.options_by_name[color_filter_option].position | minus: 1
+  assign current_color = current_variant.options[color_option_position]
+  assign color_splitter = '|' | append: color_filter_option | append: ':'
+  endif
+
+  assign style = ''
+  if section.settings.enable_custom_background
+    if section.settings.background_gradient != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_gradient | append: '"'
+    elsif section.settings.background_color != blank
+      assign style = ' style="--section-background:' | append: section.settings.background_color | append: '"'
+    else
+      assign style = ''
+    endif
+  endif
+
+  capture section_class
+    echo 'product--gallery-type-' | append: section.settings.gallery_type | append: ' product--gallery-size-' | append: section.settings.gallery_image_size | append: ' ' | append: class
+    if style != ''
+      echo ' section-background'
+    endif
+  endcapture
+
+  assign content_size = section.settings.content_size
+  if section.settings.gallery_size == '8' and content_size == '5'
+    assign content_size = '4'
+  endif
+  if content_size == 'auto'
+    assign gallery_size_number = section.settings.gallery_size | times: 1
+    assign content_size = 12 | minus: gallery_size_number
+  endif
+-%}
+
+{%- if first_3d_model -%}
+  <link id="ModelViewerStyle" rel="stylesheet" href="https://cdn.shopify.com/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.css" media="print" onload="this.media='all'">
+  <link id="ModelViewerOverride" rel="stylesheet" href="{{- 'component-model-viewer-ui.css' | asset_url -}}" media="print" onload="this.media='all'">
+{%- endif -%}
+
+
+{%- capture deferred_styles_noscript -%}
+  {{- 'spr-reviews.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-form-elements.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-badge.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-deferred-media.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-rte.css' | asset_url | stylesheet_tag -}}
+{%- endcapture -%}
+
+{%- capture deferred_styles -%}
+  <link rel="stylesheet" href="{{- 'spr-reviews.css' | asset_url -}}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{- 'component-form-elements.css' | asset_url -}}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{- 'component-badge.css' | asset_url -}}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{- 'component-deferred-media.css' | asset_url -}}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{- 'component-rte.css' | asset_url -}}" media="print" onload="this.media='all'">
+{%- endcapture -%}
+
+{%- if defer_styles -%}
+  <link rel="stylesheet" href="{{- 'section-product.css' | asset_url -}}" media="print" onload="this.media='all'">
+  {{- deferred_styles -}}
+
+  <noscript>
+    {{- 'section-product.css' | asset_url | stylesheet_tag -}}
+    {{- deferred_styles_noscript -}}
+  </noscript>
+{%- else -%}
+  {{- 'section-product.css' | asset_url | stylesheet_tag -}}
+  {{- deferred_styles_noscript -}}
+
+  <noscript>
+    {{- deferred_styles_noscript -}}
+  </noscript>
+{%- endif -%}
+
+<script src="{{- 'sticky-sidebar.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+
+{%- if product_ref.media.size > 0 -%}
+  {%- if section.settings.enable_zoom -%}
+    <link rel="stylesheet" href="{{- 'photoswipe.css' | asset_url -}}" media="print" onload="this.media='all'">
+
+    <script src="{{- 'photoswipe-lightbox.umd.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+    <script src="{{- 'photoswipe.umd.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  {%- endif -%}
+
+  {%- if product_ref.media.size > 1 -%}
+    {{- 'swiper-bundle.min.css' | asset_url | stylesheet_tag -}}
+
+    <script src="{{- 'swiper-bundle.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  {%- endif -%}
+
+  <script src="{{- 'product-modal.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{- 'product-media.js' | asset_url -}}" defer="defer" data-theme-script></script>
+{%- endif -%}
+
+<script src="{{- 'product-selector.js' | asset_url -}}" defer="defer" data-theme-script></script>
+<script src="{{- 'product-sidebar.js' | asset_url -}}" defer="defer" data-theme-script></script>
+
+{%-
+  liquid
+  if settings.enable_images_filtering and product.has_only_default_variant == false
+    assign medias_alt_array = product_ref.media | map: 'alt'
+    assign color_media_size = 0
+    assign current_color_media_size = 0
+    for media_alt in medias_alt_array
+      if media_alt contains color_splitter
+        assign media_color = media_alt | split: color_splitter | last
+      else
+        continue
+      endif
+
+      if media_color == current_color
+        assign current_color_media_size = current_color_media_size | plus: 1
+      endif
+
+      assign color_media_size = color_media_size | plus: 1
+    endfor
+  endif
+-%}
+
+{%- capture thumbs_html -%}
+  <div
+    class="product__media-thumbs
+      {%- unless section.settings.gallery_type contains 'thumbs' %}
+        large-up-hide
+      {%- endunless -%}
+
+      {%- if section.settings.enable_mobile_thumbs == false %}
+        small-hide
+        medium-hide
+      {%- endif -%}
+    "
+  >
+    <div class="swiper" data-thumbs>
+      <div class="swiper-wrapper">
+
+        {%- for media in product_ref.media -%}
+          {%- if settings.enable_images_filtering -%}
+            {%- assign media_color = media.alt | split: color_splitter | last -%}
+          {%- endif -%}
+
+          <div
+            class="{% if settings.enable_images_filtering and current_color != media_color and color_media_size > 0 and current_color_media_size > 0 %}hidden{% else %}swiper-slide{% endif %}"
+            data-thumbnail
+            {% if media_color and media.alt contains color_splitter %}
+              data-media-color="{{- media_color -}}"
+            {% endif %}
+          >
+            {%- render 'product-thumbnail', media: media, media_size: section.settings.gallery_image_size -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="product__media-thumbs-arrows">
+        <button class="button-arrow button-arrow--small product__media-thumbs-arrow product__media-thumbs-arrow--prev" data-thumbs-prev aria-label="{{- 'accessibility.previous' | t -}}">
+          {%- if section.settings.gallery_type != 'thumbs-bottom' -%}
+            {%- render 'icon-arrow-button-up' -%}
+          {%- else -%}
+            {%- render 'icon-arrow-button-left' -%}
+          {%- endif -%}
+        </button>
+
+        <button class="button-arrow button-arrow--small product__media-thumbs-arrow product__media-thumbs-arrow--next" data-thumbs-next aria-label="{{- 'accessibility.next' | t -}}">
+          {%- if section.settings.gallery_type != 'thumbs-bottom' -%}
+            {%- render 'icon-arrow-button-down' -%}
+          {%- else -%}
+            {%- render 'icon-arrow-button-right' -%}
+          {%- endif -%}
+        </button>
+      </div><!-- /.product__media-thumbs-arrows -->
+    </div>
+  </div><!-- /.product__media-thumbs -->
+{%- endcapture -%}
+
+{%- style -%}
+  #MainProduct-{{- section.id }} {
+    {%- liquid
+      assign partial_slide_ratio = 0.9
+      assign slide_width = 100.0 | divided_by: section.settings.slides_per_view
+      if section.settings.partial_slide
+        assign slide_width = slide_width | times: partial_slide_ratio
+      endif
+    -%}
+
+    --slide-width: {{ slide_width }}%;
+  }
+{%- endstyle -%}
+
+<main-product
+  class="product {{ section_class }} color-{{ section.settings.style }} color-background color-paragraphs {{ section.settings.outer_spacing }} js-main-product"
+  id="MainProduct-{{- section.id -}}"
+  data-section="{{- section.id -}}"
+  {{ style }}
+>
+  <div class="product__container container{{ container_class }}">
+    <div class="grid grid--row-gap-0">
+      {%- if product_ref.media.size > 0 -%}
+        <div class="grid__item grid__item--xs-12 grid__item--s-6 grid__item--m-{{- section.settings.gallery_size }} grid__item--lg-{{- section.settings.gallery_size -}}">
+          <product-media
+            class="product__media"
+            {% if section.settings.gallery_image_size == 'aspect-ratio' %}
+              data-slider-autoheight
+            {% endif %}
+            {% if section.settings.gallery_type contains 'grid' %}
+              data-slider-desktop-disabled
+            {%- elsif section.settings.gallery_type != 'thumbs-bottom' -%}
+              data-thumbs-layout="{{- section.settings.gallery_type | remove: 'thumbs-' -}}"
+            {% endif %}
+            {% if settings.enable_images_filtering %}
+              data-gallery-filter="{{- color_filter_option -}}"
+            {% endif %}
+          >
+            {%- if product_ref.media.size > 1 -%}
+              {%- if section.settings.gallery_type == 'thumbs-left' -%}
+                {{- thumbs_html -}}
+              {%- endif -%}
+
+              <div class="product__media-slider">
+                <div class="swiper" data-slider>
+                  <div class="product__media-track swiper-wrapper">
+                    {%- for media in product_ref.media -%}
+                      {%- if settings.enable_images_filtering -%}
+                        {%- assign media_color = media.alt | split: color_splitter | last -%}
+                      {%- endif -%}
+                      <div
+                        class="product__media-slide{% if settings.enable_images_filtering and current_color != media_color and color_media_size > 0 and current_color_media_size > 0 %} hidden{% else %} swiper-slide{% endif %}"
+                        data-media-item
+                        data-media-id="{{- media.id -}}"
+                        data-index="{{- forloop.index0 -}}"
+                        {% if media.id == product_ref.selected_variant.featured_media.id and media_color == nil %}
+                          data-selected
+                        {% endif %}
+                        {% if media_color and media.alt contains color_splitter %}
+                          data-media-color="{{- media_color -}}"
+                        {% endif %}
+                      >
+                        {%- render 'product-media', media: media, product_ref: product_ref, preload_media: forloop.first, media_size: section.settings.gallery_image_size, disable_zoom_icon: section.settings.disable_zoom_icon, enable_zoom: section.settings.enable_zoom -%}
+                      </div><!-- /.product__media-slide -->
+                    {%- endfor -%}
+                  </div><!-- /.product__media-track -->
+
+                  {%- if section.settings.enable_navigation -%}
+                    <div class="swiper-navigation large-up-hide">
+                      <button class="product__media-arrow button-arrow motion-reduce" data-arrow-prev aria-label="{{- 'accessibility.previous' | t -}}">
+                        {% render 'icon-arrow-button-left' %}
+                      </button>
+
+                      <button class="product__media-arrow button-arrow motion-reduce" data-arrow-next aria-label="{{- 'accessibility.next' | t -}}">
+                        {% render 'icon-arrow-button-right' %}
+                      </button>
+                    </div><!-- /.swiper-navigation -->
+                  {%- endif -%}
+
+                  <div class="swiper-pagination"></div>
+                </div>
+              </div><!-- /.product__media-slider -->
+
+              {%- if section.settings.gallery_type == 'thumbs-bottom' or section.settings.gallery_type == 'thumbs-right' -%}
+                {{- thumbs_html -}}
+              {%- endif -%}
+
+              {%- unless section.settings.gallery_type contains 'thumbs' or section.settings.enable_mobile_thumbs == false -%}
+                {{- thumbs_html -}}
+              {%- endunless -%}
+            {%- else -%}
+              <div class="product__media-slider">
+                {%- render 'product-media', media: product_ref.featured_media, product_ref: product_ref, media_size: section.settings.gallery_image_size, disable_zoom_icon: section.settings.disable_zoom_icon, enable_zoom: section.settings.enable_zoom -%}
+              </div><!-- /.product__media-slider -->
+            {%- endif -%}
+          </product-media><!-- /.product__media -->
+        </div><!-- /.grid__item -->
+      {%- endif -%}
+
+      <div class="
+        grid__item grid__item--xs-12
+        {% if product_ref %}
+          grid__item--s-6
+          grid__item--m-{{ content_size }}
+          grid__item--lg-{{ content_size }}
+          product__grid-col-content
+          relative
+        {% else %}
+          center
+        {% endif %}"
+      >
+        {%- capture product_content -%}
+          {%-
+            liquid
+            if section.settings.enable_breadcrumbs and section.settings.breadcrumbs_position == 'info'
+              if section.settings.enable_breadcrumbs
+                assign breadcrumbs_class = 'small-hide medium-hide color-' | append: section.settings.style
+                render 'breadcrumbs', class: breadcrumbs_class, position: section.settings.breadcrumbs_position
+              endif
+            endif
+            render 'product-content' for section.blocks as block, product_ref: product_ref, selling_plan_required_hide_actions: selling_plan_required_hide_actions
+          -%}
+        {%- endcapture -%}
+
+        <product-sidebar
+          id="main-product-sidebar"
+          class="block"
+          {% unless section.settings.enable_sticky %}
+            data-disable-sticky
+          {% endunless %}
+        >
+          <div class="product__content {%- if section.settings.condensed_layout %} product__content--condensed{%- endif %} pt-s pb-xs js-product-content">
+            {{- product_content -}}
+          </div><!-- /.product__content -->
+        </product-sidebar>
+      </div><!-- /.grid__item -->
+    </div><!-- /.grid -->
+  </div><!-- /.product__container container -->
+</main-product><!-- /.product -->
+
+<script>
+  const pushHandleToRecentProducts = () => {
+    const handles = localStorage.getItem('recently-viewed');
+
+    if (!handles) {
+      localStorage.setItem('recently-viewed', '{{- product.handle -}}');
+      return;
+    }
+
+    if (handles.includes('{{- product.handle -}}')) return;
+
+    const handlesToAdd = [
+      '{{- product.handle -}}',
+      ...handles.split(',')
+    ]
+
+    if (handlesToAdd.length > 10) {
+      handlesToAdd.pop();
+    }
+
+    localStorage.setItem(
+      'recently-viewed',
+      handlesToAdd.join(',')
+    );
+  }
+
+  pushHandleToRecentProducts();
+</script>
+
+{%- if first_3d_model -%}
+  <script type="application/json" id="ProductJSON-{{- product_ref.id -}}">
+    {{- product_ref.media | where: 'media_type', 'model' | json -}}
+  </script>
+  <script src="{{ 'deferred-media.js' | asset_url }}" defer data-theme-script></script>
+  <script src="{{ 'product-model.js' | asset_url }}" defer data-theme-script></script>
+{%- endif -%}
+
+{%- if show_seo -%}
+  {%- liquid
+    if product_ref.selected_or_first_available_variant.featured_media
+      assign seo_media = product_ref.selected_or_first_available_variant.featured_media
+    else
+      assign seo_media = product_ref.featured_media
+    endif
+  -%}
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org/",
+      "@type": "Product",
+      "name": {{ product_ref.title | json }},
+      "url": {{ request.origin | append: product_ref.url | json }},
+      {% if seo_media -%}
+        "image": [
+          {{ seo_media | image_url: width: seo_media.preview_image.width | prepend: "https:" | json }}
+        ],
+      {%- endif %}
+      "description": {{ product_ref.description | strip_html | json }},
+      {% if product_ref.selected_or_first_available_variant.sku != blank -%}
+        "sku": {{ product_ref.selected_or_first_available_variant.sku | json }},
+      {%- endif %}
+      "brand": {
+        "@type": "Brand",
+        "name": {{ product_ref.vendor | json }}
+      },
+      "offers": [
+        {%- for variant in product_ref.variants -%}
+          {
+            "@type" : "Offer",
+            {%- if variant.sku != blank -%}
+              "sku": {{ variant.sku | json }},
+            {%- endif -%}
+            {%- if variant.barcode.size == 12 -%}
+              "gtin12": {{ variant.barcode }},
+            {%- endif -%}
+            {%- if variant.barcode.size == 13 -%}
+              "gtin13": {{ variant.barcode }},
+            {%- endif -%}
+            {%- if variant.barcode.size == 14 -%}
+              "gtin14": {{ variant.barcode }},
+            {%- endif -%}
+            "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+            "price" : {{ variant.price | divided_by: 100.00 | json }},
+            "priceCurrency" : {{ cart.currency.iso_code | json }},
+            "url" : {{ request.origin | append: variant.url | json }}
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{%- assign sticky_bar = section.blocks | where: 'type', 'sticky-bar' | first -%}
+{%- assign buy_buttons = section.blocks | where: 'type', 'buy-buttons' | first -%}
+
+{%- if sticky_bar -%}
+  {{- 'component-product-bar.css' | asset_url | stylesheet_tag -}}
+
+  {%- assign product_form_id = 'product-form-' | append: section.id -%}
+
+  <product-bar class="product-bar motion-reduce bd-t color-{{ section.settings.style }} no-js-hidden is-hidden">
+    <button class="product-bar__close" data-close>
+      {% render 'icon-chevron-down' %}
+    </button><!-- /.product-bar__close -->
+
+    <div class="product-bar__main">
+      {%- if product_ref.featured_media -%}
+        <div class="product-bar__media media">
+          {%-
+            liquid
+            assign image_src = product_ref.featured_media | image_url: width: 144
+            assign image_alt = product_ref.featured_media.alt | escape
+            render 'image', src: image_src, sizes: 'auto', alt: image_alt, width: 72, height: 96
+          -%}
+        </div><!-- /.product-bar__media media -->
+      {%- endif -%}
+
+      <div class="product-bar__content">
+        <p class="product-bar__title h6 mt-0 mb-xs">{{- product_ref.title | escape -}}</p><!-- /.product-bar__title -->
+
+        <div class="product-bar__price p3" data-price>
+          {%- render 'price', product_ref: product_ref, use_variant: true -%}
+        </div><!-- /.product-bar__price -->
+      </div><!-- /.product-bar__content -->
+    </div><!-- /.product-bar__main -->
+
+    <div class="product-bar__actions">
+      {%-
+        liquid
+        assign value = 'products.product.sold_out' | t
+        assign disabled = true
+        assign attr = 'form="' | append: product_form_id | append: '"'
+        if current_variant.available
+          assign value = 'products.product.add_to_cart' | t
+          assign disabled = false
+        endif
+        render 'button', type: 'submit', value: value, class: 'product-bar__submit', disabled: disabled, attr: attr, styles: 's'
+      -%}
+    </div><!-- /.product-bar__actions -->
+
+    {%- if sticky_bar.settings.show_quantity or product_ref.has_only_default_variant == false -%}
+      <div class="product-bar__controls{% if sticky_bar.settings.hide_options_mobile %} small-hide{% endif %}">
+        {%- unless product_ref.has_only_default_variant -%}
+          {%- for product_option in product_ref.options_with_values -%}
+            {%-
+              liquid
+              assign label = product_option.name | escape
+              assign id = 'Product-Bar-Option-' | append: section.id | append: '-' | append: forloop.index0
+              assign attr = 'data-name="' | append: label | append: '"'
+            -%}
+
+            {%- capture options -%}
+              {%- for value in product_option.values -%}
+                <option
+                  value="{{- value | escape -}}"
+                  {% if product_option.selected_value == value %}selected="selected"{% endif %}
+                >
+                  {{- value -}}
+                </option>
+              {%- endfor -%}
+            {%- endcapture -%}
+
+            <div class="product-bar__control product-bar__control--option">
+              {%- render 'select-input', label: label, hide_label: true, id: id, options: options, class: 'product-bar__dropdown', style: 'small', attr: attr -%}
+            </div><!-- /.product-bar__control product-bar__control--option -->
+          {%- endfor -%}
+        {%- endunless -%}
+
+        {%- if sticky_bar.settings.show_quantity -%}
+          <div class="product-bar__control">
+            {%- render 'quantity-input', product_ref: product_ref, index: 'Product-Bar-', style: 'small' -%}
+          </div><!-- /.product-bar__control -->
+        {%- endif -%}
+      </div><!-- /.product-bar__controls -->
+    {%- endif -%}
+  </product-bar><!-- /.product-bar -->
+
+  <script src="{{ 'component-product-bar.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{%- if buy_buttons.settings.show_contact_button -%}
+  <script src="{{- 'form-validation.js' | asset_url -}}" defer></script>
+
+  {%- capture contact_modal_html -%}
+    <p class="h4">{{- 'products.product.contact_modal.title' | t -}}</p>
+
+    <p class="p3">
+      <strong>{{- 'products.product.contact_modal.about' | t -}}:</strong>
+      <span>
+        {{ product_ref.title | escape }} /
+        <span data-contact-modal-variant>{{- current_variant.title | escape -}}</span>
+      </span>
+    </p>
+
+    <form-validation>
+      {%- assign contact_form_id = 'ContactForm-' | append: product_ref.id | append: '-' | append: section.id -%}
+      {%- form 'contact', id: contact_form_id -%}
+        <input type="hidden" name="contact[request_type]" value="Contact client advisor">
+        <input type="hidden" name="contact[Product]" value="{{- product_ref.title | escape -}}">
+        <input type="hidden" name="contact[Variant]" value="{{- current_variant.title | escape -}}">
+        <input type="hidden" name="contact[Product URL]" value="{{- product_ref.url -}}">
+
+        {%- if form.posted_successfully? -%}
+          <p class="p1 color-paragraphs" tabindex="-1">{{- 'products.product.contact_success' | t -}}</p><!-- /.h4 -->
+        {%- elsif form.errors -%}
+          <div class="color-red">
+            {{- form.errors | default_errors -}}
+          </div><!-- /.color-red -->
+        {%- endif -%}
+
+        <div class="form-row form-row--double">
+          {%-
+            liquid
+            assign label = 'contact.form.name' | t
+            assign placeholder = 'contact.form.name' | t
+            assign id = contact_form_id | append: '-name'
+            if customer
+              assign value = customer.name
+            else
+              assign value = ''
+            endif
+            render 'text-input', id: id, label: label, name: 'contact[Name]', placeholder: placeholder, attr: 'autocomplete="name"', value: value, hide_label: true, required: true
+          -%}
+
+          {%-
+            liquid
+            assign label = 'contact.form.email' | t | append: ' <span class="color-red" aria-hidden="true">*</span>'
+            assign placeholder = 'contact.form.email' | t
+            assign id = contact_form_id | append: '-email'
+            capture attr
+              echo 'autocomplete="email"'
+              echo 'spellcheck="false"'
+              echo 'autocapitalize="off"'
+              echo 'aria-required="true"'
+            endcapture
+            if customer
+              assign value = customer.email
+            else
+              assign value = ''
+            endif
+            render 'text-input', id: id, type: 'email', label: label, name: 'contact[email]', placeholder: placeholder, attr: attr, value: value, hide_label: true, required: true
+          -%}
+        </div><!-- /.form-row form-row--double -->
+
+        <div class="form-row">
+          {%-
+            liquid
+            assign label = 'contact.form.message' | t
+            assign placeholder = 'contact.form.message' | t
+            assign id = contact_form_id | append: '-body'
+            assign name = 'contact.form.message' | t
+            assign nameAttr = 'contact[' | append: name | append: ']'
+            render 'textarea-input', id: id, label: label, name: nameAttr, placeholder: placeholder, hide_label: true, required: true
+          -%}
+        </div><!-- /.form-row -->
+
+        <div class="mt-s">
+          {%- assign value = 'contact.form.submit' | t -%}
+          {%- render 'button', type: 'submit', value: value -%}
+        </div>
+      {%- endform -%}
+    </form-validation>
+  {%- endcapture -%}
+  {%-
+    liquid
+    assign title = 'products.product.contact_modal.title' | t
+    assign id = 'Modal-Product-Contact-' | append: product_ref.id | append: '-' | append: section.id
+    assign class = 'modal-dialog--product-contact color-' | append: section.settings.style
+    render 'modal-dialog', title: title, content: contact_modal_html, class: class, id: id
+  -%}
+{%- endif -%}

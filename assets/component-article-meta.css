@@ -1,0 +1,25 @@
+.article-meta__avatar {
+  margin-right: var(--spacing-step);
+}
+
+.article-meta__avatar img {
+  border-radius: 50%;
+  max-width: calc(var(--spacing-step) * 4);
+}
+
+.article-meta__avatar span {
+  font-size: 1rem;
+  color: var(--color-headings);
+  background-color: var(--color-seperators);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  min-width: calc(var(--spacing-step) * 3);
+  min-height: calc(var(--spacing-step) * 3);
+  border-radius: 50%;
+}
+
+.article-meta__time {
+  margin-left: auto;
+}

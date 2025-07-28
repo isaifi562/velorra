@@ -1,0 +1,86 @@
+<cart-drawer-upsell
+  class="cart-drawer__upsell-item block {% unless upsell_product.has_only_default_variant %} cart-drawer__upsell-item--has-variants {% endunless %}"
+  data-url="{{- routes.root_url -}}products/{{- upsell_product.handle -}}?section_id=cart-drawer-upsell"
+>
+  {%- assign upsell_variant = upsell_product.selected_or_first_available_variant -%}
+
+  {%- if upsell_product.featured_media -%}
+    <div class="cart-drawer__upsell-item-media">
+      <a
+        href="{{- upsell_product.url -}}"
+        class="media media--{{ settings.card_product_media_size }} motion-reduce"
+        {% if settings.card_product_media_size == 'aspect-ratio' %}
+          style="padding-top: {%- render 'aspect-ratio', aspect_ratio: upsell_product.featured_media.aspect_ratio -%}%;"
+        {% endif %}
+      >
+        <span class="visually-hidden">{{- upsell_product.title | escape -}}</span>
+
+        {%-
+          liquid
+          assign image_src = upsell_product.featured_media | image_url: width: 192
+          assign image_alt = upsell_product.featured_media.alt | escape
+          render 'image', src: image_src, alt: image_alt, width: upsell_product.featured_media.width, height: upsell_product.featured_media.height
+        -%}
+      </a><!-- /.media cart-drawer__upsell-item-media -->
+    </div><!-- /.cart-drawer__upsell-item-media -->
+  {%- endif -%}
+
+  <div class="cart-drawer__upsell-item-content">
+    <p class="cart-drawer__upsell-item-title h6">
+      <a href="{{- upsell_product.url -}}" class="full-unstyled-link">{{- upsell_product.title | escape -}}</a>
+    </p><!-- /.cart-drawer__upsell-item-title h6 -->
+
+    <p class="cart-drawer__upsell-item-price p3" data-price>
+      {%- if settings.show_currency_codes -%}
+        {{- upsell_variant.price | money_with_currency -}}
+      {%- else -%}
+        {{- upsell_variant.price | money -}}
+      {%- endif -%}
+    </p><!-- /.cart-drawer__upsell-item-price p3 -->
+  </div><!-- /.cart-drawer__upsell-item-content -->
+
+  <div class="cart-drawer__upsell-item-actions">
+    {%- assign product_form_id = 'Card-Drawer-Upsell-Form-' | append: upsell_product.handle -%}
+    {%- form 'product', upsell_product, id: product_form_id, novalidate: 'novalidate' -%}
+      <input type="hidden" name="id" value="{{- upsell_variant.id -}}">
+
+      {%-
+        liquid
+        assign button_value = 'products.product.add_to_cart_short' | t
+        render 'button', name: 'add', type: 'submit', value: button_value, styles: 's'
+      -%}
+    {%- endform -%}
+
+    <script type="application/json">
+      {{- upsell_product.variants | json -}}
+    </script>
+  </div><!-- /.cart-drawer__upsell-item-actions -->
+
+  {%- unless upsell_product.has_only_default_variant -%}
+    <div class="cart-drawer__upsell-variant-selects">
+      {%- for product_option in upsell_product.options_with_values -%}
+        {%-
+          liquid
+          assign label = product_option.name | escape
+          assign id = 'Card-Drawer-' | append: upsell_product.handle | append: '-Upsell-Option-' | append: forloop.index0
+          assign attr = 'data-name="' | append: label | append: '" data-select'
+        -%}
+
+        {%- capture options -%}
+          {%- for value in product_option.values -%}
+            <option
+              value="{{- value | escape -}}"
+              {% if product_option.selected_value == value %}selected="selected"{% endif %}
+            >
+              {{- value -}}
+            </option>
+          {%- endfor -%}
+        {%- endcapture -%}
+
+        <div class="cart-drawer__upsell-control">
+          {%- render 'select-input', label: label, hide_label: true, id: id, options: options, class: 'cart-drawer__upsell-dropdown', style: 'small', attr: attr -%}
+        </div><!-- /. -->
+      {%- endfor -%}
+    </div><!-- /.cart-drawer__upsell-variant-selects -->
+  {%- endunless -%}
+</cart-drawer-upsell><!-- /.cart-drawer__upsell-item -->

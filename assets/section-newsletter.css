@@ -1,0 +1,15 @@
+.section-newsletter .section__form {
+  max-width: 61rem;
+  margin-inline: auto;
+  text-align: left;
+}
+
+.section-newsletter .section__form .field.has-error .field__icon {
+  display: none;
+}
+
+@media screen and (min-width: 750px) {
+  .section-newsletter .section__form {
+    text-align: center;
+  }
+}

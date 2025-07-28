@@ -1,0 +1,54 @@
+{% comment %}
+    Renders shipping bar
+    Accepts:
+    - class {String} Additional classes
+    Usage:
+    {%- render 'shipping-bar', class: 'additional_classes' -%}
+{% endcomment %}
+
+<script src="{{- 'shipping-bar.js' | asset_url -}}" defer="defer"></script>
+{%- comment -%}theme-check-disable{%- endcomment -%}
+<script src="{{- 'option_selection.js' | shopify_asset_url -}}"></script>
+{%- comment -%}theme-check-enable{%- endcomment -%}
+
+{%- if settings.enable_cart_shipping_bar and
+  settings.cart_shipping_bar_threshold > 0 and
+  settings.cart_shipping_bar_progress_text != blank and
+  settings.cart_shipping_bar_success_text != blank and
+  settings.cart_shipping_bar_empty_text != blank
+-%}
+  {%- capture bar_html -%}
+    <div class="progress-bar__progress hidden mt-xs">
+      <span class="progress-bar__progress-inner" data-progress-bar></span>
+    </div><!-- /.progress-bar__progress -->
+  {%- endcapture -%}
+
+  <div data-cart-shipping-bar>
+    <shipping-bar
+      class="progress-bar block {{ class }}"
+      data-money-format="{{- shop.money_format | escape -}}"
+      data-threshold="{{- settings.cart_shipping_bar_threshold | times: 100 -}}"
+      data-total-price="{{- cart.total_price -}}"
+      data-empty="{%- if cart == empty -%} true {%- else -%} false {%- endif -%}"
+      data-show-currency-code="{{- settings.show_currency_codes -}}"
+    >
+      <p class="progress-bar__text p3">
+        {%- if cart == empty -%}
+          <div class="hidden" data-empty-text>
+            {{- settings.cart_shipping_bar_empty_text -}}
+          </div>
+        {%- else -%}
+          <div class="hidden" data-success-text>
+            {{- settings.cart_shipping_bar_success_text -}}
+          </div>
+
+          <div class="hidden" data-progress-text>
+            {{- settings.cart_shipping_bar_progress_text -}}
+          </div>
+
+          {{- bar_html -}}
+        {%- endif -%}
+      </p><!-- /.progress-bar__text p3 -->
+    </shipping-bar><!-- /.progress-bar -->
+  </div>
+{%- endif -%}

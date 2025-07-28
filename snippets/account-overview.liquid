@@ -1,0 +1,63 @@
+<div class="account-overview">
+  <h1 class="h4 mt-0 mb-xl">{{- 'customer.account.title' | t -}}</h1><!-- /.h4 -->
+
+  <div class="account-overview__inner grid">
+    <div class="account-overview__orders grid__item grid__item--xs-8 mb-l--large">
+      <h2 class="h5 mt-0 mb-m">{{- 'customer.orders.latest' | t -}}</h2><!-- /.h5 -->
+
+      {%- if customer.orders.size > 0 -%}
+        <div class="account__table mb-m">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="p3 bold">{{- 'customer.orders.order' | t -}}</th>
+
+                <th class="p3 bold">{{- 'customer.orders.order_date' | t -}}</th>
+
+                <th class="p3 bold">{{- 'customer.orders.payment_status' | t -}}</th>
+
+                <th class="p3 bold">{{- 'customer.orders.fulfillment_status' | t -}}</th>
+
+                <th class="p3 bold">{{- 'customer.orders.total' | t -}}</th>
+              </tr>
+            </thead>
+
+            <tbody class="p3">
+              {%- for order in customer.orders limit: 3 -%}
+                {%- render 'order-row-item', order: order -%}
+              {%- endfor -%}
+            </tbody>
+          </table>
+        </div><!-- /.account__table -->
+
+        {%-
+          liquid
+          assign value = 'customer.account.view_order_history' | t
+          assign href = routes.account_url | append: '?view=order-history'
+          render 'button', type: 'link', href: href, css: 'button', styles: 'outline,s', value: value
+        -%}
+      {%- else -%}
+        <p class="p1">
+          {{- 'customer.orders.orders_empty' | t -}}
+        </p><!-- /.h3 -->
+      {%- endif -%}
+    </div><!-- /.account-overview__orders -->
+
+    <span class="small-hide grid__item--xs-1"></span><!-- /.grid__item--xs-1 -->
+
+    <div class="account-overview__address grid__item grid__item--xs-3">
+      {%-
+        liquid
+        assign heading = 'customer.addresses.default' | t
+        render 'card-address', heading: heading, address: customer.default_address
+      -%}
+
+      {%-
+        liquid
+        assign value = 'customer.account.view_addresses' | t
+        assign href = routes.account_addresses_url
+        render 'button', type: 'link', href: href, css: 'button', styles: 'outline,s', value: value
+      -%}
+    </div><!-- /.account-overview__address -->
+  </div><!-- /.account-overview__inner -->
+</div><!-- /.account-overview -->

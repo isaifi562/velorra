@@ -1,0 +1,306 @@
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: calc(var(--spacing-step) * 2);
+}
+
+.form-row--double {
+  grid-template-columns: 1fr;
+}
+
+@media screen and (min-width: 750px) {
+  .form-row--double {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.form-row + .form-row {
+  margin-top: calc(var(--spacing-step) * 2);
+}
+
+.field,
+.field__input-wrapper {
+  position: relative;
+}
+
+.field__label,
+#shopify-product-reviews .spr-form-label {
+  display: block;
+  cursor: pointer;
+  margin: 0 0 var(--spacing-step);
+}
+
+.field.has-error .field__label:after,
+.select-input.has-error .select-input__label:after {
+  content: ' *';
+  color: var(--color-red);
+}
+
+.field__input,
+#shopify-product-reviews .spr-form-input:not(.spr-starrating) {
+  font-family: inherit;
+  color: var(--color-form-label);
+  background-color: var(--color-form-input-background);
+  width: 100%;
+  height: calc(var(--spacing-step) * 7);
+  padding: calc(var(--spacing-step) * 2);
+  border: none;
+  border-radius: var(--border-radius-form-inputs);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.field__input {
+  outline-offset: -0.2rem;
+}
+
+.field__input::placeholder,
+#shopify-product-reviews
+  .spr-form-input:not(.spr-starrating)::placeholder {
+  color: var(--color-form-input-placeholder);
+}
+
+.field.has-error .field__input:not(:focus-visible),
+.select-input.has-error .select-input__wrapper:not(:focus-within) {
+  color: var(--color-red);
+  outline: 0.2rem solid var(--color-red);
+}
+
+.field--textarea .field__input {
+  display: block;
+  height: auto;
+  min-height: 14.4rem;
+  resize: vertical;
+}
+
+.field--small .field__input {
+  height: calc(var(--spacing-step) * 4);
+  padding: var(--spacing-step);
+}
+
+.field--large .field__input {
+  height: calc(var(--spacing-step) * 7);
+  padding: calc(var(--spacing-step) * 2);
+}
+
+.field__icon {
+  line-height: 0;
+  display: none;
+  position: absolute;
+  top: 50%;
+  right: calc(var(--spacing-step) * 2);
+  transform: translate3d(0, -50%, 0);
+}
+
+.field--small .field__icon svg {
+  width: calc(var(--spacing-step) * 2);
+  height: calc(var(--spacing-step) * 2);
+}
+
+.field.has-error .field__input:not(:focus-visible) ~ .field__icon {
+  color: var(--color-red);
+  display: block;
+}
+
+.field.has-error:not(:focus-within) .field__message {
+  display: block;
+  margin: calc(var(--spacing-step) / 2) 0 0;
+}
+
+.field:focus-within .field__message {
+  display: none;
+}
+
+.field.has-error:not(:focus-within) .field__message.has-error {
+  color: var(--color-red);
+}
+
+.field__message > * {
+  vertical-align: middle;
+}
+
+.field__message span {
+  margin-left: calc(var(--spacing-step) / 2);
+}
+
+@media screen and (min-width: 750px) {
+  .field.has-error {
+    margin-bottom: 0rem;
+  }
+
+  .field--small .field__input {
+    height: calc(var(--spacing-step) * 6);
+    padding: calc(var(--spacing-step) * 2);
+  }
+
+  .field--large .field__input {
+    height: calc(var(--spacing-step) * 8);
+  }
+}
+
+.checkbox--is-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Position hidden input for required tooltip. */
+.checkbox {
+  position: relative;
+}
+
+.has-error .checkbox,
+.checkbox.has-error {
+  color: var(--color-red);
+}
+
+.checkbox input {
+  top: calc(50% + 1rem);
+  left: 0.9rem;
+}
+
+.checkbox__label,
+.radio__label {
+  display: inline-block;
+  padding: var(--spacing-step) 0 var(--spacing-step)
+    calc(var(--spacing-step) * 3);
+  cursor: pointer;
+  position: relative;
+}
+
+.checkbox__icon,
+.radio__icon {
+  background-color: var(--color-form-input-background);
+  display: block;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.radio__icon {
+  border-radius: 50%;
+}
+
+.checkbox__icon svg,
+.radio__icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: scale(0);
+  transition: transform var(--duration-default) ease-out;
+}
+
+.checkbox__input:checked ~ .checkbox__label .checkbox__icon svg,
+.radio__input:checked ~ .radio__label .radio__icon svg {
+  transform: scale(1);
+}
+
+.checkbox__input:focus-visible ~ .checkbox__label .checkbox__icon {
+  outline: 0.2rem solid currentColor;
+}
+
+select {
+  background: none;
+  color: inherit;
+}
+
+.select-input__label {
+  display: block;
+  cursor: pointer;
+  margin: 0 0 calc(var(--spacing-step) * 2);
+}
+
+.select-input__wrapper {
+  position: relative;
+}
+
+.select-input__wrapper svg {
+  color: var(--color-form-label);
+  position: absolute;
+  top: 50%;
+  right: calc(var(--spacing-step) * 2);
+  z-index: 1;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.select-input__wrapper .select__icon {
+  display: none;
+  position: absolute;
+  top: 50%;
+  right: calc(var(--spacing-step) * 2);
+  transform: translate3d(0, -50%, 0);
+}
+
+.select-input__el {
+  font-family: inherit;
+  line-height: 1.2;
+  background-color: var(--color-form-input-background);
+  width: 100%;
+  height: calc(var(--spacing-step) * 6);
+  padding: calc(var(--spacing-step) * 2)
+    calc(var(--spacing-step) * 6.5) calc(var(--spacing-step) * 2)
+    calc(var(--spacing-step) * 2);
+  border: none;
+  border-radius: var(--border-radius-form-inputs);
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.select-input__el:invalid {
+  color: var(--color-form-input-placeholder);
+}
+
+.select-input--small .select-input__el {
+  height: calc(var(--spacing-step) * 4);
+  padding: var(--spacing-step) calc(var(--spacing-step) * 4)
+    var(--spacing-step) var(--spacing-step);
+}
+
+.select-input--small .select-input__wrapper svg {
+  width: 1.6rem;
+  height: 1.6rem;
+  right: var(--spacing-step);
+}
+
+.select-input--small label {
+  font-size: calc(var(--font-body-scale) * 1.4rem);
+}
+
+.select-input--large .select-input__el {
+  height: calc(var(--spacing-step) * 7);
+}
+
+@media screen and (min-width: 750px) {
+  .select-input__el {
+    height: calc(var(--spacing-step) * 7);
+  }
+
+  .select-input--small label {
+    font-size: calc(var(--font-body-scale) * 1.6rem);
+  }
+
+  .select-input--small .select-input__el {
+    height: calc(var(--spacing-step) * 6);
+    padding: calc(var(--spacing-step) * 2)
+      calc(var(--spacing-step) * 6.5) calc(var(--spacing-step) * 2)
+      calc(var(--spacing-step) * 2);
+  }
+
+  .select-input--small .select-input__wrapper svg {
+    right: calc(var(--spacing-step) * 2);
+  }
+
+  .select-input--large .select-input__el {
+    height: calc(var(--spacing-step) * 8);
+  }
+
+  .select-input--large .select-input__wrapper svg {
+    right: calc(var(--spacing-step) * 3);
+  }
+}

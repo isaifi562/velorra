@@ -1,0 +1,47 @@
+.text-content > :first-child {
+  margin-top: 0;
+}
+
+.text-content ul {
+  text-align: left;
+  display: inline-grid;
+  list-style-position: inside;
+  padding-left: 0;
+}
+
+.text-content ul a {
+  color: inherit;
+}
+
+.text-content p:last-child {
+  margin-bottom: 0;
+}
+
+.text__actions a {
+  margin: 0 var(--spacing-step) var(--spacing-step) 0;
+}
+
+.center .text__actions a {
+  margin-inline: calc(var(--spacing-step) / 2);
+}
+
+.text__actions .button--solid + .link {
+  margin-left: calc(var(--spacing-step) * 2.5);
+}
+
+.text-content--solid-mobile {
+  background-color: var(--color-background-transparent-50);
+  padding: calc(var(--spacing-step) * 2);
+}
+
+@media screen and (min-width: 750px) {
+  .text-content--solid-mobile {
+    background-color: transparent;
+    padding: 0;
+  }
+
+  .text-content--solid {
+    background-color: var(--color-background-transparent-50);
+    padding: calc(var(--spacing-step) * 6);
+  }
+}

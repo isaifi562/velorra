@@ -1,0 +1,6 @@
+{%- liquid
+  assign link_string_to_find = '@@@' | append: link.title | append: '|||'
+  if highlighted_links contains link_string_to_find
+    echo highlighted_links | split: link_string_to_find | last | split: '@@@' | first
+  endif
+-%}

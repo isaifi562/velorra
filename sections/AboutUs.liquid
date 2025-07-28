@@ -1,0 +1,196 @@
+<!-- about-us.liquid -->
+<section class="about-us-section">
+  <div class="container">
+    <h1>{{ section.settings.title }}</h1>
+
+    {% for block in section.blocks %}
+      <div class="about-us-content{% if block.settings.layout == 'reverse' %} reverse{% elsif block.settings.layout == 'overlay' %} overlay{% endif %}">
+        {% if block.settings.layout == 'overlay' %}
+          <div class="about-us-image overlay">
+            <img src="{{ block.settings.image | img_url: 'large' }}" alt="{{ block.settings.image_alt }}">
+          </div>
+          <div class="about-us-text overlay-text">
+            {% if block.settings.heading %}
+              <h2>{{ block.settings.heading }}</h2>
+            {% endif %}
+            <p>{{ block.settings.text }}</p>
+          </div>
+        {% else %}
+          <div class="about-us-text">
+            {% if block.settings.heading %}
+              <h2>{{ block.settings.heading }}</h2>
+            {% endif %}
+            <p>{{ block.settings.text }}</p>
+          </div>
+          <div class="about-us-image">
+            <img src="{{ block.settings.image | img_url: 'large' }}" alt="{{ block.settings.image_alt }}">
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="about-us-text final">
+      <p>{{ section.settings.final_text }}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* theme.scss.liquid */
+.about-us-section {
+  background-color: #f9f9f9;
+  padding: 50px 0;
+}
+
+.about-us-section .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.about-us-section h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.about-us-section h2 {
+  font-size: 28px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.about-us-section p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.about-us-section .about-us-content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.about-us-section .about-us-content.reverse {
+  flex-direction: row-reverse;
+}
+
+.about-us-section .about-us-content.overlay {
+  flex-direction: column;
+  text-align: center;
+}
+
+.about-us-section .about-us-image {
+  flex: 1;
+  padding: 20px;
+}
+
+.about-us-section .about-us-text {
+  flex: 1;
+  padding: 20px;
+}
+
+.about-us-section .about-us-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.about-us-section .about-us-content.overlay .about-us-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.about-us-section .about-us-content.overlay .about-us-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.about-us-section .about-us-text.final {
+  text-align: center;
+}
+
+</style>
+
+{% schema %}
+{
+  "name": "About Us",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "About Us"
+    },
+    {
+      "type": "textarea",
+      "id": "final_text",
+      "label": "Final Text",
+      "default": "Welcome to Tazori Collection - where luxury meets affordability, tradition meets innovation, and elegance finds its truest expression. Embark on a journey with us, as we craft stories through jewelry that will be cherished for generations to come."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Content Block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image Alt Text",
+          "default": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Heading"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Content text here."
+        },
+        {
+          "type": "radio",
+          "id": "layout",
+          "label": "Layout",
+          "options": [
+            { "value": "default", "label": "Default" },
+            { "value": "reverse", "label": "Reverse" },
+            { "value": "overlay", "label": "Overlay" }
+          ],
+          "default": "default"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Us"
+    }
+  ]
+}
+{% endschema %}

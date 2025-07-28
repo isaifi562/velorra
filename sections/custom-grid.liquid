@@ -1,0 +1,133 @@
+<style>
+.custom-grid-section {
+  padding: 60px 0;
+}
+.custom-grid-section .container {
+  max-width: 1500px;
+  margin: 0 auto;
+  text-align: center;
+  padding:0
+}
+.custom-grid-section h2 {
+  font-size: 3em;
+  text-align: center;
+  margin:15px 0 !important
+}
+.custom-grid-section p {
+  max-width: 45%;
+  margin: 0 auto 20px;
+  text-align: center;
+  font-size:18px;
+  line-height:28px
+}
+.custom-grid-section .grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 50px;
+}
+.custom-grid-section .grid-item {
+  flex: 1 1 calc(20% - 20px);
+  box-sizing: border-box;
+}
+.custom-grid-section .grid-item img {
+  width: 270px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.custom-grid-section .grid-item h3 {
+  margin: 10px 0;
+  font-size:20px;
+  color:#000  !important;
+   text-decoration: none !important
+}
+.custom-grid-section .grid-item p {
+  margin: 10px 0;
+}
+.custom-grid-section .grid-item .btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #000;
+  color: #fff;
+      text-decoration: none !important;
+}
+  .btn{
+        text-decoration: none !important;
+  }
+</style>
+
+<div class="custom-grid-section">
+  <div class="container">
+    <h2>{{ section.settings.section_heading }}</h2>
+    <p>{{ section.settings.section_para }}</p>
+    <div class="grid">
+      {% for block in section.blocks %}
+     <a href="{{ block.settings.button_link }}" class="btn">
+        <div class="grid-item">
+          <img src="{{ block.settings.image | img_url: 'master' }}" alt="{{ block.settings.image_heading }}">
+          <h3>{{ block.settings.image_heading }}</h3>
+          <p>{{ block.settings.image_paragraph }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Grid Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Section Heading",
+      "default": "Our Gallery"
+    },
+    {
+      "type": "text",
+      "id": "section_para",
+      "label": "Section Paragraph",
+      "default": "Explore our curated selection of Indian jewelry, meticulously crafted to adorn every moment of your life with elegance and grace"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image_block",
+      "name": "Image Block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_heading",
+          "label": "Image Heading",
+          "default": "Image Heading"
+        },
+        {
+          "type": "textarea",
+          "id": "image_paragraph",
+          "label": "Image Paragraph",
+          "default": "This is a description for the image."
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Grid Section",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

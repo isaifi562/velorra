@@ -1,0 +1,70 @@
+{%-
+  liquid
+  capture socials
+  echo 'facebook,'
+  echo 'twitter,'
+  echo 'instagram,'
+  echo 'youtube,'
+  echo 'pinterest,'
+  echo 'tiktok,'
+  echo 'snapchat,'
+  echo 'tumblr,'
+  echo 'linkedin,'
+  echo 'vimeo'
+  endcapture
+  assign socials = socials | strip_newlines | split: ','
+-%}
+
+{%- capture socials_html -%}
+  {%- for social in socials -%}
+    {%-
+      liquid
+      assign social_link = 'social_' | append: social | append: '_link'
+      assign social_text = 'general.social.links.' | append: social
+
+      if settings[social_link] == blank
+        continue
+      endif
+    -%}
+
+    <li class="mb-s">
+      <a href="{{- settings[social_link] -}}" class="inline-unstyled-link" target="_blank">
+        {%-
+          liquid
+          case social
+            when 'facebook'
+              render 'icon-facebook'
+            when 'twitter'
+              render 'icon-twitter'
+            when 'pinterest'
+              render 'icon-pinterest'
+            when 'instagram'
+              render 'icon-instagram'
+            when 'snapchat'
+              render 'icon-snapchat'
+            when 'tiktok'
+              render 'icon-tiktok'
+            when 'tumblr'
+              render 'icon-tumblr'
+            when 'linkedin'
+              render 'icon-linkedin'
+            when 'youtube'
+              render 'icon-youtube'
+            when 'vimeo'
+              render 'icon-vimeo'
+          endcase
+        -%}
+
+        <span class="visually-hidden">
+          {{- social_text | t -}}
+        </span>
+      </a>
+    </li><!-- /.mb-s -->
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if socials_html -%}
+  <ul class="list-unstyled list-socials flex flex--center {{ class }}">
+    {{- socials_html -}}
+  </ul>
+{%- endif -%}

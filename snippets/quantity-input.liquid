@@ -1,0 +1,69 @@
+{% comment %}
+    Renders quantity input field with controls
+    Accepts:
+    - product_ref {Object} Liquid product object
+    - value {Integer} Quantity value. Defaults to 1
+    - name {String} Input name. Accepts 'quantity' or 'updates[]'. Defaults to 'quantity'.
+    - min {Integer} Minimum value. Defaults to 1
+    - max {Integer} Maximum value.
+    - index {Integer} Index of the cart line_item
+    - style {String} Input style. Accepts: 'small', 'large'. Defaults to 'medium'.
+    - context {String} Context that the input belongs to
+    - form {String} The form ID to which the input belongs
+    - show_label {Boolean} Show label
+    Usage:
+    {% render 'quantity-input', product_ref: product %}
+{% endcomment %}
+
+{%-
+  liquid
+    assign product_ref = product_ref | default: false
+    assign value = value | default: 1
+    assign name = name | default: false
+    assign min = min | default: false
+    assign max = max | default: false
+    assign index = index | default: false
+    assign style = style | default: false
+    assign context = context | default: ''
+    assign typo = 'p3'
+    assign form = form | default: false
+    assign show_label = show_label | default: false
+
+    if style == 'small'
+      assign typo = 'p4'
+    elsif style == 'large'
+      assign typo = 'p2'
+    endif
+-%}
+
+<quantity-input class="quantity quantity--{{ style }} field">
+  <label for="ProductQuantity-{{- index | default: product_ref.id -}}-{{- context -}}" class="{% if show_label %}quantity__label mb-s{% else %}visually-hidden{% endif %}">
+    {{- 'products.product.quantity.label' | t -}}
+  </label>
+
+  <div class="quantity__wrapper">
+    <button class="quantity__button" name="decrement" type="button">
+      <span class="visually-hidden">{{- 'products.product.quantity.decrease' | t: product: product_ref.title | escape -}}</span>
+
+      {%- render 'icon-minus' -%}
+    </button>
+
+    <input
+      class="quantity__input {{ typo }}"
+      type="number"
+      name="{{- name | default: 'quantity' -}}"
+      id="ProductQuantity-{{- index | default: product_ref.id -}}-{{- context -}}"
+      min="{{- min | default: 1 -}}"
+      {% if max %}max="{{- max -}}"{% endif %}
+      value="{{- value | default: 1 -}}"
+      {% if form %}form="{{- form -}}"{% endif %}
+      {% if index %}data-index="{{- index -}}"{% endif %}
+    >
+
+    <button class="quantity__button" name="increment" type="button">
+      <span class="visually-hidden">{{- 'products.product.quantity.increase' | t: product: product_ref.title | escape -}}</span>
+
+      {%- render 'icon-plus' -%}
+    </button>
+  </div><!-- /.quantity__wrapper -->
+</quantity-input><!-- /.quantity.field -->

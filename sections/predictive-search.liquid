@@ -1,0 +1,122 @@
+<link rel="stylesheet" href="{{ 'component-card-product.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'component-badge.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>
+  {{- 'component-card-product.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-badge.css' | asset_url | stylesheet_tag -}}
+</noscript>
+
+{%- if predictive_search.performed -%}
+  <div id="predictive-search-results">
+    <div class="container container--fullwidth">
+      <div class="header__search-results-inner">
+        <div class="header__search-results-main">
+          <p class="header__search-results-title h5">{{- 'predictive_search.product_results' | t -}}</p><!-- /.header__search-results-title h5 -->
+
+          {%- if predictive_search.resources.products.size > 0 -%}
+            <div class="header__search-results-products-grid">
+              {%- for product_resource in predictive_search.resources.products -%}
+                <div class="header__search-results-products-grid-item">
+                  {%- render 'card-product', product_ref: product_resource -%}
+                </div><!-- /.="header__search-results-products-grid-item -->
+              {%- endfor -%}
+            </div><!-- /.header__search-results-products-grid -->
+
+            <div class="header__search-results-actions">
+              {%-
+                liquid
+                assign link_text = 'predictive_search.see_all_products' | t
+                assign link_url = routes.search_url | append: '?q=' | append: predictive_search.terms | append: '&type=product' | append: '&options[prefix]=last'
+                render 'button', type: 'link', href: link_url, css: 'link', value: link_text, styles: 's'
+              -%}
+            </div><!-- /.header__search-results-actions -->
+          {%- else -%}
+            <p class="header__search-results-empty p4">{{- 'predictive_search.no_results' | t -}}</p><!-- /.header__search-results-empty p4 -->
+          {%- endif -%}
+        </div><!-- /.header__search-results-main -->
+
+        <div class="header__search-results-aside">
+          {%- if predictive_search.resources.queries.size > 0 -%}
+            <div class="header__search-results-aside-inner">
+              <p class="header__search-results-title h5">{{- 'predictive_search.similar_searches' | t -}}</p><!-- /.header__search-results-title h5 -->
+
+              {%- for query_resource in predictive_search.resources.queries -%}
+                <div class="header__search-results-aside-item">
+                  <p class="header__search-results-aside-heading h6">
+                    <a href="{{- query_resource.url -}}" class="full-unstyled-link header__search-query">{{- query_resource.text -}}</a>
+                  </p><!-- /.header__search-results-aside-heading h6 -->
+                </div><!-- /.header__search-results-aside-item -->
+              {%- endfor -%}
+            </div><!-- /.header__search-results-aside-inner -->
+          {%- endif -%}
+
+          <div class="header__search-results-aside-inner">
+            <p class="header__search-results-title h5">{{- 'predictive_search.blog_posts_and_pages' | t -}}</p><!-- /.header__search-results-title h5 -->
+
+            {%- if predictive_search.resources.articles.size > 0  or predictive_search.resources.pages.size > 0 -%}
+              {%- for article_resource in predictive_search.resources.articles limit: 3 -%}
+                <div class="header__search-results-aside-item">
+                  <p class="header__search-results-aside-subheading sh sh--4">
+                    {{- 'predictive_search.article' | t -}}
+                  </p><!-- /.header__search-results-aside-subheading sh sh--4 -->
+
+                  <p class="header__search-results-aside-heading h6">
+                    <a href="{{- article_resource.url -}}" class="full-unstyled-link">{{- article_resource.title -}}</a>
+                  </p><!-- /.header__search-results-aside-heading h6 -->
+                </div><!-- /.header__search-results-aside-item -->
+              {%- endfor -%}
+
+              {%- for page_resource in predictive_search.resources.pages limit: 3 -%}
+                <div class="header__search-results-aside-item">
+                  <p class="header__search-results-aside-subheading sh sh--4">
+                    {{- 'predictive_search.page' | t -}}
+                  </p><!-- /.header__search-results-aside-subheading sh sh--4 -->
+
+                  <p class="header__search-results-aside-heading h6">
+                    <a href="{{- page_resource.url -}}" class="full-unstyled-link">{{- page_resource.title -}}</a>
+                  </p><!-- /.header__search-results-aside-heading h6 -->
+                </div><!-- /.header__search-results-aside-item -->
+              {%- endfor -%}
+
+              <div class="header__search-results-actions">
+                {%-
+                  liquid
+                  assign link_text = 'predictive_search.see_all_results' | t
+                  assign link_url = routes.search_url | append: '?q=' | append: predictive_search.terms | append: '&type=article,page' | append: '&options[prefix]=last'
+                  render 'button', type: 'link', href: link_url, css: 'link', value: link_text, styles: 's'
+                -%}
+              </div><!-- /.header__search-results-actions -->
+            {%- else -%}
+              <p class="header__search-results-empty p4">{{- 'predictive_search.no_results' | t -}}</p><!-- /.header__search-results-empty p4 -->
+            {%- endif -%}
+          </div><!-- /.header__search-results-aside-inner -->
+
+          <div class="header__search-results-aside-inner">
+            <p class="header__search-results-title h5">{{- 'predictive_search.collections' | t -}}</p><!-- /.header__search-results-title h5 -->
+
+            {%- if predictive_search.resources.collections.size > 0 -%}
+              {%- for collection in predictive_search.resources.collections -%}
+                <div class="header__search-results-aside-item">
+                  <p class="header__search-results-aside-heading h6">
+                    <a href="{{- collection.url -}}" class="full-unstyled-link">{{- collection.title -}}</a>
+                  </p><!-- /.header__search-results-aside-heading h6 -->
+                </div><!-- /.header__search-results-aside-item -->
+              {%- endfor -%}
+
+              <div class="header__search-results-actions">
+                {%-
+                  liquid
+                  assign link_text = 'predictive_search.see_all_results' | t
+                  assign link_url = routes.search_url | append: '?q=' | append: predictive_search.terms | append: '&type=collection' | append: '&options[prefix]=last'
+                  render 'button', type: 'link', href: link_url, css: 'link', value: link_text, styles: 's'
+                -%}
+              </div><!-- /.header__search-results-actions -->
+            {%- else -%}
+              <p class="header__search-results-empty p4">{{- 'predictive_search.no_results' | t -}}</p><!-- /.header__search-results-empty p4 -->
+            {%- endif -%}
+          </div><!-- /.header__search-results-aside-inner -->
+        </div><!-- /.header__search-results-aside -->
+      </div><!-- /.header__search-results-inner -->
+    </div><!-- /.container container--fullwidth -->
+  </div><!-- #predictive-search-results -->
+{%- endif -%}
