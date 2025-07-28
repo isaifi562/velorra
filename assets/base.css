@@ -2808,3 +2808,6 @@ input.is-unavailable + label:after {
 #shopify-section-sections--15649371553850__header > sticky-header > div > div > nav.header__utils > ul > li:nth-child(2){
   display:none;
 }
+.card-product__main a {
+    padding-top: 10% !important;
+}
