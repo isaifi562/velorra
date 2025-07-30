@@ -106,6 +106,11 @@
       {%- endif -%}
 
 
+  {%- when 'bundel' -%}
+  {% if block.type == 'bundel' %}
+    {%- render 'combo-bundel', product: product, metafield: product.metafields.custom.free_product_handle, block: block -%}
+  {% endif %}
+
       <div class="product__selector{% if product_ref.has_only_default_variant %} hidden{% endif %}" id="ProductSelector-{{- section.id -}}">
         <product-selector
           class="product-selector {% if product_ref.variants.size == 1 %}product-selector--single{% endif %}"
