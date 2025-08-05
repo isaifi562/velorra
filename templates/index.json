@@ -162,7 +162,7 @@
         "button_style_1": "solid",
         "button_size_1": "s",
         "button_text_1": "",
-        "button_url_1": "shopify://collections",
+        "button_url_1": "shopify://collections/combo",
         "collection": "combo",
         "product_list": [],
         "products_count": 8,
