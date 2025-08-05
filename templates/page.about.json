@@ -84,14 +84,14 @@
         "heading_DQa9Vi": {
           "type": "heading",
           "settings": {
-            "heading": "<p>Unveiling Elegance</p>",
+            "heading": "<p>What We Stand For:</p>",
             "heading_size": "h3"
           }
         },
         "paragraph_NGcLqL": {
           "type": "paragraph",
           "settings": {
-            "paragraph": "<p>Tazori Collection stands as a beacon of exceptional craftsmanship and unparalleled artistry. Each piece within our curated range is meticulously designed and handcrafted, encapsulating the rich heritage of Indian jewelry while embracing contemporary aesthetics. Our commitment to quality ensures that every gemstone, every detail, and every intricate element reflects the highest standards of excellence.</p>"
+            "paragraph": "<p>● Quality over clutter: We believe fewer, better pieces lead to clearer, better days<br/>● Feminine energy, not fast fashion: No overproduction, no trend-chasing chaos<br/>● Real people, real bodies: We celebrate movement, softness, and self-expression — not<br/>filters<br/>● Cotton that breathes like you do: All our clothing is created with premium, breathable cotton that feels light, flows well, and lasts longer<br/>● Story-first design: Every drop, every silhouette, every name we give to a piece — it’s never random. It’s all intentional</p>"
           }
         }
       },
@@ -105,7 +105,7 @@
         "p {font-size: 18px;}"
       ],
       "settings": {
-        "style": "style-1",
+        "style": "style-3",
         "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
         "inner_spacing": "spacing-none",
         "height": "3-4",
@@ -114,63 +114,8 @@
         "background_gradient": "",
         "enable_fullwidth": true,
         "swap_image_and_text": true,
-        "content_vertical_position": "center"
-      }
-    },
-    "2_text_columns_pWG93r": {
-      "type": "2-text-columns",
-      "blocks": {
-        "text_4JXmjL": {
-          "type": "text",
-          "settings": {
-            "subheading": "",
-            "heading": "<p>Our Aim</p>",
-            "heading_size": "h3",
-            "paragraph": "<p>At Tazori Collection, we believe that jewelry is more than just adornment; it's a reflection of individuality, a testament to artistry, and a celebration of timeless beauty. Our journey began with a passion to bring forth exquisite Indian jewelry that captures the essence of elegance and uniqueness, making luxury accessible to all corners of the world.</p>",
-            "button_style_1": "solid",
-            "button_size_1": "m",
-            "button_text_1": "",
-            "button_url_1": "",
-            "button_style_2": "solid",
-            "button_size_2": "m",
-            "button_text_2": "",
-            "button_url_2": ""
-          }
-        },
-        "text_dGGMTQ": {
-          "type": "text",
-          "settings": {
-            "subheading": "",
-            "heading": "<p>Tazori Experience</p>",
-            "heading_size": "h3",
-            "paragraph": "<p>We invite you to immerse yourself in the world of Tazori Collection. Discover handpicked gems that speak to your heart and resonate with your spirit. Explore jewelry that mirrors your elegance and captures your distinctiveness. We're not just a jewelry brand; we're a destination for those who appreciate the finer things in life.</p>",
-            "button_style_1": "solid",
-            "button_size_1": "m",
-            "button_text_1": "",
-            "button_url_1": "",
-            "button_style_2": "solid",
-            "button_size_2": "m",
-            "button_text_2": "",
-            "button_url_2": ""
-          }
-        }
-      },
-      "block_order": [
-        "text_4JXmjL",
-        "text_dGGMTQ"
-      ],
-      "custom_css": [
-        ".section__wrapper {background: #f9f9f9; margin: 40px 0;}",
-        ".container {max-width: 1400px; padding: 0;}"
-      ],
-      "settings": {
-        "style": "style-1",
-        "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
-        "inner_spacing": "spacing-m spacing-m--large",
-        "enable_fullwidth": false,
-        "enable_custom_background": false,
-        "background_color": "",
-        "background_gradient": ""
+        "content_vertical_position": "center",
+        "image": "shopify://shop_images/6_0b571863-1074-4381-aef9-f47f584d07a1.jpg"
       }
     },
     "image_with_text_MbTzAk": {
@@ -179,14 +124,14 @@
         "heading_J8TrUg": {
           "type": "heading",
           "settings": {
-            "heading": "<p>Global Beauty, Thoughtful Pricing</p>",
+            "heading": "<p>Why We Exist</p>",
             "heading_size": "h3"
           }
         },
         "paragraph_gCLcPd": {
           "type": "paragraph",
           "settings": {
-            "paragraph": "<p>We understand that elegance should never be exclusive. Tazori Collection was born from the desire to make luxurious jewelry accessible without compromising on quality. By combining our passion for design with efficient sourcing and production, we are able to offer remarkable pieces that showcase your unique style, all at an affordable price.</p>"
+            "paragraph": "<p>We started Velorrea because we couldn’t find what we wanted to wear — <br/>Something clean, comfortable, conscious, and still powerful.<br/>Something that looked like us. Felt like us<br/>Something that wasn’t screaming for attention, but still turned heads with energy<br/>So we made it.<br/>And we keep making it — not just for us, but for every woman out there who’s ready to own her soft power, walk with a little more ease, and look in the mirror and say:</p><p><br/><strong>“This feels like me.”</strong><br/><strong>Velorrea isn’t fast. It’s not loud. It’s not for everyone.</strong><br/><strong>But if it feels like home, welcome.<br/>We’ve been waiting for you.</strong><br/><br/><br/></p>"
           }
         }
       },
@@ -200,55 +145,17 @@
         "p {font-size: 18px;}"
       ],
       "settings": {
-        "style": "style-1",
+        "style": "style-3",
         "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
-        "inner_spacing": "spacing-none",
+        "inner_spacing": "spacing-s spacing-s--large",
         "height": "3-4",
         "enable_custom_background": false,
         "background_color": "",
         "background_gradient": "",
         "enable_fullwidth": true,
         "swap_image_and_text": false,
-        "content_vertical_position": "center"
-      }
-    },
-    "image_with_text_wJw77M": {
-      "type": "image-with-text",
-      "blocks": {
-        "heading_x8ppVR": {
-          "type": "heading",
-          "settings": {
-            "heading": "<p>Crafting Memories</p>",
-            "heading_size": "h3"
-          }
-        },
-        "paragraph_QfMGxp": {
-          "type": "paragraph",
-          "settings": {
-            "paragraph": "<p>Every piece from Tazori Collection is an embodiment of art and emotion. Whether you're celebrating a milestone, expressing your individuality, or honoring cherished traditions, our jewelry becomes a part of your journey. With Tazori, you don't just wear jewelry; you wear memories, dreams, and moments that transcend time</p>"
-          }
-        }
-      },
-      "block_order": [
-        "heading_x8ppVR",
-        "paragraph_QfMGxp"
-      ],
-      "custom_css": [
-        ".section__wrapper {max-width: 1400px !important; margin: auto !important; background: #f9f9f9;}",
-        "img {border-radius: 0px 10px 10px 10px;}",
-        "p {font-size: 18px;}"
-      ],
-      "settings": {
-        "style": "style-1",
-        "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
-        "inner_spacing": "spacing-none",
-        "height": "3-4",
-        "enable_custom_background": false,
-        "background_color": "",
-        "background_gradient": "",
-        "enable_fullwidth": true,
-        "swap_image_and_text": true,
-        "content_vertical_position": "center"
+        "content_vertical_position": "center",
+        "image": "shopify://shop_images/5_cf649a44-b33a-4e84-8bab-3300c209bb1d.jpg"
       }
     }
   },
@@ -257,8 +164,6 @@
     "custom_grid_RBdqFb",
     "image_with_text_Wh4wgB",
     "image_with_text_KgyprM",
-    "2_text_columns_pWG93r",
-    "image_with_text_MbTzAk",
-    "image_with_text_wJw77M"
+    "image_with_text_MbTzAk"
   ]
 }
