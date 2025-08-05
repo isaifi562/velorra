@@ -148,7 +148,7 @@
     "featured_products_VYbiQ8": {
       "type": "featured-products",
       "custom_css": [
-        ".text-content {display: flex; justify-content: space-between; align-items: center;}",
+        ".text-content {display: flex; justify-content: center; align-items: center;}",
         ".max-width {width: 100% !important; max-width: 100% !important;}",
         ".card-product__main a {padding-top: 20% !important;}"
       ],
@@ -195,7 +195,7 @@
     "featured_products_JAhMVD": {
       "type": "featured-products",
       "custom_css": [
-        ".text-content {display: flex; justify-content: space-between; align-items: center;}",
+        ".text-content {display: flex; justify-content: center; align-items: center;}",
         ".max-width {width: 100% !important; max-width: 100% !important;}",
         ".card-product__main a {padding-top: 20% !important;}"
       ],
