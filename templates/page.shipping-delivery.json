@@ -58,7 +58,7 @@
       "name": "t:sections.richtext.name",
       "settings": {
         "style": "style-1",
-        "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
+        "outer_spacing": "mt-l mb-l mt-l--large mb-l--large",
         "inner_spacing": "spacing-none",
         "text_align": "left",
         "narrow_content": false,
