@@ -95,6 +95,8 @@
     "swatches_hex_codes": "Black=#000\nWhite=#fff",
     "pdp_swatches_type": "swatches",
     "pdp_swatches_shape": "circle",
+    "card_swatches_type": "swatches",
+    "card_swatches_shape": "circle",
     "social_facebook_link": "#",
     "social_instagram_link": "#",
     "social_youtube_link": "#",
