@@ -137,6 +137,7 @@
       "block_order": [
         "gsc_countdown_timer_countdown_FPGtrX"
       ],
+      "disabled": true,
       "custom_css": [
         "{padding: 0;}",
         ".gta-banner__content-wrap {height: 200px;}",
