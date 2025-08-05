@@ -44,14 +44,14 @@
         "heading_dVBkPH": {
           "type": "heading",
           "settings": {
-            "heading": "<p>Our Vision</p>",
+            "heading": "<p>We create for:</p>",
             "heading_size": "h3"
           }
         },
         "paragraph_EC6Xa9": {
           "type": "paragraph",
           "settings": {
-            "paragraph": "<p>Our vision is simple yet profound - to redefine the concept of luxury by offering high-end, distinctive Indian jewelry that resonates with the discerning tastes of connoisseurs worldwide. We envision a world where every piece of jewelry tells a story, evokes emotions, and becomes a cherished symbol of sophistication.</p>"
+            "paragraph": "<p>● The woman who outgrows rooms gracefully<br/>● The girl who’s tired of fast fashion and wants soul in her wardrobe<br/>● The creative who wants to be comfortable in her skin and her clothes<br/>● The leader who leads not by noise, but by energy<br/>Velorrea is Indo-Western in style, but universal in spirit — every piece is designed to blend freedom with structure, softness with statement, tradition with rebellion. Because your style should never make you choose between being bold and being comfortable.</p>"
           }
         }
       },
@@ -65,16 +65,17 @@
         "p {font-size: 18px;}"
       ],
       "settings": {
-        "style": "style-1",
+        "style": "style-3",
         "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
-        "inner_spacing": "spacing-none",
+        "inner_spacing": "spacing-s spacing-s--large",
         "height": "3-4",
         "enable_custom_background": false,
-        "background_color": "",
+        "background_color": "#f2f2f2",
         "background_gradient": "",
         "enable_fullwidth": true,
         "swap_image_and_text": false,
-        "content_vertical_position": "center"
+        "content_vertical_position": "center",
+        "image": "shopify://shop_images/7_438a62c5-9796-42cd-a8eb-e4df54a24739.jpg"
       }
     },
     "image_with_text_KgyprM": {
