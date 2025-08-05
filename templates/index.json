@@ -558,8 +558,8 @@
           "settings": {
             "button_style_1": "solid",
             "button_size_1": "m",
-            "button_text_1": "About Us",
-            "button_url_1": "#",
+            "button_text_1": "Read More",
+            "button_url_1": "shopify://pages/about",
             "button_style_2": "link",
             "button_size_2": "m",
             "button_text_2": "",
