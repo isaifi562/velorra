@@ -11,10 +11,66 @@
   "sections": {
     "main": {
       "type": "main-page",
-      "settings": {}
+      "disabled": true,
+      "settings": {
+        "style": "style-1",
+        "hide_heading": false
+      }
+    },
+    "richtext_VhJeDC": {
+      "type": "richtext",
+      "blocks": {
+        "heading_a6zbB9": {
+          "type": "heading",
+          "settings": {
+            "heading": "<p>Shipping & Delivery – Velorrea</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_a6zbB9"
+      ],
+      "name": "t:sections.richtext.name",
+      "settings": {
+        "style": "style-1",
+        "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
+        "inner_spacing": "spacing-s spacing-s--large",
+        "text_align": "center",
+        "narrow_content": true,
+        "enable_custom_background": false,
+        "background_color": "",
+        "background_gradient": ""
+      }
+    },
+    "richtext_pAAF7m": {
+      "type": "richtext",
+      "blocks": {
+        "paragraph_3tPkM7": {
+          "type": "paragraph",
+          "settings": {
+            "paragraph": "<p>At Velorrea, every piece is thoughtfully created using premium cotton to offer you comfort, style, and quality you can feel. We take great care in processing your orders efficiently and delivering them safely to your doorstep.</p><ul><li>Order Processing Time <br/>All orders are processed and dispatched within 5 to 7 working days after your purchase is confirmed.</li><li>Delivery Timeline<br/>Once dispatched, your order typically reaches you within 4 to 5 working days, depending on your location. Please note that weekends and public holidays are excluded from this timeline.</li><li>Order Tracking<br/>A tracking link will be shared with you via your registered contact number and email within 24 hours of dispatch, allowing you to follow your order every step of the way.</li><li>High-Demand or Seasonal Delays<br/>During peak seasons or unexpected surges in demand, there may be slight delays. We will always keep you informed and do our best to minimize wait times.</li><li>Important Note<br/>Please double-check your shipping address and contact details at the time of checkout to ensure smooth and timely delivery.</li><li>Need Help?<br/>For any questions or assistance, our customer care team is here to support you. Feel free to reach out at <a href=\"mailto:thevelorrea@gmail.com\" title=\"mailto:thevelorrea@gmail.com\">thevelorrea@gmail.com</a><br/><br/></li></ul>"
+          }
+        }
+      },
+      "block_order": [
+        "paragraph_3tPkM7"
+      ],
+      "name": "t:sections.richtext.name",
+      "settings": {
+        "style": "style-1",
+        "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
+        "inner_spacing": "spacing-none",
+        "text_align": "left",
+        "narrow_content": false,
+        "enable_custom_background": false,
+        "background_color": "",
+        "background_gradient": ""
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "richtext_VhJeDC",
+    "richtext_pAAF7m"
   ]
 }
