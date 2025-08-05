@@ -147,12 +147,17 @@
     },
     "featured_products_VYbiQ8": {
       "type": "featured-products",
+      "custom_css": [
+        ".text-content {display: flex; justify-content: space-between; align-items: center;}",
+        ".max-width {width: 100% !important; max-width: 100% !important;}",
+        ".card-product__main a {padding-top: 20% !important;}"
+      ],
       "name": "t:sections.featured-products.name",
       "settings": {
         "style": "style-1",
         "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
         "inner_spacing": "spacing-s spacing-s--large",
-        "layout": "slider-right",
+        "layout": "fullwidth",
         "enable_custom_background": false,
         "background_color": "",
         "background_gradient": "",
