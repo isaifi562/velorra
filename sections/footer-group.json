@@ -66,7 +66,8 @@
         ".footer__grid-item--accordion {margin-right: 1.8rem;}",
         ".footer__heading {font-size: 19px; font-weight: 600;}",
         ".list-unstyled li,.footer__entry p {font-size: 16px;}",
-        ".footer__grid .footer__grid-item--accordion:nth-child(3) {margin-right: 5.2rem;}"
+        ".footer__grid .footer__grid-item--accordion:nth-child(3) {margin-right: 5.2rem;}",
+        " .footer-bar__inner {justify-content: center; }"
       ],
       "settings": {
         "style": "style-2",
