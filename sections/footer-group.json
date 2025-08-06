@@ -1,1 +1,88 @@
-{"type":"footer","name":"t:section-groups.footer-group.name","sections":{"footer":{"type":"footer","blocks":{"3a7b51d5-1527-4f13-8bad-3765962dcfa2":{"type":"menu","settings":{"title":"Navigation","url":"","menu":"main-menu"}},"menu_zWGyWJ":{"type":"menu","settings":{"title":"Collections","url":"","menu":"collections"}},"menu_xWMtWb":{"type":"menu","settings":{"title":"Quick Link","url":"","menu":"footer"}},"920f08a5-a221-4bda-a38a-6d0a83ebfab6":{"type":"newsletter","disabled":true,"settings":{"title":"Newsletter","text":"Add descriptive text to invite your users to sign up for your newsletter.","show_privacy_note":true,"enable_country":true,"enable_country_name":true,"enable_country_flag":true,"enable_language":true}}},"block_order":["3a7b51d5-1527-4f13-8bad-3765962dcfa2","menu_zWGyWJ","menu_xWMtWb","920f08a5-a221-4bda-a38a-6d0a83ebfab6"],"custom_css":[".container {max-width: 100% !important; padding: 20px;}",".footer {padding-bottom: 0 !important;}",".footer__grid {justify-content: center !important;}",".footer__grid-item--main {margin-right: 20rem;}",".footer__grid-item--accordion {margin-right: 1.8rem;}",".footer__heading {font-size: 19px; font-weight: 600;}",".list-unstyled li,.footer__entry p {font-size: 16px;}",".footer__grid .footer__grid-item--accordion:nth-child(3) {margin-right: 5.2rem;}"],"settings":{"style":"style-2","fullwidth":false,"show_payment_icons":true,"logo":"shopify:\/\/shop_images\/velorrea.png","logo_svg_code":"","logo_width":175,"logo_width_mobile":175,"below_logo_text":"Welcome to Velorrea Collection - where luxury meets affordability, tradition meets innovation, and elegance finds its truest expression. Embark on a journey with us, as we craft stories through cotton that will be cherished for generations to come.","enable_mobile_accordions":true,"enable_follow_on_shop":false}}},"order":["footer"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "t:section-groups.footer-group.name",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "3a7b51d5-1527-4f13-8bad-3765962dcfa2": {
+          "type": "menu",
+          "settings": {
+            "title": "Navigation",
+            "url": "",
+            "menu": "main-menu"
+          }
+        },
+        "menu_zWGyWJ": {
+          "type": "menu",
+          "settings": {
+            "title": "Collections",
+            "url": "",
+            "menu": "collections"
+          }
+        },
+        "menu_xWMtWb": {
+          "type": "menu",
+          "settings": {
+            "title": "Quick Link",
+            "url": "",
+            "menu": "footer"
+          }
+        },
+        "920f08a5-a221-4bda-a38a-6d0a83ebfab6": {
+          "type": "newsletter",
+          "disabled": true,
+          "settings": {
+            "title": "Newsletter",
+            "text": "Add descriptive text to invite your users to sign up for your newsletter.",
+            "show_privacy_note": true,
+            "enable_country": true,
+            "enable_country_name": true,
+            "enable_country_flag": true,
+            "enable_language": true
+          }
+        }
+      },
+      "block_order": [
+        "3a7b51d5-1527-4f13-8bad-3765962dcfa2",
+        "menu_zWGyWJ",
+        "menu_xWMtWb",
+        "920f08a5-a221-4bda-a38a-6d0a83ebfab6"
+      ],
+      "custom_css": [
+        ".container {max-width: 100% !important; padding: 20px;}",
+        ".footer {padding-bottom: 0 !important;}",
+        ".footer__grid {justify-content: center !important;}",
+        ".footer__grid-item--main {margin-right: 20rem;}",
+        ".footer__grid-item--accordion {margin-right: 1.8rem;}",
+        ".footer__heading {font-size: 19px; font-weight: 600;}",
+        ".list-unstyled li,.footer__entry p {font-size: 16px;}",
+        ".footer__grid .footer__grid-item--accordion:nth-child(3) {margin-right: 5.2rem;}"
+      ],
+      "settings": {
+        "style": "style-2",
+        "fullwidth": false,
+        "show_payment_icons": true,
+        "logo": "shopify://shop_images/velorrea.png",
+        "logo_svg_code": "",
+        "logo_width": 175,
+        "logo_width_mobile": 175,
+        "below_logo_text": "",
+        "enable_mobile_accordions": true,
+        "enable_follow_on_shop": false
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}
