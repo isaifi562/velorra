@@ -53,7 +53,7 @@
           "settings": {
             "title": "Variant selector",
             "size_guide_page": "",
-            "size_options_picker_type": "button",
+            "size_options_picker_type": "select",
             "other_options_picker_type": "button",
             "enable_variant_scroll": true
           }
