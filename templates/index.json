@@ -14,13 +14,13 @@
       "blocks": {
         "fullwidth_w7DwmH": {
           "type": "fullwidth",
-          "disabled": true,
           "settings": {
-            "whole_block_link": "",
+            "whole_block_link": "shopify://collections",
             "external_video": "",
             "disable_autoplay_on_mobile": true,
             "description": "",
-            "image": "shopify://shop_images/home-main.webp",
+            "image": "shopify://shop_images/291.jpg",
+            "image_mobile": "shopify://shop_images/290.2.png",
             "background_overlay": "#000000",
             "background_overlay_opacity": 0,
             "background_overlay_gradient": "",
@@ -31,14 +31,14 @@
             "align_vertical_mobile": "center",
             "align_horizontal_mobile": "center",
             "text_color": "#ffffff",
-            "subheading": "Tranding",
-            "heading": "<p>Slide heading with <em><strong>accent element</strong></em></p>",
+            "subheading": "",
+            "heading": "",
             "heading_size": "h2",
             "paragraph": "",
             "button_style_1": "solid",
             "button_size_1": "s",
-            "button_text_1": "Explore",
-            "button_url_1": "shopify://collections/all",
+            "button_text_1": "",
+            "button_url_1": "",
             "button_style_2": "solid",
             "button_size_2": "s",
             "button_text_2": "",
@@ -49,13 +49,14 @@
         },
         "50_50_fb3ftU": {
           "type": "50-50",
+          "disabled": true,
           "settings": {
             "whole_block_link": "",
             "separate_on_mobile": true,
             "flip": false,
             "enable_gap": false,
-            "image": "shopify://shop_images/01-20_f6a61869-6256-4c0f-944d-47c416b9f19a.jpg",
-            "image_mobile": "shopify://shop_images/01-20.jpg",
+            "image": "shopify://shop_images/291.jpg",
+            "image_mobile": "shopify://shop_images/290.2.png",
             "background_overlay": "#000000",
             "background_overlay_opacity": 2,
             "background_overlay_gradient": "",
@@ -80,8 +81,6 @@
             "button_text_color": "#000000",
             "button_background_color": "#ffffff",
             "aside_whole_block_link": "",
-            "aside_image": "shopify://shop_images/5_3.jpg",
-            "aside_image_mobile": "shopify://shop_images/5_3.jpg",
             "aside_background_overlay": "#000000",
             "aside_background_overlay_opacity": 0,
             "aside_background_overlay_gradient": "",
@@ -106,11 +105,46 @@
             "aside_button_text_color": "",
             "aside_button_background_color": ""
           }
+        },
+        "fullwidth_3YiYAM": {
+          "type": "fullwidth",
+          "disabled": true,
+          "settings": {
+            "whole_block_link": "",
+            "external_video": "",
+            "disable_autoplay_on_mobile": true,
+            "description": "",
+            "background_overlay": "#000000",
+            "background_overlay_opacity": 0,
+            "background_overlay_gradient": "",
+            "show_background": false,
+            "show_background_mobile": false,
+            "align_vertical": "center",
+            "align_horizontal": "center",
+            "align_vertical_mobile": "center",
+            "align_horizontal_mobile": "center",
+            "text_color": "",
+            "subheading": "Add a tagline",
+            "heading": "<p>Slide heading with <em><strong>accent element</strong></em></p>",
+            "heading_size": "h1",
+            "paragraph": "<p>Add descriptive text for your slide here.</p>",
+            "button_style_1": "solid",
+            "button_size_1": "m",
+            "button_text_1": "Explore",
+            "button_url_1": "shopify://collections/all",
+            "button_style_2": "solid",
+            "button_size_2": "m",
+            "button_text_2": "",
+            "button_url_2": "",
+            "button_text_color": "",
+            "button_background_color": ""
+          }
         }
       },
       "block_order": [
         "fullwidth_w7DwmH",
-        "50_50_fb3ftU"
+        "50_50_fb3ftU",
+        "fullwidth_3YiYAM"
       ],
       "custom_css": [
         "{margin-top: -85px;}"
