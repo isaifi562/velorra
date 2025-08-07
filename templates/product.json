@@ -111,6 +111,7 @@
         },
         "979d6588-4409-4258-9786-c2009381e309": {
           "type": "collapsible-element",
+          "disabled": true,
           "settings": {
             "title": "Shipping & Delivery",
             "text": "<p>Free Worldwide Standard Shipping</p><p>Check <a href=\"https://3742vf9e0ivnads4-81457512763.shopifypreview.com/pages/refund-policy\">Return Policy</a></p><p>Check <a href=\"https://tazoricollection.com/pages/shipping-policy\">Shipping Policy</a></p>",
