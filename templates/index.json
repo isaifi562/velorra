@@ -146,14 +146,12 @@
         "50_50_fb3ftU",
         "fullwidth_3YiYAM"
       ],
-      "custom_css": [
-        "{margin-top: -85px;}"
-      ],
+      "custom_css": [],
       "name": "t:sections.hero.name",
       "settings": {
         "style": "style-3",
         "outer_spacing": "mt-s mb-s mt-s--large mb-s--large",
-        "height": "viewport",
+        "height": "medium",
         "autoplay": false,
         "autoplay_speed": 5
       }
