@@ -2811,3 +2811,34 @@ input.is-unavailable + label:after {
 .card-product__main a {
     padding-top: 10% !important;
 }
+/* ✅ Size swatches styled like circular buttons */
+.swatch-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;        /* adjust size */
+  height: 40px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  margin: 3px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.swatch-button__text {
+  line-height: 1;
+}
+
+.swatch-button:hover {
+  border-color: #666;
+}
+
+/* ✅ Selected (checked) state */
+input[type="radio"]:checked + .swatch-button {
+  border-color: #000;   /* darker border when active */
+  box-shadow: 0 0 0 2px #000 inset;
+}
