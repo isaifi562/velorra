@@ -2816,8 +2816,8 @@ input.is-unavailable + label:after {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;        /* adjust size */
-  height: 28px;
+  width: 30px;        /* adjust size */
+  height: 30px;
   border: 2px solid #ccc;
   border-radius: 50%;
   margin: 3px;
