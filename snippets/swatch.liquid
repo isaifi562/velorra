@@ -49,16 +49,17 @@
       {% if disabled %}disabled{% endif %}
     >
 
-    {%- if option_name contains 'size' -%}
-      <!-- ✅ SIZE OPTION = show text button -->
-      <label
-        for="Product-Swatch-{{- swatch_id -}}--Context-{{- context -}}-Value--{{- swatch_value | handle -}}"
-        class="swatch-button motion-reduce"
-        aria-label="{{- swatch_value -}}"
-      >
-        <span class="p3">{{- swatch_value -}}</span>
-      </label>
-    {%- else -%}
+{%- if option_name contains 'size' -%}
+  <!-- ✅ SIZE OPTION = show circular button -->
+  <label
+    for="Product-Swatch-{{- swatch_id -}}--Context-{{- context -}}-Value--{{- swatch_value | handle -}}"
+    class="swatch-button swatch-button--circle motion-reduce"
+    aria-label="{{- swatch_value -}}"
+  >
+    <span class="swatch-button__text">{{- swatch_value -}}</span>
+  </label>
+{%- else -%}
+
       <!-- ✅ COLOR OPTION = show color swatch -->
       <label
         for="Product-Swatch-{{- swatch_id -}}--Context-{{- context -}}-Value--{{- swatch_value | handle -}}"
