@@ -1,9 +1,3 @@
-{%- comment -%}
-  Fixed swatch.liquid:
-  - Shows color swatches for Color options
-  - Shows text buttons for Size options
-{%- endcomment -%}
-
 {%- liquid
   assign swatch_id = swatch_id | default: ''
   assign swatch_value = swatch_value | default: false
@@ -56,7 +50,7 @@
     >
 
     {%- if option_name contains 'size' -%}
-      {# ✅ SIZE OPTION → show text button #}
+      <!-- ✅ SIZE OPTION = show text button -->
       <label
         for="Product-Swatch-{{- swatch_id -}}--Context-{{- context -}}-Value--{{- swatch_value | handle -}}"
         class="swatch-button motion-reduce"
@@ -65,7 +59,7 @@
         <span class="p3">{{- swatch_value -}}</span>
       </label>
     {%- else -%}
-      {# ✅ COLOR OPTION → show color swatch #}
+      <!-- ✅ COLOR OPTION = show color swatch -->
       <label
         for="Product-Swatch-{{- swatch_id -}}--Context-{{- context -}}-Value--{{- swatch_value | handle -}}"
         class="{{ class }} {{ class }}--{{ swatch_value_downcased }} {{ class }}--{{ size }} motion-reduce"
