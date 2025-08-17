@@ -50,6 +50,7 @@
         },
         "b07a1b21-c53c-4514-9563-0da2a57df8ad": {
           "type": "variant-selector",
+          "disabled": true,
           "settings": {
             "title": "Variant selector",
             "size_guide_page": "",
