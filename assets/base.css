@@ -2840,5 +2840,5 @@ input.is-unavailable + label:after {
 /* ✅ Selected (checked) state */
 input[type="radio"]:checked + .swatch-button {
   border-color: #000;   /* darker border when active */
-  box-shadow: 0 0 0 2px #000 inset;
+  box-shadow: 0 0 0 1px #000 inset;
 }
