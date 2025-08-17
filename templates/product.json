@@ -50,6 +50,7 @@
         },
         "b07a1b21-c53c-4514-9563-0da2a57df8ad": {
           "type": "variant-selector",
+          "disabled": true,
           "settings": {
             "title": "Variant selector",
             "size_guide_page": "",
@@ -226,7 +227,10 @@
       "blocks": {
         "judge_me_reviews_review_widget_9nU4CF": {
           "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
-          "settings": {}
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200
+          }
         }
       },
       "block_order": [
