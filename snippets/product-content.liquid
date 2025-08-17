@@ -130,7 +130,7 @@
           <div class="product-selector__label-inner">
             <legend class="product__selector__label-content p3">
               {{- option.name -}}: <strong data-option-selected-value>{{- option.selected_value | escape -}}</strong>
-            </legend><!-- /.product__selector__label-content -->
+            </legend>
 
             {%- if option.name == settings.swatches_size_option and block.settings.size_guide_page != blank -%}
               {%- assign size_guide_modal_id = 'SizeGuideModal-' | append: block.settings.size_guide_page.id -%}
@@ -176,20 +176,20 @@
         {%- if settings.swatches_option contains option.name or is_size_button or is_other_option_button or show_default_swatches -%}
           <div class="product-selector__buttons-list">
             {%- for value in option.values -%}
-              {%- assign swatch_checked = option.selected_value == value -%}
-              {%- assign swatch_class = '' -%}
-              {%- assign swatch_type = '' -%}
+              {%- assign swatch_checked = false -%}
+              {%- if option.selected_value == value -%}
+                {%- assign swatch_checked = true -%}
+              {%- endif -%}
               {%- assign swatch_option_name = 'data-name="' | append: option.name | append: '"' -%}
 
               {% if is_size_button %}
-                <!-- SIZE BUTTONS (S, M, L, etc.) -->
+                <!-- SIZE BUTTONS -->
                 <label class="product-selector__button{% if swatch_checked %} is-active{% endif %}">
                   <input type="radio"
                          name="options[{{ option.name }}]"
                          value="{{ value | escape }}"
                          {% if swatch_checked %}checked="checked"{% endif %}
-                         {{ swatch_option_name }}
-                  >
+                         {{ swatch_option_name }}>
                   <span>{{ value }}</span>
                 </label>
               {% else %}
@@ -199,8 +199,8 @@
                   swatch_value: value,
                   context: section.id,
                   checked: swatch_checked,
-                  class: swatch_class,
-                  swatch_type: swatch_type,
+                  class: '',
+                  swatch_type: '',
                   input_attr: swatch_option_name,
                   option_name: option.name,
                   placement_context: 'product',
@@ -237,6 +237,7 @@
     </script>
   </product-selector>
 </div>
+
 <!-- /.product__selector -->
 
     {%- when 'custom-property-field' -%}
