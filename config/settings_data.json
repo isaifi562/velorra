@@ -97,7 +97,7 @@
     "pdp_swatches_shape": "circle",
     "card_swatches_type": "swatches",
     "card_swatches_shape": "circle",
-    "swatches_size_option": "",
+    "swatches_size_option": "Size",
     "social_facebook_link": "#",
     "social_instagram_link": "#",
     "social_youtube_link": "#",
@@ -347,6 +347,11 @@
           "debugging_global_script": "",
           "enable_reelPops": true
         }
+      },
+      "1759773598402494664": {
+        "type": "shopify://apps/rt-whatsapp-chat-live-chat/blocks/app-embed/9baee9b7-6929-47af-9935-05bcdc376396",
+        "disabled": false,
+        "settings": {}
       }
     }
   },
