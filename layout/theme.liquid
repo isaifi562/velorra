@@ -115,30 +115,6 @@
       <li id="a11y-refresh-page-message">{{- 'accessibility.refresh_page' | t -}}</li>
     </ul>
 
-    <script>
-      window.shopUrl = '{{ request.origin }}';
-      window.routes = {
-        cart_url: '{{ routes.cart_url }}',
-        cart_add_url: '{{ routes.cart_add_url }}',
-        cart_change_url: '{{ routes.cart_change_url }}',
-        cart_update_url: '{{ routes.cart_update_url }}',
-        predictive_search_url: '{{ routes.predictive_search_url }}'
-      };
-
-      window.cartStrings = {
-        error: `{{ 'cart.cart_error' | t }}`,
-        quantityError: `{{ 'cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`
-      }
-      window.variantStrings = {
-        unavailable: '{{ 'products.product.unavailable' | t }}',
-        addToCart: '{{ 'products.product.add_to_cart' | t }}',
-        addToCartShort: '{{ 'products.product.add_to_cart_short' | t }}',
-        soldOut: '{{ 'products.product.sold_out' | t }}',
-      }
-      window.validationStrings = {
-        invalidEmail: '{{ 'general.validation.invalid_email' | t }}',
-      }
-      window.newsletterMessage = '{{ settings.subscribe_notification_text }}';
-    </script>
+    
   </body>
 </html>
