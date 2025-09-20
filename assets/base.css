@@ -2842,3 +2842,7 @@ input[type="radio"]:checked + .swatch-button {
   border-color: #000;   /* darker border when active */
   box-shadow: 0 0 0 1px #000 inset;
 }
+#shopify-section-sections--15747188424762__header > sticky-header > div > div > nav.header__nav.small-hide.medium-hide > ul > li:nth-child(2) > a > span {
+    color: red;
+    font-weight: 600;
+}
