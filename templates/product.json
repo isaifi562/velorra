@@ -187,10 +187,19 @@
             "answer": "{{ product.description }}",
             "answer_page": ""
           }
+        },
+        "question_X4pBE4": {
+          "type": "question",
+          "settings": {
+            "question": "Size Chart",
+            "answer": "<p>.</p>",
+            "answer_page": ""
+          }
         }
       },
       "block_order": [
-        "question_NN9NmJ"
+        "question_NN9NmJ",
+        "question_X4pBE4"
       ],
       "custom_css": [
         ".accordion-item summary span {font-size: 30px; line-height: 2rem; font-weight: 600;}"
