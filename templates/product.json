@@ -184,13 +184,16 @@
           "type": "question",
           "settings": {
             "question": "Description",
-            "answer": "<p>Answer to the question.</p>{{ product.description }}",
+            "answer": "{{ product.description }}",
             "answer_page": ""
           }
         }
       },
       "block_order": [
         "question_NN9NmJ"
+      ],
+      "custom_css": [
+        ".accordion-item summary span {font-size: 30px; line-height: 2rem; font-weight: 600;}"
       ],
       "name": "t:sections.faq.name",
       "settings": {
@@ -199,8 +202,8 @@
         "inner_spacing": "spacing-s spacing-s--large",
         "subheading": "",
         "heading": "",
-        "enable_custom_background": false,
-        "background_color": "",
+        "enable_custom_background": true,
+        "background_color": "#f2f2f2",
         "background_gradient": ""
       }
     },
