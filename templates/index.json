@@ -817,6 +817,50 @@
         "background_color": "",
         "background_gradient": ""
       }
+    },
+    "175986354424d3d788": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_e16733e_3Tgj4c": {
+          "type": "ai_gen_block_e16733e",
+          "settings": {
+            "heading": "Have a discount code?",
+            "description": "Enter your discount code below to apply it to your order.",
+            "placeholder_text": "Enter discount code",
+            "button_text": "Apply",
+            "padding": 20,
+            "margin": 16,
+            "border_radius": 8,
+            "background_color": "#f8f8f8",
+            "border_color": "#e0e0e0",
+            "text_color": "#000000",
+            "input_background_color": "#ffffff",
+            "input_border_color": "#cccccc",
+            "input_focus_border_color": "#000000",
+            "input_text_color": "#000000",
+            "input_placeholder_color": "#999999",
+            "input_border_radius": 4,
+            "button_color": "#000000",
+            "button_hover_color": "#333333",
+            "button_disabled_color": "#cccccc",
+            "button_text_color": "#ffffff",
+            "button_border_radius": 4,
+            "success_bg_color": "#d4edda",
+            "success_text_color": "#155724",
+            "success_border_color": "#c3e6cb",
+            "error_bg_color": "#f8d7da",
+            "error_text_color": "#721c24",
+            "error_border_color": "#f5c6cb",
+            "heading_size": 18,
+            "description_size": 14
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_e16733e_3Tgj4c"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -835,6 +879,7 @@
     "featured_blog_kEBwQN",
     "featured_collection_nEGakA",
     "17291841403ce662c2",
-    "email_signup_banner_9tVgY3"
+    "email_signup_banner_9tVgY3",
+    "175986354424d3d788"
   ]
 }
