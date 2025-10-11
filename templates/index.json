@@ -359,17 +359,6 @@
             "button_style": "outline"
           }
         },
-        "card_N6Qkqg": {
-          "type": "card",
-          "settings": {
-            "collection": "new-arrivals",
-            "image": "shopify://shop_images/3_9d586d44-9608-42a4-b18d-8e251983b9a7.png",
-            "heading": "Ethnic Dresses",
-            "link_text": "Shop Collection",
-            "link_url": "shopify://collections/ethnic",
-            "button_style": "outline"
-          }
-        },
         "card_NKkeKd": {
           "type": "card",
           "settings": {
@@ -397,10 +386,10 @@
       "block_order": [
         "card_3ErjMa",
         "card_TyYrY6",
-        "card_N6Qkqg",
         "card_NKkeKd",
         "card_aammN3"
       ],
+      "disabled": true,
       "custom_css": [
         ".card-collection__actions {border: 1px solid #000; border-radius: 50px; background: transparent; color: #000; text-align: center; margin-top: 18px; padding: 4px;}",
         ".spacing-s--large {padding-top: 0 !important; padding-bottom: 0 !important;}",
@@ -616,7 +605,7 @@
         "enable_fullwidth": true,
         "swap_image_and_text": true,
         "content_vertical_position": "center",
-        "image": "shopify://shop_images/01-12.jpg"
+        "image": "shopify://shop_images/ADY04314.jpg"
       }
     },
     "featured_products_MhENWW": {
