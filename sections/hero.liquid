@@ -273,6 +273,31 @@
   overflow: hidden;
 }
 
+/* Fix extra bottom white space in slider on mobile */
+@media (max-width: 767px) {
+  .slider-section,
+  .slider-wrapper,
+  .hero-banner,
+  .slideshow,
+  .banner, 
+  .your-slider-class {  /* replace with your real slider container */
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .slider-section img,
+  .slider-wrapper img,
+  .hero-banner img,
+  .slideshow img,
+  .banner img, 
+  .your-slider-class img {
+    height: auto !important;
+    width: 100% !important;
+    display: block !important;
+    margin-bottom: 0 !important;
+  }
+}
   </style>
 {%- endunless -%}
 
