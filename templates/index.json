@@ -47,8 +47,44 @@
             "button_background_color": "#ffffff"
           }
         },
+        "fullwidth_kkaTeY": {
+          "type": "fullwidth",
+          "settings": {
+            "whole_block_link": "shopify://products/hour-glow-shirt-copy",
+            "external_video": "",
+            "disable_autoplay_on_mobile": true,
+            "description": "",
+            "image": "shopify://shop_images/co_ord.jpg",
+            "image_mobile": "shopify://shop_images/coordd.jpg",
+            "background_overlay": "#000000",
+            "background_overlay_opacity": 0,
+            "background_overlay_gradient": "",
+            "show_background": false,
+            "show_background_mobile": false,
+            "align_vertical": "bottom",
+            "align_horizontal": "far_left",
+            "align_vertical_mobile": "center",
+            "align_horizontal_mobile": "center",
+            "text_color": "#ffffff",
+            "subheading": "",
+            "heading": "",
+            "heading_size": "h2",
+            "paragraph": "",
+            "button_style_1": "solid",
+            "button_size_1": "s",
+            "button_text_1": "",
+            "button_url_1": "shopify://products/hourglow-snatched-shirt-copy",
+            "button_style_2": "solid",
+            "button_size_2": "s",
+            "button_text_2": "",
+            "button_url_2": "shopify://products/hourglow-snatched-shirt-copy",
+            "button_text_color": "#000000",
+            "button_background_color": "#ffffff"
+          }
+        },
         "50_50_fb3ftU": {
           "type": "50-50",
+          "disabled": true,
           "settings": {
             "whole_block_link": "",
             "separate_on_mobile": false,
@@ -142,6 +178,7 @@
       },
       "block_order": [
         "fullwidth_w7DwmH",
+        "fullwidth_kkaTeY",
         "50_50_fb3ftU",
         "fullwidth_3YiYAM"
       ],
