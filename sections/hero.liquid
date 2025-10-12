@@ -3,8 +3,7 @@
 
   {%- capture slides_html -%}
     {%- for block in section.blocks -%}
-      {%-
-        liquid
+      {%- liquid
         assign block_layout = block.type
         assign subheading_class = 'sh--1'
 
@@ -20,7 +19,7 @@
             {%- render 'hero-block',
               block_id: main_block_id,
               link: block.settings.whole_block_link,
-              height: section.settings.height,
+              height: 'auto',
               show_background: block.settings.show_background,
               show_background_mobile: block.settings.show_background_mobile,
               image: block.settings.image,
@@ -100,7 +99,7 @@
           {%- render 'hero-block',
             link: block.settings.whole_block_link,
             block_id: block.id,
-            height: section.settings.height,
+            height: 'auto',
             external_video: block.settings.external_video,
             video: block.settings.video,
             video_mobile: block.settings.video_mobile,
@@ -131,15 +130,13 @@
             button_background_color: block.settings.button_background_color
           -%}
         {%- else -%}
-          <div class="grid hero__grid hero__grid--{{ block_layout }} {% if block.settings.flip %}grid--reverse{% endif %} {%- if block.settings.enable_gap %} grid--row-gap-s{%- else %}
-            grid--row-gap-0 grid--no-column-gap{%- endif -%}">
-            {% # Main block %}
+          <div class="grid hero__grid hero__grid--{{ block_layout }} {% if block.settings.flip %}grid--reverse{% endif %} {%- if block.settings.enable_gap %} grid--row-gap-s{%- else %} grid--row-gap-0 grid--no-column-gap{%- endif -%}">
             <div class="grid__item relative overflow-hidden hero__grid__item hero__grid__item--main {% if block_layout == '60-40' %} grid__item--xs-7 grid__item--xs-row-2 {% else %} grid__item--xs-6 {% endif %}">
               {%- assign main_block_id = block.id -%}
               {%- render 'hero-block',
                 block_id: main_block_id,
                 link: block.settings.whole_block_link,
-                height: section.settings.height,
+                height: 'auto',
                 show_background: block.settings.show_background,
                 show_background_mobile: block.settings.show_background_mobile,
                 image: block.settings.image,
@@ -162,9 +159,8 @@
                 button_text_color: block.settings.button_text_color,
                 button_background_color: block.settings.button_background_color
               -%}
-            </div><!-- /.grid__item -->
+            </div>
 
-            {% # Aside block %}
             <div class="grid__item relative overflow-hidden hero__grid__item hero__grid__item--aside {% if block_layout == '50-50' %} grid__item--xs-6 {% else %} grid__item--xs-5 {% endif %}">
               {%- assign aside_block_id = block.id | append: '-aside' -%}
               {%- render 'hero-block',
@@ -201,59 +197,21 @@
                 button_text_color: block.settings.aside_button_text_color,
                 button_background_color: block.settings.aside_button_background_color
               -%}
-            </div><!-- /.grid__item -->
-
-            {%- if block_layout == '60-40' -%}
-              {% # Aside bottom block %}
-              <div class="grid__item relative overflow-hidden hero__grid__item hero__grid__item--aside-bttom small-hide grid__item--xs-5">
-                {%- assign aside_bottom_block_id = block.id | append: '-aside-bottom' -%}
-                {%- render 'hero-block',
-                  block_id: aside_bottom_block_id,
-                  link: block.settings.aside_bottom_whole_block_link,
-                  height: 'auto',
-                  show_background: block.settings.aside_bottom_show_background,
-                  image: block.settings.aside_bottom_image,
-                  background_overlay: block.settings.aside_bottom_background_overlay,
-                  background_overlay_opacity: block.settings.aside_bottom_background_overlay_opacity,
-                  background_overlay_gradient: block.settings.aside_bottom_background_overlay_gradient,
-                  align_vertical: block.settings.aside_bottom_align_vertical,
-                  align_horizontal: block.settings.aside_bottom_align_horizontal,
-                  content_source: 'manual',
-                  subheading: block.settings.aside_bottom_subheading,
-                  heading: block.settings.aside_bottom_heading,
-                  heading_size: 'h2',
-                  heading_class: block.settings.aside_bottom_heading_size,
-                  subheading_class: subheading_class,
-                  button_url_1: block.settings.aside_bottom_button_url_1,
-                  button_text_1: block.settings.aside_bottom_button_text_1,
-                  button_size_1: block.settings.aside_bottom_button_size_1,
-                  button_style_1: block.settings.aside_bottom_button_style_1,
-                  button_url_2: block.settings.aside_bottom_button_url_2,
-                  button_text_2: block.settings.aside_bottom_button_text_2,
-                  button_size_2: block.settings.aside_bottom_button_size_2,
-                  button_style_2: block.settings.aside_bottom_button_style_2,
-                  placeholder_svg: 'collection-apparel-1',
-                  text_color: block.settings.aside_bottom_text_color,
-                  button_text_color: block.settings.aside_bottom_button_text_color,
-                  button_background_color: block.settings.aside_bottom_button_background_color
-                -%}
-              </div><!-- /.grid__item -->
-           {%- endif -%}
-          </div><!-- /.grid -->
+            </div>
+          </div>
         {%- endif -%}
-      </div><!-- /.swiper-slide -->
+      </div>
     {%- endfor -%}
   {%- endcapture -%}
 
-  {%-
-    liquid
+  {%- liquid
     echo 'swiper-bundle.min.css' | asset_url | stylesheet_tag: preload: true
     echo 'component-slider.css' | asset_url | stylesheet_tag: preload: true
     echo 'component-deferred-media.css' | asset_url | stylesheet_tag: preload: true
     echo 'section-hero.css' | asset_url | stylesheet_tag
     echo 'component-text-content.css' | asset_url | stylesheet_tag
     capture style_classes
-      echo 'hero--slider hero--' | append: section.settings.height | append: ' '
+      echo 'hero--slider hero--auto-height '
       echo 'color-' | append: section.settings.style | append: ' '
       if section.blocks.size == 1
         echo 'relative '
@@ -262,13 +220,12 @@
   -%}
 
   <script src="{{ 'deferred-media.js' | asset_url }}" defer="defer" data-theme-script></script>
-  <script src="{{- 'swiper-bundle.min.js' | asset_url -}}" defer="defer" data-theme-script></script>
-  <script src="{{- 'slider-component.js' | asset_url -}}" defer="defer" data-theme-script></script>
-  <script src="{{- 'hero-slider.js' | asset_url -}}" defer="defer" data-theme-script></script>
+  <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer="defer" data-theme-script></script>
+  <script src="{{ 'slider-component.js' | asset_url }}" defer="defer" data-theme-script></script>
+  <script src="{{ 'hero-slider.js' | asset_url }}" defer="defer" data-theme-script></script>
 
   <section class="hero {{ style_classes }} {{ section.settings.outer_spacing }}">
-    {%-
-      liquid
+    {%- liquid
       if section.blocks.size > 1 or section.blocks[0].settings.separate_on_mobile
         assign autoplay_speed = section.settings.autoplay_speed | times: 1000
         capture slider_attr
@@ -280,7 +237,18 @@
         echo slides_html
       endif
     -%}
-  </section><!-- /.hero -->
+  </section>
+
+  <style>
+    .hero, .hero__slide {
+      height: auto !important;
+    }
+    .hero__slide img {
+      width: 100%;
+      height: auto !important;
+      object-fit: cover;
+    }
+  </style>
 {%- endunless -%}
 
 {% schema %}
