@@ -185,9 +185,9 @@
       "custom_css": [],
       "name": "t:sections.hero.name",
       "settings": {
-        "style": "style-3",
+        "style": "style-1",
         "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
-        "height": "medium",
+        "height": "viewport",
         "autoplay": false,
         "autoplay_speed": 5
       }
