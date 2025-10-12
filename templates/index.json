@@ -54,7 +54,7 @@
             "separate_on_mobile": false,
             "flip": false,
             "enable_gap": false,
-            "image": "shopify://shop_images/co_ord.jpg",
+            "image": "shopify://shop_images/web-1-2.jpg",
             "image_mobile": "shopify://shop_images/coordd.jpg",
             "background_overlay": "#000000",
             "background_overlay_opacity": 2,
