@@ -273,44 +273,31 @@
   overflow: hidden;
 }
 
-/* Fix extra bottom white space in slider on mobile */
 @media (max-width: 767px) {
-  .slider-section,
-  .slider-wrapper,
-  .hero-banner,
-  .slideshow,
-  .banner, 
-  .your-slider-class {  /* replace with your real slider container */
-    margin-bottom: 0 !important;
+  .hero--slider {
+    --viewport-height-minus-offset: auto !important;
+    --actual-viewport-height: auto !important;
+    height: auto !important;
+    min-height: auto !important;
     padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
     overflow: hidden !important;
   }
 
-  .slider-section img,
-  .slider-wrapper img,
-  .hero-banner img,
-  .slideshow img,
-  .banner img, 
-  .your-slider-class img {
-    height: auto !important;
+  .hero--slider img {
     width: 100% !important;
+    height: auto !important;
     display: block !important;
-    margin-bottom: 0 !important;
+    margin: 0 auto !important;
+  }
+
+  .hero__block,
+  .hero__block_container {
+    height: auto !important;
+    min-height: auto !important;
   }
 }
 
-@media (max-width: 767px) {
-  .hero--slider {
-    --viewport-height-minus-offset: 100vh !important;
-    --actual-viewport-height: 100vh !important;
-    height: auto !important;
-    min-height: unset !important;
-  }
-
-  .hero--slider .hero__block {
-    height: auto !important;
-  }
-}
   </style>
 {%- endunless -%}
 
