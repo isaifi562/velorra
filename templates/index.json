@@ -187,7 +187,7 @@
       "settings": {
         "style": "style-3",
         "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
-        "height": "viewport",
+        "height": "medium",
         "autoplay": false,
         "autoplay_speed": 5
       }
