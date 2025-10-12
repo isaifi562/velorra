@@ -298,6 +298,19 @@
     margin-bottom: 0 !important;
   }
 }
+
+@media (max-width: 767px) {
+  .hero--slider {
+    --viewport-height-minus-offset: 100vh !important;
+    --actual-viewport-height: 100vh !important;
+    height: auto !important;
+    min-height: unset !important;
+  }
+
+  .hero--slider .hero__block {
+    height: auto !important;
+  }
+}
   </style>
 {%- endunless -%}
 
