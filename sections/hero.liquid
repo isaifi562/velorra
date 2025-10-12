@@ -248,6 +248,31 @@
       height: auto !important;
       object-fit: cover;
     }
+    /* Remove unwanted bottom space in slider section */
+.slider-section, 
+.slider-wrapper, 
+.hero-banner, 
+.your-slider-class { /* replace with your slider container class */
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.slider-section img,
+.slider-wrapper img,
+.hero-banner img,
+.your-slider-class img {
+  display: block;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  vertical-align: bottom;
+}
+
+/* Ensure full height fit */
+.slider-section,
+.slider-wrapper {
+  overflow: hidden;
+}
+
   </style>
 {%- endunless -%}
 
