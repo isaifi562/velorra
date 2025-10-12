@@ -273,33 +273,38 @@
   overflow: hidden;
 }
 
-@media (max-width: 767px) {
-  .hero--slider {
-    --viewport-height-minus-offset: auto !important;
-    --actual-viewport-height: auto !important;
-    height: auto !important;
-    min-height: auto !important;
-    padding-bottom: 0 !important;
-    margin-bottom: 0 !important;
-    overflow: hidden !important;
-  }
-
-  .hero--slider img {
-    width: 100% !important;
-    height: auto !important;
-    display: block !important;
-    margin: 0 auto !important;
-  }
-
-  .hero__block,
-  .hero__block_container {
-    height: auto !important;
-    min-height: auto !important;
-  }
+.hero--slider {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+  overflow: hidden !important;
 }
+
 
   </style>
 {%- endunless -%}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  function adjustHeroHeight() {
+    const heroSlider = document.querySelector('.hero--slider');
+    if (!heroSlider) return;
+
+    const img = heroSlider.querySelector('img');
+    if (img && img.complete) {
+      heroSlider.style.height = img.offsetHeight + 'px';
+    } else if (img) {
+      img.addEventListener('load', () => {
+        heroSlider.style.height = img.offsetHeight + 'px';
+      });
+    }
+  }
+
+  // Run on load
+  adjustHeroHeight();
+
+  // Re-run on resize (e.g. rotate mobile)
+  window.addEventListener('resize', adjustHeroHeight);
+});
+</script>
 
 {% schema %}
 {
