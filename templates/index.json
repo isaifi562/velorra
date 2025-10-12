@@ -51,7 +51,7 @@
           "type": "50-50",
           "settings": {
             "whole_block_link": "",
-            "separate_on_mobile": true,
+            "separate_on_mobile": false,
             "flip": false,
             "enable_gap": false,
             "image": "shopify://shop_images/co_ord.jpg",
