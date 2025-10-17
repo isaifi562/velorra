@@ -193,7 +193,7 @@
           "settings": {
             "question": "Size Chart",
             "answer": "<p>.</p>",
-            "answer_page": ""
+            "answer_page": "size-chart"
           }
         }
       },
