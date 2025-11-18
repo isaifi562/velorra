@@ -34,7 +34,7 @@
       "custom_css": [],
       "settings": {
         "style": "style-1",
-        "enable_custom_background": false,
+        "enable_custom_background": true,
         "background_color": "#000000",
         "background_gradient": "",
         "enable_custom_color": true,
