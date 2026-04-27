@@ -672,6 +672,8 @@ ins {
  * Spacings
 */
 
+
+/*
 .pt-xs {
   padding-top: var(--spacing-step);
 }
@@ -1222,6 +1224,8 @@ summary::-webkit-details-marker {
     z-index: var(--z-modals) !important;
   }
 }
+
+*/
 
 *:focus {
   outline: 0;
