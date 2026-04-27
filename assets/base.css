@@ -41,6 +41,8 @@ html {
   height: 100%;
 }
 
+/*
+
 body {
   display: flex;
   flex-direction: column;
@@ -660,6 +662,11 @@ ins {
 .word-break {
   word-break: break-word;
 }
+
+*/
+
+
+
 
 /*
  * Spacings
