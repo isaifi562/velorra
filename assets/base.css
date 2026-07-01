@@ -41,7 +41,6 @@ html {
   height: 100%;
 }
 
-/*
 
 body {
   display: flex;
@@ -1225,7 +1224,6 @@ summary::-webkit-details-marker {
   }
 }
 
-*/
 
 *:focus {
   outline: 0;
