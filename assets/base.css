@@ -2,9 +2,9 @@
   color: var(--color-red);
 }
 
-/* .card-product__actions{
+ .card-product__actions{
   display:none !important
-} */
+}
 .color-background {
   background-color: var(--color-background);
 }
