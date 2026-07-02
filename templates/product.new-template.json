@@ -255,8 +255,7 @@
         "ai_gen_block_89b9dc3_Gmy69M"
       ],
       "custom_css": [
-        "{padding: 50px; background: #0001;}",
-        "@media only screen and (max-width:767px){{padding: 10px;}}"
+        "{padding: 50px; background: #0001;}"
       ],
       "settings": {}
     },
@@ -306,7 +305,8 @@
         "ai_gen_block_89b9dc3_F77weg"
       ],
       "custom_css": [
-        "{padding: 50px;}"
+        "{padding: 50px;}",
+        "@media only screen and (max-width:767px){{padding: 10px;}}"
       ],
       "settings": {}
     },
