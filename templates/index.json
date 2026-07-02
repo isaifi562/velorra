@@ -261,6 +261,7 @@
     },
     "featured_products_JAhMVD": {
       "type": "featured-products",
+      "disabled": true,
       "custom_css": [
         ".text-content {display: flex; justify-content: center; align-items: center;}",
         ".max-width {width: 100% !important; max-width: 100% !important;}",
@@ -599,14 +600,14 @@
         "heading_dLdYJE": {
           "type": "heading",
           "settings": {
-            "heading": "<p>About Us – Velorrea</p>",
+            "heading": "<p>About Us – Saj Ke Chalo</p>",
             "heading_size": "h3"
           }
         },
         "paragraph_Q9FUnQ": {
           "type": "paragraph",
           "settings": {
-            "paragraph": "<p>Not just clothing. A feeling. A frequency. A feminine rebellion.</p>"
+            "paragraph": "<p>सजने की हर वजह, यहीं मिलेगी।</p>"
           }
         },
         "buttons_jQMXbk": {
@@ -641,7 +642,7 @@
         "enable_fullwidth": true,
         "swap_image_and_text": true,
         "content_vertical_position": "center",
-        "image": "shopify://shop_images/web-1-2.jpg"
+        "image": "shopify://shop_images/11_2.png"
       }
     },
     "featured_products_MhENWW": {
