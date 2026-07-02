@@ -105,7 +105,7 @@
     "social_tiktok_link": "",
     "social_snapchat_link": "",
     "social_linkedin_link": "#",
-    "favicon": "shopify://shop_images/logo_webiste_2.jpg",
+    "favicon": "shopify://shop_images/hf_20260627_082934_a6114f2d-426e-48b8-8e59-b5bbf090453e.png",
     "enable_subscribe_notification": false,
     "enable_localization": true,
     "swatches_use_image_assets": false,
@@ -348,11 +348,6 @@
       },
       "1759773598402494664": {
         "type": "shopify://apps/rt-whatsapp-chat-live-chat/blocks/app-embed/9baee9b7-6929-47af-9935-05bcdc376396",
-        "disabled": false,
-        "settings": {}
-      },
-      "11348531219507317188": {
-        "type": "shopify://apps/eb-easy-bundle-builder/blocks/app-embed/05b1325c-6303-4da5-8e2f-b13ab2a50e1a",
         "disabled": false,
         "settings": {}
       }
