@@ -66,7 +66,18 @@
       {{- product_badges -}}
     </div>
 
-  
+    {%- when 'title' -%}
+      <div class="product__title-wrapper">
+        <h1 class="{{ block.settings.heading_size }} product__title color-headings mt-0 mb-0">
+          {%- if product_ref == blank -%}
+            {{- 'products.product.example_title' | t -}}
+          {%- else -%}
+            {{- product_ref.title | escape -}}
+          {%- endif -%}
+        </h1><!-- /.product__title -->
+
+      
+      </div>
     {%- when 'type' -%}
       {%- if product_ref.type == blank -%}
         {%- continue -%}
