@@ -209,44 +209,99 @@
         "enable_mobile_thumbs": true
       }
     },
-    "faq_BFFArE": {
-      "type": "faq",
+    "1782990494c4447cf9": {
+      "type": "_blocks",
       "blocks": {
-        "question_NN9NmJ": {
-          "type": "question",
+        "ai_gen_block_89b9dc3_Gmy69M": {
+          "type": "ai_gen_block_89b9dc3",
           "settings": {
-            "question": "Description",
-            "answer": "{{ product.description }}",
-            "answer_page": ""
-          }
-        },
-        "question_X4pBE4": {
-          "type": "question",
-          "settings": {
-            "question": "Size Chart",
-            "answer": "<p>.</p>",
-            "answer_page": "size-chart"
-          }
+            "desktop_width_percent": 100,
+            "title_column_width": 35,
+            "column_gap": 60,
+            "section_padding": 40,
+            "mobile_title_spacing": 30,
+            "main_title": "More Details",
+            "main_title_size": 36,
+            "main_title_color": "#000000",
+            "item_spacing": 15,
+            "item_padding": 20,
+            "border_radius": 8,
+            "item_background": "#ffffff",
+            "item_hover_background": "#f9f9f9",
+            "border_color": "#e5e5e5",
+            "question_size": 16,
+            "question_weight": "600",
+            "question_color": "#000000",
+            "answer_size": 14,
+            "answer_color": "#666666",
+            "icon_style": "plus_minus",
+            "icon_size": 24,
+            "icon_color": "#000000",
+            "question_1": "Care Instructions",
+            "answer_1": "<p>— Store in the box provided, away from moisture<br/>— Avoid contact with perfume, water, and    sweat directly on the earring<br/>— Wipe with a soft dry cloth after use<br/>— Do not use chemical cleaners</p>",
+            "question_2": "",
+            "answer_2": "",
+            "question_3": "",
+            "answer_3": "",
+            "question_4": "",
+            "answer_4": "",
+            "question_5": "",
+            "answer_5": ""
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "question_NN9NmJ",
-        "question_X4pBE4"
+        "ai_gen_block_89b9dc3_Gmy69M"
       ],
-      "custom_css": [
-        ".accordion-item summary span {font-size: 30px; line-height: 2rem; font-weight: 600;}"
+      "settings": {}
+    },
+    "blocks_pHYAhp": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_89b9dc3_F77weg": {
+          "type": "ai_gen_block_89b9dc3",
+          "settings": {
+            "desktop_width_percent": 100,
+            "title_column_width": 35,
+            "column_gap": 60,
+            "section_padding": 40,
+            "mobile_title_spacing": 30,
+            "main_title": "FAQ",
+            "main_title_size": 36,
+            "main_title_color": "#000000",
+            "item_spacing": 15,
+            "item_padding": 20,
+            "border_radius": 8,
+            "item_background": "#ffffff",
+            "item_hover_background": "#f9f9f9",
+            "border_color": "#e5e5e5",
+            "question_size": 16,
+            "question_weight": "600",
+            "question_color": "#000000",
+            "answer_size": 14,
+            "answer_color": "#666666",
+            "icon_style": "plus_minus",
+            "icon_size": 24,
+            "icon_color": "#000000",
+            "question_1": "1. Will these turn green or tarnish?",
+            "answer_1": "<p>Oxidised jewellery has an intentionally darkened finish — it is not plated silver that fades. With basic care (keeping dry, storing properly) these maintain their look for a long time.</p>",
+            "question_2": "2.Are these suitable for sensitive ears?",
+            "answer_2": "<p>The hooks and posts are smooth and standard gauge. Most customers wear them without issues. If you have highly sensitive ears, we recommend wearing for a few hours first.</p>",
+            "question_3": "3.Can I buy individual earrings from this set?",
+            "answer_3": "<p>The Rang Mahal Collection is available only as a complete set of 16</p>",
+            "question_4": "4.How is the packaging?",
+            "answer_4": "<p>All 16 pairs come beautifully packed in a premium Adhya gift box, perfect for gifting or treating yourself. Designed to carry and protect your earrings, keeping them safe from damage.</p>",
+            "question_5": "5.What if one earring arrives damaged?",
+            "answer_5": "<p>We check every pair before dispatch. If anything arrives damaged, reach out to us within 48 hours with a photo and we'll make it right.</p>"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_89b9dc3_F77weg"
       ],
-      "name": "t:sections.faq.name",
-      "settings": {
-        "style": "style-1",
-        "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
-        "inner_spacing": "spacing-s spacing-s--large",
-        "subheading": "",
-        "heading": "",
-        "enable_custom_background": true,
-        "background_color": "#f2f2f2",
-        "background_gradient": ""
-      }
+      "settings": {}
     },
     "recommendations": {
       "type": "product-recommendations",
@@ -315,7 +370,8 @@
   },
   "order": [
     "main",
-    "faq_BFFArE",
+    "1782990494c4447cf9",
+    "blocks_pHYAhp",
     "recommendations",
     "featured_products_VhKaii",
     "1753561600e64969d1"
