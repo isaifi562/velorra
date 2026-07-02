@@ -50,6 +50,12 @@
           "type": "price",
           "settings": {}
         },
+        "custom_liquid_xJqtMz": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<b>WHAT'S IN THE BOX</b>\n<div>\n✦ 16 pairs of handpicked oxidised earrings\n<br>\n✦ Mix of pure oxidised, oxidised with stone, oxidised with meenakari\n<br>\n✦ Styles ranging from everyday to festive\n<br>\n✦ Premium gift box packaging\n<br>\n✦ Colours may vary slightly based on availability\n</div>"
+          }
+        },
         "448ed604-e434-41bc-a38d-c5e6dfc87c9f": {
           "type": "separator",
           "settings": {}
@@ -149,6 +155,7 @@
         "custom_liquid_GiqBMg",
         "a574468c-b971-46d7-bf83-d54ae6679d82",
         "6f1bce4f-f119-49ae-a5b5-28fce3641a2a",
+        "custom_liquid_xJqtMz",
         "448ed604-e434-41bc-a38d-c5e6dfc87c9f",
         "b07a1b21-c53c-4514-9563-0da2a57df8ad",
         "1cfcca14-dc02-433c-86a5-68ceb8392c70",
