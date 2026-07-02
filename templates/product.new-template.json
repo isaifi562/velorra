@@ -12,8 +12,15 @@
     "main": {
       "type": "main-product",
       "blocks": {
+        "gsc_countdown_timer_countdown_g4DfRp": {
+          "type": "shopify://apps/gsc-countdown-timer/blocks/countdown/58dc5b1b-43d2-4209-b1f3-52aff31643ed",
+          "settings": {
+            "widget_id": "GSC-LARGE-GdnWOWdsrcrE"
+          }
+        },
         "5ad897b0-57f4-4599-849d-2a41a78c9399": {
           "type": "badges",
+          "disabled": true,
           "settings": {}
         },
         "2dd2f51a-f755-4a34-ab97-3d560f52d666": {
@@ -136,6 +143,7 @@
         }
       },
       "block_order": [
+        "gsc_countdown_timer_countdown_g4DfRp",
         "5ad897b0-57f4-4599-849d-2a41a78c9399",
         "2dd2f51a-f755-4a34-ab97-3d560f52d666",
         "bundel_wEEqfh",
