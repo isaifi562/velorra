@@ -99,7 +99,7 @@
         "713b003a-1374-4d1f-9f98-3f96ed4881ce": {
           "type": "buy-buttons",
           "settings": {
-            "show_dynamic_checkout": false,
+            "show_dynamic_checkout": true,
             "show_contact_button": false,
             "show_gift_card_recipient": false,
             "accent_color": ""
@@ -107,6 +107,7 @@
         },
         "custom_liquid_A8YXfA": {
           "type": "custom_liquid",
+          "disabled": true,
           "settings": {
             "custom_liquid": "<div id=\"delivery-date-message\" style=\"margin-top: 10px; font-size: 14px; color: #000;\"></div>\n\n<script>\n  document.addEventListener('DOMContentLoaded', function () {\n    function calculateDeliveryDate(isOutOfStock) {\n      if (isOutOfStock) {\n        document.getElementById('delivery-date-message').textContent = 'Product is out of stock';\n      } else {\n        var today = new Date();\n        var minDays = 5;\n        var maxDays = 7;\n        var minDeliveryDate = new Date(today);\n        minDeliveryDate.setDate(today.getDate() + minDays);\n        var maxDeliveryDate = new Date(today);\n        maxDeliveryDate.setDate(today.getDate() + maxDays);\n        var options = { month: 'long', day: 'numeric', year: 'numeric' };\n        var minDateFormatted = minDeliveryDate.toLocaleDateString('en-US', options);\n        var maxDateFormatted = maxDeliveryDate.toLocaleDateString('en-US', options);\n        var message = 'Estimated Delivery: ' + minDateFormatted + ' - ' + maxDateFormatted;\n        document.getElementById('delivery-date-message').textContent = message;\n      }\n    }\n    var isOutOfStock = {{ product.available | json }};\n    calculateDeliveryDate(!isOutOfStock); \n  });\n</script>"
           }
@@ -145,6 +146,21 @@
             "show_quantity": true,
             "hide_options_mobile": false
           }
+        },
+        "judge_me_reviews_review_widget_chT7iJ": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "other_products_reviews"
+          }
+        },
+        "custom_liquid_7gUfbw": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<div class=\"key-highlights\">\n  <h2>Key Highlights</h2>\n\n  <div class=\"highlights-grid\">\n    <div class=\"item\">\n      <span class=\"label\">Material</span>\n      <p>Oxidised Metal</p>\n    </div>\n\n    <div class=\"item\">\n      <span class=\"label\">Weight</span>\n      <p>Lightweight</p>\n    </div>\n\n    <div class=\"item\">\n      <span class=\"label\">Closure Type</span>\n      <p>Hook, Stud & Hoop</p>\n    </div>\n\n    <div class=\"item\">\n      <span class=\"label\">Occasion\n</span>\n      <p>Casual, Ethnic & Festive</p>\n    </div>\n  </div>\n</div>\n\n\n<style>\n.key-highlights {\n  max-width: 700px;\n  font-family: Arial, sans-serif;\n}\n\n.key-highlights h2 {\n  font-size: 22px;\n  margin-bottom: 20px;\n  color: #000;\n}\n\n.highlights-grid {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 20px 40px;\n}\n\n.item {\n  border-bottom: 1px solid #eee;\n  padding-bottom: 14px;\n}\n\n.label {\n  display: block;\n  font-size: 14px;\n  color: #8fa0b7; /* light bluish heading */\n  margin-bottom: 6px;\n}\n\n.item p {\n  font-size: 15px;\n  color: #222;\n  margin: 0;\n  line-height: 1.4;\n}\n\n/* Mobile responsive */\n@media (max-width: 600px) {\n  .highlights-grid {\n    grid-template-columns: 1fr 1fr;\n    gap: 16px 20px;\n  }\n\n  .item p {\n    font-size: 14px;\n  }\n\n  .label {\n    font-size: 13px;\n  }\n}\n\n</style>"
+          }
         }
       },
       "block_order": [
@@ -169,7 +185,9 @@
         "ceed2691-0e85-47e8-8442-2375657b6222",
         "979d6588-4409-4258-9786-c2009381e309",
         "d2d15c7c-25a6-4d9c-86f1-a57afbc62204",
-        "4efdfff0-f62b-4d27-bbb5-fb5817233073"
+        "4efdfff0-f62b-4d27-bbb5-fb5817233073",
+        "judge_me_reviews_review_widget_chT7iJ",
+        "custom_liquid_7gUfbw"
       ],
       "settings": {
         "style": "style-1",
