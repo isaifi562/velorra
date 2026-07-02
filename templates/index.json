@@ -15,12 +15,12 @@
         "fullwidth_w7DwmH": {
           "type": "fullwidth",
           "settings": {
-            "whole_block_link": "shopify://products/hourglow-snatched-shirt-copy",
+            "whole_block_link": "shopify://products/rang-mahal-collection-set-of-16-oxidize-earring",
             "external_video": "",
             "disable_autoplay_on_mobile": true,
             "description": "",
-            "image": "shopify://shop_images/aura_on_top_curves_so_criminal.png",
-            "image_mobile": "shopify://shop_images/HOURGLOW_SHIRT_1013_x_1350_px.png",
+            "image": "shopify://shop_images/11_1d02f017-87f4-4df4-a35d-0833c2909d04.png",
+            "image_mobile": "shopify://shop_images/1_4f68ea9a-4dc0-48be-8b95-222492fbaa07.png",
             "background_overlay": "#000000",
             "background_overlay_opacity": 0,
             "background_overlay_gradient": "",
@@ -50,12 +50,12 @@
         "fullwidth_kkaTeY": {
           "type": "fullwidth",
           "settings": {
-            "whole_block_link": "shopify://products/hour-glow-shirt-copy",
+            "whole_block_link": "shopify://products/rang-mahal-collection-set-of-16-oxidize-earring",
             "external_video": "",
             "disable_autoplay_on_mobile": true,
             "description": "",
-            "image": "shopify://shop_images/co_ord.jpg",
-            "image_mobile": "shopify://shop_images/coordd.jpg",
+            "image": "shopify://shop_images/10_ba300a57-47de-4a4f-8f15-56a200b95c3f.png",
+            "image_mobile": "shopify://shop_images/2_9e660171-ce4e-4b24-b79e-51461a6935b7.png",
             "background_overlay": "#000000",
             "background_overlay_opacity": 0,
             "background_overlay_gradient": "",
@@ -248,7 +248,7 @@
       "type": "apps",
       "blocks": {
         "reelup_shoppable_videos_reels_reelup_playlist_B7pXei": {
-          "type": "shopify://apps/reelup-shoppable-videos-reels/blocks/reelup_playlist/a8ec9e4d-d192-44f7-9c23-595f9ee7dd5b",
+          "type": "shopify://apps/reelup-shoppable-videos/blocks/reelup_playlist/a8ec9e4d-d192-44f7-9c23-595f9ee7dd5b",
           "settings": {
             "playlist_id": ""
           }
