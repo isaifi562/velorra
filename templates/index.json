@@ -298,7 +298,7 @@
           "olive-green-jacket"
         ],
         "products_count": 12,
-        "autoplay": false,
+        "autoplay": true,
         "autoplay_speed": 5
       }
     },
