@@ -213,37 +213,6 @@
       ],
       "settings": {}
     },
-    "featured_products_VYbiQ8": {
-      "type": "featured-products",
-      "custom_css": [
-        ".text-content {display: flex; justify-content: center; align-items: center;}",
-        ".max-width {width: 100% !important; max-width: 100% !important;}",
-        ".card-product__main a {padding-top: 20% !important;}"
-      ],
-      "name": "t:sections.featured-products.name",
-      "settings": {
-        "style": "style-1",
-        "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
-        "inner_spacing": "spacing-s spacing-s--large",
-        "layout": "fullwidth",
-        "enable_custom_background": false,
-        "background_color": "",
-        "background_gradient": "",
-        "subheading": "",
-        "heading": "<h2>Best Offers</h2>",
-        "heading_size": "h2",
-        "paragraph": "",
-        "button_style_1": "solid",
-        "button_size_1": "s",
-        "button_text_1": "",
-        "button_url_1": "shopify://collections/combo",
-        "collection": "combo",
-        "product_list": [],
-        "products_count": 12,
-        "autoplay": false,
-        "autoplay_speed": 5
-      }
-    },
     "17543867595a9c9942": {
       "type": "apps",
       "blocks": {
@@ -299,6 +268,37 @@
         ],
         "products_count": 12,
         "autoplay": true,
+        "autoplay_speed": 5
+      }
+    },
+    "featured_products_VYbiQ8": {
+      "type": "featured-products",
+      "custom_css": [
+        ".text-content {display: flex; justify-content: center; align-items: center;}",
+        ".max-width {width: 100% !important; max-width: 100% !important;}",
+        ".card-product__main a {padding-top: 20% !important;}"
+      ],
+      "name": "t:sections.featured-products.name",
+      "settings": {
+        "style": "style-1",
+        "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
+        "inner_spacing": "spacing-s spacing-s--large",
+        "layout": "fullwidth",
+        "enable_custom_background": false,
+        "background_color": "",
+        "background_gradient": "",
+        "subheading": "",
+        "heading": "<h2>Best Offers</h2>",
+        "heading_size": "h2",
+        "paragraph": "",
+        "button_style_1": "solid",
+        "button_size_1": "s",
+        "button_text_1": "",
+        "button_url_1": "shopify://collections/combo",
+        "collection": "combo",
+        "product_list": [],
+        "products_count": 12,
+        "autoplay": false,
         "autoplay_speed": 5
       }
     },
@@ -892,9 +892,9 @@
   "order": [
     "hero_bxzBk6",
     "1753557717ca340702",
-    "featured_products_VYbiQ8",
-    "17543867595a9c9942",
     "featured_products_JAhMVD",
+    "17543867595a9c9942",
+    "featured_products_VYbiQ8",
     "featured_product_naJbUc",
     "featured_collections_hH3VET",
     "marquee_pWxNpt",
