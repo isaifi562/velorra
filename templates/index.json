@@ -217,8 +217,7 @@
       "type": "featured-products",
       "custom_css": [
         ".text-content {display: flex; justify-content: center; align-items: center;}",
-        ".max-width {width: 100% !important; max-width: 100% !important;}",
-        ".card-product__main a {padding-top: 20% !important;}"
+        ".max-width {width: 100% !important; max-width: 100% !important;}"
       ],
       "settings": {
         "style": "style-1",
