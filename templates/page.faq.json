@@ -23,8 +23,8 @@
         "284529bf-da67-4f6f-bc4a-9503befd7a7f": {
           "type": "question",
           "settings": {
-            "question": "Why Does the Colour Look a Bit Different?",
-            "answer": "<p>Every product is shot in lighting that’s close to real life, but slight variations can occur due to lighting, camera settings, or your screen.</p>",
+            "question": "What if I receive a product that's different from the picture?",
+            "answer": "<p><br/>You'll receive the <strong>same design</strong> as shown. Only the <strong>colour may vary slightly</strong> based on stock availability. The quality and style remain the same.<br/><br/></p>",
             "answer_page": ""
           }
         },
@@ -47,24 +47,8 @@
         "3fce47c6-1a10-406e-8517-f04390db0f9e": {
           "type": "question",
           "settings": {
-            "question": "What makes Velorrea outfits special?",
-            "answer": "<p>Our pieces blend Indian roots with Western flair — designed with love, made in 100% pure cotton, and handcrafted in small, mindful batches. No mass production, no compromise on comfort or uniqueness.</p>",
-            "answer_page": ""
-          }
-        },
-        "ea091b07-43ee-4a53-a064-35f3ba3a3e5c": {
-          "type": "question",
-          "settings": {
-            "question": "How do I know which size fits me best?",
-            "answer": "<p>Each product page includes a detailed size guide to help you find your perfect fit. Still unsure? DM us or email us at thevelorrea@gmail.com — we’ve got you.</p>",
-            "answer_page": ""
-          }
-        },
-        "20c8f363-42d4-4342-b2e7-0f8ad56bbec1": {
-          "type": "question",
-          "settings": {
-            "question": "Do you ship internationally?",
-            "answer": "<p>Absolutely! We ship worldwide. International shipping charges apply and will be shown at checkout.</p>",
+            "question": "What makes Saj Ke Chalo special?",
+            "answer": "<p><br/>Every box is thoughtfully curated with unique, handcrafted-inspired designs, proudly made in India. We focus on quality, affordability, and versatile styles, bringing you statement jewellery you'll love to wear, all at prices that make sense.<br/><br/></p>",
             "answer_page": ""
           }
         },
@@ -83,8 +67,6 @@
         "c9f46c46-113b-400d-938a-631fcaba2694",
         "150c365e-2a91-4761-af44-02e3997e8d2b",
         "3fce47c6-1a10-406e-8517-f04390db0f9e",
-        "ea091b07-43ee-4a53-a064-35f3ba3a3e5c",
-        "20c8f363-42d4-4342-b2e7-0f8ad56bbec1",
         "73a4a517-6cc1-4bd8-8cd8-faa9d3f98f73"
       ],
       "settings": {
