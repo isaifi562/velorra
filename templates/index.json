@@ -217,7 +217,8 @@
       "type": "featured-products",
       "custom_css": [
         ".text-content {display: flex; justify-content: center; align-items: center;}",
-        ".max-width {width: 100% !important; max-width: 100% !important;}"
+        ".max-width {width: 100% !important; max-width: 100% !important;}",
+        " {margin-top: -50px;}"
       ],
       "settings": {
         "style": "style-1",
