@@ -54,7 +54,8 @@
       "type": "header",
       "custom_css": [
         ".header {border: none;}",
-        "svg {color: #000;}"
+        "svg {color: #000;}",
+        ".header__inner {padding: 10px 0;}"
       ],
       "settings": {
         "style": "style-1",
