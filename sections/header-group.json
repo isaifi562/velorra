@@ -72,6 +72,7 @@
         "enable_sticky_header": true,
         "transparent": false,
         "transparent_gradient": false,
+        "transparent_logo": "shopify://shop_images/hf_20260627_082934_9aa722f8-9b2a-4a2d-9d75-6add0abc7c59.png",
         "transparent_logo_svg_code": "",
         "transparent_color": "#000000",
         "enable_country": false,
