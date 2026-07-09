@@ -11,7 +11,6 @@
   "sections": {
     "banner": {
       "type": "main-collection-banner",
-      "disabled": true,
       "settings": {
         "style": "style-2",
         "height": "compact",
@@ -32,7 +31,6 @@
     },
     "main": {
       "type": "main-collection",
-      "disabled": true,
       "custom_css": [
         ".card-product__main a {padding-top: 0 !important;}"
       ],
