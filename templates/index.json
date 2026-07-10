@@ -12,6 +12,41 @@
     "hero_bxzBk6": {
       "type": "hero",
       "blocks": {
+        "fullwidth_xk7dHY": {
+          "type": "fullwidth",
+          "settings": {
+            "whole_block_link": "shopify://products/essentials-box",
+            "external_video": "",
+            "disable_autoplay_on_mobile": true,
+            "description": "",
+            "image": "shopify://shop_images/website_banner_web.png",
+            "image_mobile": "shopify://shop_images/web_mobile_view_banner_1.png",
+            "background_overlay": "#000000",
+            "background_overlay_opacity": 0,
+            "background_overlay_gradient": "",
+            "show_background": false,
+            "show_background_mobile": false,
+            "align_vertical": "center",
+            "align_horizontal": "center",
+            "align_vertical_mobile": "center",
+            "align_horizontal_mobile": "center",
+            "text_color": "",
+            "subheading": "Add a tagline",
+            "heading": "<p>Slide heading with <em><strong>accent element</strong></em></p>",
+            "heading_size": "h1",
+            "paragraph": "<p>Add descriptive text for your slide here.</p>",
+            "button_style_1": "solid",
+            "button_size_1": "m",
+            "button_text_1": "Explore",
+            "button_url_1": "shopify://collections/all",
+            "button_style_2": "solid",
+            "button_size_2": "m",
+            "button_text_2": "",
+            "button_url_2": "",
+            "button_text_color": "",
+            "button_background_color": ""
+          }
+        },
         "fullwidth_w7DwmH": {
           "type": "fullwidth",
           "settings": {
@@ -177,6 +212,7 @@
         }
       },
       "block_order": [
+        "fullwidth_xk7dHY",
         "fullwidth_w7DwmH",
         "fullwidth_kkaTeY",
         "50_50_fb3ftU",
@@ -219,7 +255,7 @@
         ".text-content {display: flex; justify-content: center; align-items: center;}",
         ".max-width {width: 100% !important; max-width: 100% !important;}",
         " {margin-top: -50px;}",
-        "@media only screen and (max-width:767px){{margin-top: -0px;}}"
+        "@media only screen and (max-width: 767px) {{margin-top: -0px; }}"
       ],
       "settings": {
         "style": "style-1",
@@ -261,7 +297,7 @@
       "type": "apps",
       "blocks": {
         "reelup_shoppable_videos_reels_reelup_playlist_B7pXei": {
-          "type": "shopify://apps/reelup-shoppable-videos-reels/blocks/reelup_playlist/a8ec9e4d-d192-44f7-9c23-595f9ee7dd5b",
+          "type": "shopify://apps/reelup-shoppable-videos/blocks/reelup_playlist/a8ec9e4d-d192-44f7-9c23-595f9ee7dd5b",
           "settings": {
             "playlist_id": ""
           }
