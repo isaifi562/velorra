@@ -94,6 +94,7 @@
         },
         "custom_liquid_A8YXfA": {
           "type": "custom_liquid",
+          "disabled": true,
           "settings": {
             "custom_liquid": "<div id=\"delivery-date-message\" style=\"margin-top: 10px; font-size: 14px; color: #000;\"></div>\n\n<script>\n  document.addEventListener('DOMContentLoaded', function () {\n    function calculateDeliveryDate(isOutOfStock) {\n      if (isOutOfStock) {\n        document.getElementById('delivery-date-message').textContent = 'Product is out of stock';\n      } else {\n        var today = new Date();\n        var minDays = 5;\n        var maxDays = 7;\n        var minDeliveryDate = new Date(today);\n        minDeliveryDate.setDate(today.getDate() + minDays);\n        var maxDeliveryDate = new Date(today);\n        maxDeliveryDate.setDate(today.getDate() + maxDays);\n        var options = { month: 'long', day: 'numeric', year: 'numeric' };\n        var minDateFormatted = minDeliveryDate.toLocaleDateString('en-US', options);\n        var maxDateFormatted = maxDeliveryDate.toLocaleDateString('en-US', options);\n        var message = 'Estimated Delivery: ' + minDateFormatted + ' - ' + maxDateFormatted;\n        document.getElementById('delivery-date-message').textContent = message;\n      }\n    }\n    var isOutOfStock = {{ product.available | json }};\n    calculateDeliveryDate(!isOutOfStock); \n  });\n</script>"
           }
