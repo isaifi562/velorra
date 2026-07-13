@@ -201,6 +201,7 @@
         "question_NN9NmJ",
         "question_X4pBE4"
       ],
+      "disabled": true,
       "custom_css": [
         ".accordion-item summary span {font-size: 30px; line-height: 2rem; font-weight: 600;}"
       ],
