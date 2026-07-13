@@ -1,0 +1,388 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "gsc_countdown_timer_countdown_g4DfRp": {
+          "type": "shopify://apps/gsc-countdown-timer/blocks/countdown/58dc5b1b-43d2-4209-b1f3-52aff31643ed",
+          "settings": {
+            "widget_id": "GSC-LARGE-GdnWOWdsrcrE"
+          }
+        },
+        "5ad897b0-57f4-4599-849d-2a41a78c9399": {
+          "type": "badges",
+          "disabled": true,
+          "settings": {}
+        },
+        "2dd2f51a-f755-4a34-ab97-3d560f52d666": {
+          "type": "title",
+          "settings": {
+            "price_with_title": true,
+            "heading_size": "h4"
+          }
+        },
+        "bundel_wEEqfh": {
+          "type": "bundel",
+          "settings": {}
+        },
+        "custom_liquid_GiqBMg": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": "<div id=\"variant-inventory\" class=\"{% unless current_variant.available %} hide {% endunless %}\">\n              {% if current_variant.inventory_management == \"shopify\" and current_variant.inventory_policy != \"continue\" %}\n              We have {{ current_variant.inventory_quantity }} in stock.\n              {% else %}\n              This product is available.\n              {% endif %}\n            </div>"
+          }
+        },
+        "a574468c-b971-46d7-bf83-d54ae6679d82": {
+          "type": "type",
+          "disabled": true,
+          "settings": {}
+        },
+        "6f1bce4f-f119-49ae-a5b5-28fce3641a2a": {
+          "type": "price",
+          "settings": {}
+        },
+        "ceed2691-0e85-47e8-8442-2375657b6222": {
+          "type": "product-content",
+          "settings": {
+            "collapsible": false,
+            "show_expanded": false
+          }
+        },
+        "custom_liquid_xJqtMz": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": "<b>WHAT'S IN THE BOX</b>\n<div>\n✦ 16 pairs of handpicked oxidised earrings\n<br>\n✦ Mix of pure oxidised, oxidised with stone, oxidised with meenakari\n<br>\n✦ Styles ranging from everyday to festive\n<br>\n✦ Premium gift box packaging\n<br>\n✦ Colours may vary slightly based on availability\n</div>"
+          }
+        },
+        "448ed604-e434-41bc-a38d-c5e6dfc87c9f": {
+          "type": "separator",
+          "settings": {}
+        },
+        "b07a1b21-c53c-4514-9563-0da2a57df8ad": {
+          "type": "variant-selector",
+          "disabled": true,
+          "settings": {
+            "title": "Variant selector",
+            "size_guide_page": "",
+            "size_options_picker_type": "button",
+            "other_options_picker_type": "button",
+            "enable_variant_scroll": true
+          }
+        },
+        "1cfcca14-dc02-433c-86a5-68ceb8392c70": {
+          "type": "quantity-input",
+          "settings": {}
+        },
+        "ac47188a-8ab8-4b89-beaf-a96495b14053": {
+          "type": "stock-notification",
+          "settings": {
+            "threshold": 15,
+            "color": "#000000"
+          }
+        },
+        "c47aaa5e-5dc0-4aea-8f63-682ae19f5192": {
+          "type": "pickup-availability",
+          "settings": {}
+        },
+        "bf1ccef1-5a7c-4db0-abc9-613857a94d2e": {
+          "type": "separator",
+          "settings": {}
+        },
+        "custom_liquid_gmKqyk": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": "<div class=\"product-block\">\n                      <div class=\"product-promotions-disc product-promotions-mob mob\">\n                      <h2>Apply Offers!</h2>\n                        <ul>\n                           <li>SHOP FOR <b>₹1999</b> &amp; MORE, GET ₹100 OFF - <b>VELORREA100</b></li>\n                           <li>SHOP FOR <b>₹2499</b> &amp; MORE, GET ₹200 OFF - <b>VELORREA200</b></li>\n<li>SHOP FOR <b>₹3499</b> &amp; MORE, GET ₹300 OFF - <b>VELORREA300</b></li>\n                        \n                         \n                        </ul>\n                  </div>\n<style>\n    .product-promotions-disc.product-promotions-mob.mob {\n   background-color: #000;\n        padding: 20px 24px  8px!important;\n        margin-left: -25px;\n        margin-right: -19px;\n    }\n.product-promotions-disc.product-promotions-mob.mob h2 {\n    color: #fff;\n    font-size: 19px;\n}\n    .product-promotions-disc.product-promotions-mob.mob li {\n     color: #fff;\n    line-height: 20px;\n    font-size: 11px;\n    letter-spacing: 0;\n    }\n@media(min-width:767px){\n.product-promotions-disc{\ndisplay:none;\n}}\nul {\n    margin-left: 10px;\n}\n</style>\n                    </div>"
+          }
+        },
+        "713b003a-1374-4d1f-9f98-3f96ed4881ce": {
+          "type": "buy-buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_contact_button": false,
+            "show_gift_card_recipient": false,
+            "accent_color": ""
+          }
+        },
+        "custom_liquid_A8YXfA": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": "<div id=\"delivery-date-message\" style=\"margin-top: 10px; font-size: 14px; color: #000;\"></div>\n\n<script>\n  document.addEventListener('DOMContentLoaded', function () {\n    function calculateDeliveryDate(isOutOfStock) {\n      if (isOutOfStock) {\n        document.getElementById('delivery-date-message').textContent = 'Product is out of stock';\n      } else {\n        var today = new Date();\n        var minDays = 5;\n        var maxDays = 7;\n        var minDeliveryDate = new Date(today);\n        minDeliveryDate.setDate(today.getDate() + minDays);\n        var maxDeliveryDate = new Date(today);\n        maxDeliveryDate.setDate(today.getDate() + maxDays);\n        var options = { month: 'long', day: 'numeric', year: 'numeric' };\n        var minDateFormatted = minDeliveryDate.toLocaleDateString('en-US', options);\n        var maxDateFormatted = maxDeliveryDate.toLocaleDateString('en-US', options);\n        var message = 'Estimated Delivery: ' + minDateFormatted + ' - ' + maxDateFormatted;\n        document.getElementById('delivery-date-message').textContent = message;\n      }\n    }\n    var isOutOfStock = {{ product.available | json }};\n    calculateDeliveryDate(!isOutOfStock); \n  });\n</script>"
+          }
+        },
+        "3c7d63aa-cfa9-4a49-97d8-903fbef2bc6a": {
+          "type": "separator",
+          "settings": {}
+        },
+        "979d6588-4409-4258-9786-c2009381e309": {
+          "type": "collapsible-element",
+          "disabled": true,
+          "settings": {
+            "title": "Shipping & Delivery",
+            "text": "<p>Free Worldwide Standard Shipping</p><p>Check <a href=\"https://3742vf9e0ivnads4-81457512763.shopifypreview.com/pages/refund-policy\">Return Policy</a></p><p>Check <a href=\"https://tazoricollection.com/pages/shipping-policy\">Shipping Policy</a></p>",
+            "page": "",
+            "icon_type": "none"
+          }
+        },
+        "d2d15c7c-25a6-4d9c-86f1-a57afbc62204": {
+          "type": "upsell-products",
+          "settings": {
+            "title": "Complete the Look"
+          }
+        },
+        "4efdfff0-f62b-4d27-bbb5-fb5817233073": {
+          "type": "sticky-bar",
+          "settings": {
+            "show_quantity": true,
+            "hide_options_mobile": false
+          }
+        },
+        "judge_me_reviews_review_widget_chT7iJ": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "other_products_reviews"
+          }
+        },
+        "custom_liquid_7gUfbw": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<div class=\"key-highlights\">\n  <h2>Key Highlights</h2>\n\n  <div class=\"highlights-grid\">\n    <div class=\"item\">\n      <span class=\"label\">Material</span>\n      <p>Oxidised Metal</p>\n    </div>\n\n    <div class=\"item\">\n      <span class=\"label\">Weight</span>\n      <p>Lightweight</p>\n    </div>\n\n    <div class=\"item\">\n      <span class=\"label\">Closure Type</span>\n      <p>Hook, Hoop</p>\n    </div>\n\n    <div class=\"item\">\n      <span class=\"label\">Occasion\n</span>\n      <p>Casual, Ethnic & Festive</p>\n    </div>\n  </div>\n</div>\n\n\n<style>\n.key-highlights {\n  max-width: 700px;\n  font-family: Arial, sans-serif;\n}\n\n.key-highlights h2 {\n  font-size: 22px;\n  margin-bottom: 20px;\n  color: #000;\n}\n\n.highlights-grid {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 20px 40px;\n}\n\n.item {\n  border-bottom: 1px solid #eee;\n  padding-bottom: 14px;\n}\n\n.label {\n  display: block;\n  font-size: 14px;\n  color: #8fa0b7; /* light bluish heading */\n  margin-bottom: 6px;\n}\n\n.item p {\n  font-size: 15px;\n  color: #222;\n  margin: 0;\n  line-height: 1.4;\n}\n\n/* Mobile responsive */\n@media (max-width: 600px) {\n  .highlights-grid {\n    grid-template-columns: 1fr 1fr;\n    gap: 16px 20px;\n  }\n\n  .item p {\n    font-size: 14px;\n  }\n\n  .label {\n    font-size: 13px;\n  }\n}\n\n</style>"
+          }
+        }
+      },
+      "block_order": [
+        "gsc_countdown_timer_countdown_g4DfRp",
+        "5ad897b0-57f4-4599-849d-2a41a78c9399",
+        "2dd2f51a-f755-4a34-ab97-3d560f52d666",
+        "bundel_wEEqfh",
+        "custom_liquid_GiqBMg",
+        "a574468c-b971-46d7-bf83-d54ae6679d82",
+        "6f1bce4f-f119-49ae-a5b5-28fce3641a2a",
+        "ceed2691-0e85-47e8-8442-2375657b6222",
+        "custom_liquid_xJqtMz",
+        "448ed604-e434-41bc-a38d-c5e6dfc87c9f",
+        "b07a1b21-c53c-4514-9563-0da2a57df8ad",
+        "1cfcca14-dc02-433c-86a5-68ceb8392c70",
+        "ac47188a-8ab8-4b89-beaf-a96495b14053",
+        "c47aaa5e-5dc0-4aea-8f63-682ae19f5192",
+        "bf1ccef1-5a7c-4db0-abc9-613857a94d2e",
+        "custom_liquid_gmKqyk",
+        "713b003a-1374-4d1f-9f98-3f96ed4881ce",
+        "custom_liquid_A8YXfA",
+        "3c7d63aa-cfa9-4a49-97d8-903fbef2bc6a",
+        "979d6588-4409-4258-9786-c2009381e309",
+        "d2d15c7c-25a6-4d9c-86f1-a57afbc62204",
+        "4efdfff0-f62b-4d27-bbb5-fb5817233073",
+        "judge_me_reviews_review_widget_chT7iJ",
+        "custom_liquid_7gUfbw"
+      ],
+      "settings": {
+        "style": "style-1",
+        "outer_spacing": "mt-s mb-s mt-s--large mb-s--large",
+        "enable_fullwidth": true,
+        "condensed_layout": true,
+        "enable_sticky": true,
+        "enable_breadcrumbs": false,
+        "breadcrumbs_position": "left",
+        "gallery_type": "grid-collage",
+        "gallery_size": "7",
+        "content_size": "5",
+        "gallery_image_size": "5-4",
+        "enable_zoom": false,
+        "disable_zoom_icon": false,
+        "slides_per_view": "1",
+        "partial_slide": false,
+        "enable_navigation": true,
+        "enable_mobile_thumbs": true
+      }
+    },
+    "1782990494c4447cf9": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_89b9dc3_Gmy69M": {
+          "type": "ai_gen_block_89b9dc3",
+          "settings": {
+            "desktop_width_percent": 100,
+            "title_column_width": 35,
+            "column_gap": 60,
+            "section_padding": 40,
+            "mobile_title_spacing": 30,
+            "main_title": "More Details",
+            "main_title_size": 36,
+            "main_title_color": "#000000",
+            "item_spacing": 15,
+            "item_padding": 20,
+            "border_radius": 8,
+            "item_background": "#ffffff",
+            "item_hover_background": "#f9f9f9",
+            "border_color": "#e5e5e5",
+            "question_size": 16,
+            "question_weight": "600",
+            "question_color": "#000000",
+            "answer_size": 14,
+            "answer_color": "#666666",
+            "icon_style": "plus_minus",
+            "icon_size": 24,
+            "icon_color": "#000000",
+            "question_1": "Care Instructions",
+            "answer_1": "<p>— Store in the box provided, away from moisture<br/>— Avoid contact with perfume, water, and    sweat directly on the earring<br/>— Wipe with a soft dry cloth after use<br/>— Do not use chemical cleaners</p>",
+            "question_2": "",
+            "answer_2": "",
+            "question_3": "",
+            "answer_3": "",
+            "question_4": "",
+            "answer_4": "",
+            "question_5": "",
+            "answer_5": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_89b9dc3_Gmy69M"
+      ],
+      "custom_css": [
+        "{padding: 50px; background: #0001;}",
+        "@media only screen and (max-width: 767px) {{padding: 10px; }}"
+      ],
+      "settings": {}
+    },
+    "blocks_pHYAhp": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_89b9dc3_F77weg": {
+          "type": "ai_gen_block_89b9dc3",
+          "settings": {
+            "desktop_width_percent": 100,
+            "title_column_width": 35,
+            "column_gap": 60,
+            "section_padding": 40,
+            "mobile_title_spacing": 30,
+            "main_title": "FAQ",
+            "main_title_size": 36,
+            "main_title_color": "#000000",
+            "item_spacing": 15,
+            "item_padding": 20,
+            "border_radius": 8,
+            "item_background": "#ffffff",
+            "item_hover_background": "#f9f9f9",
+            "border_color": "#e5e5e5",
+            "question_size": 16,
+            "question_weight": "600",
+            "question_color": "#000000",
+            "answer_size": 14,
+            "answer_color": "#666666",
+            "icon_style": "plus_minus",
+            "icon_size": 24,
+            "icon_color": "#000000",
+            "question_1": "1.Are these suitable for sensitive ears?",
+            "answer_1": "<p>The hooks and posts are smooth and standard gauge. Most customers wear them without issues. If you have highly sensitive ears, we recommend wearing for a few hours first.</p>",
+            "question_2": "2.Can I buy individual earrings from this set?",
+            "answer_2": "<p>The Iraya Collection is available only as a complete set of 12</p>",
+            "question_3": "3.How is the packaging?",
+            "answer_3": "<p>All 12 pairs come beautifully packed in a premium gift box, perfect for gifting or treating yourself. Designed to carry and protect your earrings, keeping them safe from damage.</p>",
+            "question_4": "4.What if one earring arrives damaged?",
+            "answer_4": "<p>We check every pair before dispatch. If anything arrives damaged, reach out to us within 48 hours with a photo and we'll make it right</p>",
+            "question_5": "",
+            "answer_5": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_89b9dc3_F77weg"
+      ],
+      "custom_css": [
+        "{padding: 50px;}",
+        "@media only screen and (max-width: 767px) {{padding: 10px; }}"
+      ],
+      "settings": {}
+    },
+    "recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "style": "style-1",
+        "outer_spacing": "mt-0 mb-0 mt-0--large mb-0--large",
+        "inner_spacing": "spacing-s spacing-s--large",
+        "layout": "fullwidth",
+        "subheading": "",
+        "heading": "<p>You Might Also Like</p>",
+        "paragraph": "<p>Here are some more products that you might like based on our clients preferences.</p>",
+        "autoplay": false,
+        "autoplay_speed": 5,
+        "enable_custom_background": false,
+        "background_color": "",
+        "background_gradient": ""
+      }
+    },
+    "featured_products_VhKaii": {
+      "type": "featured-products",
+      "disabled": true,
+      "custom_css": [
+        ".card-product__main a {padding-top: 20% !important;}"
+      ],
+      "settings": {
+        "style": "style-1",
+        "outer_spacing": "mt-s mb-s mt-s--large mb-s--large",
+        "inner_spacing": "spacing-s spacing-s--large",
+        "layout": "fullwidth",
+        "enable_custom_background": false,
+        "background_color": "",
+        "background_gradient": "",
+        "subheading": "",
+        "heading": "<p>Best Seller</p>",
+        "heading_size": "h2",
+        "paragraph": "",
+        "button_style_1": "solid",
+        "button_size_1": "s",
+        "button_text_1": "Shop now",
+        "button_url_1": "shopify://collections/best-sellers",
+        "collection": "best-sellers",
+        "product_list": [],
+        "products_count": 8,
+        "autoplay": false,
+        "autoplay_speed": 5
+      }
+    },
+    "1753561600e64969d1": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_9nU4CF": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_9nU4CF"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "1782990494c4447cf9",
+    "blocks_pHYAhp",
+    "recommendations",
+    "featured_products_VhKaii",
+    "1753561600e64969d1"
+  ]
+}
